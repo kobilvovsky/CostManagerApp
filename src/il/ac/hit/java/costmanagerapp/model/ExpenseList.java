@@ -1,6 +1,7 @@
-package il.ac.hit.java.costmanagerapp;
+package il.ac.hit.java.costmanagerapp.model;
+import il.ac.hit.java.costmanagerapp.model.Expense;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 

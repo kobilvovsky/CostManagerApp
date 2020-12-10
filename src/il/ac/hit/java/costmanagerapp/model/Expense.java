@@ -1,4 +1,8 @@
-package il.ac.hit.java.costmanagerapp;
+package il.ac.hit.java.costmanagerapp.model;
+import il.ac.hit.java.costmanagerapp.model.Category;
+import il.ac.hit.java.costmanagerapp.model.Currency;
+import il.ac.hit.java.costmanagerapp.model.Frequency;
+
 import java.time.LocalTime;
 import java.util.Date;
 

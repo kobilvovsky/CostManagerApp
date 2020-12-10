@@ -1,4 +1,4 @@
-package il.ac.hit.java.costmanagerapp;
+package il.ac.hit.java.costmanagerapp.model;
 
 public enum Category {
     HOUSE,
