@@ -9,17 +9,16 @@ import java.util.Date;
 public class Expense {
     private int id;
     private String name;
-    private int cost;
+    private int cost; // cost of expense
     private Category category;
-    private int sum;
+    private int sum; // total of expense over period of time (monthly, yearlly)
     private Currency currency;
     private String description;
     private Date date;
     private LocalTime time;
     private Frequency type;
 
-    public Expense(int id, String name, int cost, Category category, int sum, Currency currency, String description, Date date, LocalTime time, Frequency type)
-    {
+    public Expense(int id, String name, int cost, Category category, int sum, Currency currency, String description, Date date, LocalTime time, Frequency type) {
         setId(id);
         setName(name);
         setCost(cost);

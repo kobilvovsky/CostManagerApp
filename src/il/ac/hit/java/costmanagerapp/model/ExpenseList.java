@@ -7,22 +7,13 @@ import java.util.List;
 
 public class ExpenseList {
     private List<Expense> list = new ArrayList<Expense>();
-    private User user;
 
-    public void ExpenseList(User user) {
-        setUser(user);
+    public ExpenseList() {
+
     }
 
     public List<Expense> getList() {
         return list;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Expense retrieve(String name) {
@@ -37,14 +28,10 @@ public class ExpenseList {
         return null;
     }
 
-    public void addExpense(Expense ex) {
-        list.add(ex);
-    }
-
+    public void addExpense(Expense ex) { list.add(ex); }
     public void removeExpense(Expense ex) {
         list.remove(ex);
     }
-
     public void editExpense(Expense ex, Expense newEx) {
         ex = newEx;
     }

@@ -3,7 +3,7 @@ import java.sql.*;
 
 public class DerbyDBModel implements IModel {
 
-    //public static String driver = "org.apache.derby.jdbc.EmbeddedDriver";
+    public static String driver = "org.apache.derby.jdbc.EmbeddedDriver";
     public static String connectionString = "jdbc:derby:CostManagerDB;create=true"; //jdbc:derby:CostManagerDB;create=true
     //public static String connectionString = "jdbc:derby://localhost:1527/gagamoDB;create=true";
     //CostManagerApp\src\il\ac\hit\java\costmanagerapp
@@ -15,7 +15,7 @@ public class DerbyDBModel implements IModel {
     public DerbyDBModel() throws ClassNotFoundException, SQLException {
         try {
             connection = null;
-            //Class.forName(driver);
+            Class.forName(driver);
             setConnection(DriverManager.getConnection(connectionString));
 
             setStatement(getConnection().createStatement());
