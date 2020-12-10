@@ -5,7 +5,6 @@ public class User {
     private String user;
     private String password;
 
-
     public User(int id, String user, String password) {
         setId(id);
         setPassword(password);
@@ -25,8 +24,7 @@ public class User {
     }
 
     public void setId(int id) {
-        int size=Integer.toString(id).length();
-        if(size==9) {
+        if(Integer.toString(id).length() == 9) {
             this.id = id;
         }
     }
@@ -36,7 +34,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        if (password.length()==8) {
+        if (password.length() == 8) {
             this.password = password;
         }
     }

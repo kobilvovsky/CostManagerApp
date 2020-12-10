@@ -9,7 +9,7 @@ public class ExpenseList {
     private List<Expense> list = new ArrayList<Expense>();
     private User user;
 
-    public ExpenseList(User user) {
+    public void ExpenseList(User user) {
         setUser(user);
     }
 
