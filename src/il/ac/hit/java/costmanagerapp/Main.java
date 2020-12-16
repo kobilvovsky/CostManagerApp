@@ -1,4 +1,6 @@
-package il.ac.hit.java.costmanagerapp.model;
+package il.ac.hit.java.costmanagerapp;
+import il.ac.hit.java.costmanagerapp.model.DerbyDBModel;
+
 import java.sql.SQLException;
 
 public class Main {
