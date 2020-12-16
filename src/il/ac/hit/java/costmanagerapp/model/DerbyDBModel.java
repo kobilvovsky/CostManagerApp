@@ -19,8 +19,9 @@ public class DerbyDBModel implements IModel {
 
             setStatement(getConnection().createStatement());
 
-            //createTables();
-            //dropTables();
+            createTables();
+
+            dropTables();
         } catch (SQLException e) { //catch (SQLException | ClassNotFoundException e)
             e.printStackTrace();
         } finally {
@@ -28,6 +29,18 @@ public class DerbyDBModel implements IModel {
             if(getConnection() != null) try { getConnection().close(); } catch (Exception e) {};
             if(getRs() != null) try { getRs().close(); } catch (Exception e) {};
         }
+    }
+    
+    public int isUserMatched(Username username, Password password) throws SQLException {
+        try (PreparedStatement stmt = connection.prepareStatement(
+                "SELECT * FROM Users WHERE username = ? AND password = ?")) {
+            stmt.setString(1, username.getName());
+            stmt.setString(2, password.getPassword());
+            ResultSet result = stmt.executeQuery();
+            if (result.next())
+                return getRs().getInt("id");
+        }
+        return -1;
     }
 
     public void setConnection(Connection connection) {
@@ -64,6 +77,8 @@ public class DerbyDBModel implements IModel {
     public void dropTables() throws SQLException {
         getStatement().execute("DROP TABLE Category");
         getStatement().execute("DROP TABLE Currency");
+        getStatement().execute("DROP TABLE Users");
+        getStatement().execute("DROP TABLE Frequency");
     }
 
     public void createUsers() throws SQLException {
