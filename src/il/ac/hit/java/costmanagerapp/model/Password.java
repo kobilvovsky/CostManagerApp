@@ -1,5 +1,6 @@
 package il.ac.hit.java.costmanagerapp.model;
 
+import static il.ac.hit.java.costmanagerapp.model.utils.AppUtils.checkArgument;
 import static java.util.Objects.requireNonNull;
 
 
@@ -14,8 +15,9 @@ public class Password {
     private String password;
 
 
-    public Password(String password, boolean isPlainText) {
+    public Password(String password) {
         requireNonNull(password);
+        checkArgument(isValidPassword(password), MESSAGE_PASSWORD_CONSTRAINTS);
         setPassword(password);
     }
 
@@ -38,9 +40,9 @@ public class Password {
 
     @Override
     public boolean equals(Object other) {
-        return other == this // short circuit if same object
-                || (other instanceof Password // instanceof handles nulls
-                && password.equals(((Password) other).password)); // state check
+        return other == this
+                || (other instanceof Password
+                && password.equals(((Password) other).password));
     }
 
 }
