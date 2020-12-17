@@ -1,31 +1,37 @@
 package il.ac.hit.java.costmanagerapp.model;
-
-import java.time.LocalTime;
 import java.util.Date;
 
 public class Expense {
     private int id;
     private String name;
+    private int ownerID;
     private int cost; // cost of expense
     private Category category;
-    private int sum; // total of expense over period of time (monthly, yearly)
     private Currency currency;
     private String description;
-    private Date date;
-    private LocalTime time;
+    private Date creationDate;
+    private Date dueDate;
     private Frequency type;
 
-    public Expense(int id, String name, int cost, Category category, int sum, Currency currency, String description, Date date, LocalTime time, Frequency type) {
+    public Expense(int id, int ownerId, String name, int cost, Category category, Currency currency, String description, Date dueDate, Frequency type) {
         setId(id);
+        setOwner(ownerId);
         setName(name);
         setCost(cost);
         setCategory(category);
-        setSum(sum);
         setCurrency(currency);
         setDescription(description);
-        setDate(date);
-        setTime(time);
+        setCreationDate();
+        setDueDate(dueDate);
         setType(type);
+    }
+
+    public int getOwner() {
+        return ownerID;
+    }
+
+    public void setOwner(int ownerID) {
+        this.ownerID = ownerID;
     }
 
     public int getId() {
@@ -60,12 +66,12 @@ public class Expense {
         this.category = category;
     }
 
-    public int getSum() {
-        return sum;
-    }
-
-    public void setSum(int sum) {
-        this.sum = sum;
+    public int getSum() { // total of expense over period of time (monthly, yearly)
+        switch (getType()) {
+            case YEARLY:
+                return getCost() * 12;
+        }
+        return getCost();
     }
 
     public Currency getCurrency() {
@@ -84,20 +90,20 @@ public class Expense {
         this.description = description;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreationDate() { // ex: 2020-12-17
+        this.creationDate = new java.sql.Date(System.currentTimeMillis());
     }
 
-    public LocalTime getTime() {
-        return time;
+    public Date getDueDate() {
+        return dueDate;
     }
 
-    public void setTime(LocalTime time) {
-        this.time = time;
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
     }
 
     public Frequency getType() {
@@ -109,19 +115,19 @@ public class Expense {
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Expense{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", cost=" + cost +
-                ", category=" + category +
-                ", sum=" + sum +
-                ", currency=" + currency +
-                ", description='" + description + '\'' +
-                ", date=" + date +
-                ", time=" + time +
-                ", type=" + type +
+                "id=" + getId() +
+                ", ownerID=" + getOwner() +
+                ", name='" + getName() + '\'' +
+                ", cost=" + getCost() +
+                ", category=" + getCategory() +
+                ", sum=" + getSum() +
+                ", currency=" + getCurrency() +
+                ", description='" + getDescription() + '\'' +
+                ", creationDate=" + getCreationDate() +
+                ", dueDate=" + getDueDate() +
+                ", type=" + getType() +
                 '}';
     }
 }
