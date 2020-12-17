@@ -1,41 +1,53 @@
 package il.ac.hit.java.costmanagerapp.model;
 
 public class User {
-    private int id;
-    private String user;
-    private String password;
+    private int userId;
+    private Username userName;
+    private Password userPassword;
 
-    public User(int id, String user, String password) {
-        setId(id);
-        setPassword(password);
-        setUser(user);
+    //User instance will be crated after retrieving the new id from the DB
+    public User(int userId, Username userName, Password userPassword) {
+        setId(userId);
+        setUserName(userName);
+        setUserPassword(userPassword);
     }
 
     public int getId() {
-        return id;
+        return userId;
     }
 
-    public String getUser() {
-        return user;
+    public void setId(int userId) {
+        this.userId = userId;
     }
 
-    public String getPassword() {
-        return password;
+    public Username getUserName() {
+        return userName;
     }
 
-    public void setId(int id) {
-        if(Integer.toString(id).length() == 9) {
-            this.id = id;
-        }
+    public void setUserName(Username userName) {
+        this.userName = userName;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public Password getUserPassword() {
+        return userPassword;
     }
 
-    public void setPassword(String password) {
-        if (password.length() == 8) {
-            this.password = password;
-        }
+    public void setUserPassword(Password userPassword) {
+        this.userPassword = userPassword;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", userName=" + userName +
+                ", userPassword=" + userPassword +
+                '}';
     }
 }
+
+
+
+
+
+

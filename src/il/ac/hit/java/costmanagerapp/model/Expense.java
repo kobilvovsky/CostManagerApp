@@ -1,7 +1,4 @@
 package il.ac.hit.java.costmanagerapp.model;
-import il.ac.hit.java.costmanagerapp.model.Category;
-import il.ac.hit.java.costmanagerapp.model.Currency;
-import il.ac.hit.java.costmanagerapp.model.Frequency;
 
 import java.time.LocalTime;
 import java.util.Date;
@@ -11,7 +8,7 @@ public class Expense {
     private String name;
     private int cost; // cost of expense
     private Category category;
-    private int sum; // total of expense over period of time (monthly, yearlly)
+    private int sum; // total of expense over period of time (monthly, yearly)
     private Currency currency;
     private String description;
     private Date date;

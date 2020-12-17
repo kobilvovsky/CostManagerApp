@@ -2,29 +2,24 @@ package il.ac.hit.java.costmanagerapp.model;
 
 public class Category {
 
+    private int id;
     private String categoryName;
 
-    public enum E_CAT {
-        HOUSE,
-        INSURANCE,
-        DINING,
-        ENTERTAINMENT,
-        SHOPPING,
-        MEDICAL,
-        TRAVEL,
-        GROCERIES,
-        CAR,
-        TAX,
-        OTHERS,
-        GENERAL
-    }
-
-    public Category(String name) {
+    public Category(int id, String name) {
+        setId(id);
         setCategoryName(name);
     }
 
     public String getCategoryName() {
         return categoryName;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setCategoryName(String categoryName) {
