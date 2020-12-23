@@ -1,17 +1,14 @@
 package il.ac.hit.java.costmanagerapp.model;
 
-public class Frequency {
+public enum Frequency {
+    ONE_TIME(1),
+    MONTHLY(2),
+    YEARLY(3);
 
     private int id;
-    private String name;
 
-    public Frequency(int id, String name) {
+    Frequency(int id) {
         setId(id);
-        setFreq(name);
-    }
-
-    public String getFreq() {
-        return name;
     }
 
     public int getId() {
@@ -20,9 +17,5 @@ public class Frequency {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public void setFreq(String freqName) {
-        this.name = freqName;
     }
 }

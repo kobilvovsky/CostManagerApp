@@ -15,7 +15,7 @@ public class Password {
     private String password;
 
 
-    public Password(String password, boolean isPlainText) {
+    public Password(String password) {
         requireNonNull(password);
         checkArgument(isValidPassword(password), MESSAGE_PASSWORD_CONSTRAINTS);
         setPassword(password);
