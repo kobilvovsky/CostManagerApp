@@ -1,5 +1,7 @@
 package il.ac.hit.java.costmanagerapp.view;
 
+import il.ac.hit.java.costmanagerapp.view.viewutils.HintTextField;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -57,42 +59,5 @@ public class GeneratePieScreen {
         Generate.setBounds(95, 100, 100, 25);
         panel.add(Generate);
     }
-
-    class HintTextField extends JTextField implements FocusListener{
-
-        private final String hint;
-        private boolean showingHint;
-        private int flag=0;
-
-        public HintTextField(final String hint) {
-            super(hint);
-            this.hint = hint;
-            this.showingHint = true;
-            super.addFocusListener(this);
-        }
-
-        @Override
-        public void focusGained(FocusEvent e) {
-
-            if(this.getText().isEmpty()&&flag>0) {
-                super.setText("");
-                showingHint = false;
-            }
-            flag++;
-
-        }
-        @Override
-        public void focusLost(FocusEvent e) {
-            if(this.getText().isEmpty()) {
-                super.setText(hint);
-                showingHint = true;
-            }
-        }
-
-        @Override
-        public String getText() {
-            return showingHint ? "" : super.getText();
-        }
-    }
-
+    
 }
