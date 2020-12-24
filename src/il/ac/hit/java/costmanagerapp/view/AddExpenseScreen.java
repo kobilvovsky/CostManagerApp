@@ -9,7 +9,10 @@ import il.ac.hit.java.costmanagerapp.view.viewutils.RoundedBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.*;
+import java.util.List;
 
 public class AddExpenseScreen {
 
@@ -20,7 +23,7 @@ public class AddExpenseScreen {
     private void createGUI() {
 
         JFrame mainFrame = new JFrame("Add Expense");
-        mainFrame.setSize(650,450);
+        mainFrame.setSize(690,450);
 
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -40,7 +43,7 @@ public class AddExpenseScreen {
         //mainPanel.setBackground(Color.decode("#ffba93"));
 
         JLabel header = new JLabel("Add Expense");
-        header.setBounds(240, 10, 150, 20);
+        header.setBounds(260, 10, 150, 20);
         header.setFont(new Font("San Francisco", Font.BOLD, 20));
         header.setForeground(Color.decode("#ec5858"));
 
@@ -85,12 +88,13 @@ public class AddExpenseScreen {
 
         JLabel expenseCategory = new JLabel("Select Expense Category:");
         expenseCategory.setBounds(90, 200, 200, 20);
+
         JComboBox category = new JComboBox(Category.INITIAL_CATEGORIES);
         category.setBounds(250, 200, 200 ,25);
         category.setBorder(new RoundedBorder(3));
 
         JButton newCategoryBtn = new JButton("Add Category");
-        newCategoryBtn.setBounds(470, 200 ,110, 25);
+        newCategoryBtn.setBounds(460, 200 ,110, 25);
         newCategoryBtn.setBorder(new RoundedBorder(13));
         newCategoryBtn.addActionListener(new ActionListener() {
             @Override
@@ -102,8 +106,29 @@ public class AddExpenseScreen {
                         JOptionPane.PLAIN_MESSAGE,
                         null,
                         null,
-                        "Other"
+                        "Enter your category"
                 );
+                if ((result != null) && (result.length() > 0)) {
+                    category.setVisible(false);
+                    JTextField privateCategory = new JTextField(result);
+                    privateCategory.setBounds(250, 200, 200, 25);
+                    privateCategory.setBorder(new RoundedBorder(3));
+
+                    JButton reverseBtn = new JButton("Default");
+                    reverseBtn.setBounds(580, 200, 70, 25);
+                    reverseBtn.setBorder(new RoundedBorder(13));
+                    reverseBtn.setVisible(true);
+                    mainPanel.add(reverseBtn);
+                    mainPanel.repaint();
+                    reverseBtn.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            privateCategory.setVisible(false);
+                            category.setVisible(true);
+                        }
+                    });
+                    mainPanel.add(privateCategory);
+                }
             }
         });
 
@@ -132,7 +157,7 @@ public class AddExpenseScreen {
         date.setBorder(new RoundedBorder(3));
 
         JButton addBtn = new JButton("Add Expense");
-        addBtn.setBounds(210, 350, 180, 30);
+        addBtn.setBounds(260, 350, 180, 30);
         addBtn.setBorder(new RoundedBorder(13));
 
 
