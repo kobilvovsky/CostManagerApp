@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-
 public class MainScreen {
     private JFrame frame;
     private JPanel leftPanel;
@@ -23,7 +22,6 @@ public class MainScreen {
     private JButton logoutBtn;
     private Container container;
 
-
     public MainScreen() {
         frame = new JFrame();
         leftPanel = new JPanel();
@@ -32,15 +30,6 @@ public class MainScreen {
         dynamicPanel = new JPanel();
         container = frame.getContentPane();
 
-<<<<<<< Updated upstream
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(300,300);
-        frame.setTitle("CostManagerApp - Menu");
-
-        panel = new JPanel();
-        placeComponents(panel);
-        frame.add(panel);
-=======
         editBtn = new JButton("Edit Expense");
         reportBtn = new JButton("Generate Report");
         viewBtn = new JButton("View Expenses");
@@ -54,7 +43,6 @@ public class MainScreen {
                 resetView(viewScreen.getPanel());
             }
         });
->>>>>>> Stashed changes
 
         addBtn.addActionListener(new ActionListener() {
             @Override
@@ -67,32 +55,6 @@ public class MainScreen {
         start();
     }
 
-<<<<<<< Updated upstream
-    private static void placeComponents(JPanel panel) {
-        panel.setLayout(null);
-        panel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-
-        editBtn = new JButton("<html>Edit<br /> Expense</html>");
-        editBtn.setFont(new Font("Arial", Font.PLAIN, 17));
-        editBtn.setBounds(20, 20, 100, 75);
-        panel.add(editBtn);
-
-        reportBtn = new JButton("<html>Generate<br />Report</html>");
-        reportBtn.setFont(new Font("Arial", Font.PLAIN, 17));
-        reportBtn.setBounds(20, 105, 100, 75);
-        panel.add(reportBtn);
-
-        addBtn = new JButton("<html>Add<br />Expense</html>");
-        addBtn.setFont(new Font("Arial", Font.PLAIN, 17));
-        addBtn.setBounds(145, 20, 100, 75);
-        panel.add(addBtn);
-
-        logoutBtn = new JButton("<html>Logout");
-        logoutBtn.setFont(new Font("Arial", Font.PLAIN, 17));
-        logoutBtn.setBounds(145, 105, 100, 75);
-        panel.add(logoutBtn);
-
-=======
     public void resetView(JPanel newPanel) {
         container.remove(mainPanel);
         container.repaint();
@@ -102,7 +64,6 @@ public class MainScreen {
         container.add(newPanel);
         container.repaint();
         container.revalidate();
->>>>>>> Stashed changes
     }
 
     public void start() {
