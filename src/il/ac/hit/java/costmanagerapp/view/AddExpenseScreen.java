@@ -16,6 +16,8 @@ import java.util.List;
 
 public class AddExpenseScreen {
 
+    private JPanel mainPanel;
+
     public AddExpenseScreen() {
         createGUI();
     }
@@ -23,9 +25,13 @@ public class AddExpenseScreen {
     private void createGUI() {
 
         JFrame mainFrame = new JFrame("Add Expense");
+<<<<<<< Updated upstream
         mainFrame.setSize(690,450);
+=======
+        //mainFrame.setSize(650,450);
+>>>>>>> Stashed changes
 
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
         //Creating the menu bar
@@ -36,7 +42,7 @@ public class AddExpenseScreen {
         menuBar.add(fileMenu);
         menuBar.add(helpMenu);*/
 
-        JPanel mainPanel = new JPanel();
+        mainPanel = new JPanel();
         mainPanel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
         //mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setLayout(null);
@@ -185,7 +191,11 @@ public class AddExpenseScreen {
 
 
         mainFrame.add(mainPanel);
-        mainFrame.setVisible(true);
+        //mainFrame.setVisible(true);
+    }
+
+    public JPanel getPanel() {
+        return mainPanel;
     }
 
 }

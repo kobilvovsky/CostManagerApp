@@ -14,5 +14,8 @@ public class Main {
         //AddExpenseScreen test = new AddExpenseScreen();
         MainScreen test = new MainScreen();
 
+        //AddExpenseScreen a = new AddExpenseScreen();
+        MainScreen b = new MainScreen();
+
     }
 }
