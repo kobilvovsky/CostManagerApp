@@ -69,8 +69,8 @@ public class AddExpenseScreen {
         lbHeader.setFont(new Font("San Francisco", Font.BOLD, 20));
 
         lbExpenseAmount = new JLabel("Enter Expense Amount: ");
-        tfExpenseAmount = new JTextField(10);
-        tfExpenseAmount.setPreferredSize(new Dimension(20, 20));
+        tfExpenseAmount = new JTextField(15);
+        tfExpenseAmount.setMaximumSize(tfExpenseAmount.getPreferredSize());
         //tfExpenseAmount.setBorder(new RoundedBorder(3));
 
 
@@ -96,7 +96,8 @@ public class AddExpenseScreen {
         bxCurrency.add(rbYEN);
 
         lbExpenseDescription = new JLabel("Enter Expense Description: ");
-        tfExpenseDescription = new JTextField(20);
+        tfExpenseDescription = new JTextField(15);
+        tfExpenseDescription.setMaximumSize(tfExpenseDescription.getPreferredSize());
         //tfExpenseDescription.setBorder(new RoundedBorder(3));
 
         lbExpenseCategory = new JLabel("Select Expense Category: ");
@@ -104,6 +105,7 @@ public class AddExpenseScreen {
         Collections.addAll(defaultCategory, Category.INITIAL_CATEGORIES);
         model = new DefaultComboBoxModel(defaultCategory);
         cbCategory = new JComboBox(model);
+        cbCategory.setMaximumSize(new Dimension(200, 20));
         //cbCategory.setBorder(new RoundedBorder(3));
         btnAddCategory = new JButton("Add Category");
         //btnAddCategory.setBorder(new RoundedBorder(12));
@@ -126,6 +128,7 @@ public class AddExpenseScreen {
 
         lbExpenseDate = new JLabel("Enter Expense Date: ");
         tfExpenseDate = new HintTextField("dd/mm/yyyy");
+        tfExpenseDate.setMaximumSize(tfExpenseDate.getPreferredSize());
         //tfExpenseDate.setBorder(new RoundedBorder(3));
 
         btnAddExpense = new JButton("Add Expense");

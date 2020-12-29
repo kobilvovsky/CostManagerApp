@@ -13,6 +13,7 @@ public class HintTextField extends JTextField implements FocusListener {
         super(hint);
         this.hint = hint;
         this.showingHint = true;
+        this.setColumns(15);
         super.addFocusListener(this);
     }
 
