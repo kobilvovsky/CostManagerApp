@@ -25,11 +25,8 @@ public class AddExpenseScreen {
     private void createGUI() {
 
         JFrame mainFrame = new JFrame("Add Expense");
-<<<<<<< Updated upstream
         mainFrame.setSize(690,450);
-=======
         //mainFrame.setSize(650,450);
->>>>>>> Stashed changes
 
         //mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
