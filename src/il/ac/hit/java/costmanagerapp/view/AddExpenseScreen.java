@@ -49,6 +49,8 @@ public class AddExpenseScreen {
 
     private JComboBox cbCategory;
 
+    private Box bxCategory;
+
     private JButton btnAddExpense;
     private JButton btnAddCategory;
 
@@ -70,8 +72,7 @@ public class AddExpenseScreen {
 
         lbExpenseAmount = new JLabel("Enter Expense Amount: ");
         tfExpenseAmount = new JTextField(15);
-        tfExpenseAmount.setMaximumSize(tfExpenseAmount.getPreferredSize());
-        //tfExpenseAmount.setBorder(new RoundedBorder(3));
+        tfExpenseAmount.setMaximumSize(new Dimension(200, 25));
 
 
         lbExpenseCurrency = new JLabel("Select Expense Currency");
@@ -96,19 +97,24 @@ public class AddExpenseScreen {
         bxCurrency.add(rbYEN);
 
         lbExpenseDescription = new JLabel("Enter Expense Description: ");
-        tfExpenseDescription = new JTextField(15);
-        tfExpenseDescription.setMaximumSize(tfExpenseDescription.getPreferredSize());
-        //tfExpenseDescription.setBorder(new RoundedBorder(3));
+        tfExpenseDescription = new JTextField();
+        tfExpenseDescription.setMaximumSize(new Dimension(200, 25));
 
         lbExpenseCategory = new JLabel("Select Expense Category: ");
         defaultCategory = new Vector();
         Collections.addAll(defaultCategory, Category.INITIAL_CATEGORIES);
         model = new DefaultComboBoxModel(defaultCategory);
         cbCategory = new JComboBox(model);
-        cbCategory.setMaximumSize(new Dimension(200, 20));
-        //cbCategory.setBorder(new RoundedBorder(3));
+        cbCategory.setMaximumSize(new Dimension(200, 25));
         btnAddCategory = new JButton("Add Category");
-        //btnAddCategory.setBorder(new RoundedBorder(12));
+        btnAddCategory.setBorder(new RoundedBorder(5));
+
+        bxCategory = Box.createHorizontalBox();
+
+        bxCategory.add(cbCategory);
+        bxCategory.add(Box.createRigidArea(new Dimension(5, 0)));
+        bxCategory.add(btnAddCategory);
+
 
         lbExpenseFrequency = new JLabel("Select Expense Frequency");
         bgFrequency = new ButtonGroup();
@@ -128,11 +134,11 @@ public class AddExpenseScreen {
 
         lbExpenseDate = new JLabel("Enter Expense Date: ");
         tfExpenseDate = new HintTextField("dd/mm/yyyy");
-        tfExpenseDate.setMaximumSize(tfExpenseDate.getPreferredSize());
-        //tfExpenseDate.setBorder(new RoundedBorder(3));
+        tfExpenseDate.setMaximumSize(new Dimension(200, 25));
+
 
         btnAddExpense = new JButton("Add Expense");
-        //btnAddExpense.setBorder(new RoundedBorder(12));
+        btnAddExpense.setBorder(new RoundedBorder(5));
         start();
 
     }
@@ -175,11 +181,9 @@ public class AddExpenseScreen {
                         .addComponent(tfExpenseAmount)
                         .addComponent(bxCurrency)
                         .addComponent(tfExpenseDescription)
-                        .addComponent(cbCategory)
+                        .addComponent(bxCategory)
                         .addComponent(bxFrequency)
-                        .addComponent(tfExpenseDate))
-                .addGroup(layout.createParallelGroup()
-                        .addComponent(btnAddCategory)));
+                        .addComponent(tfExpenseDate)));
         hGroup.addComponent(btnAddExpense);
 
         layout.setHorizontalGroup(hGroup);
@@ -201,8 +205,7 @@ public class AddExpenseScreen {
 
         vGroup.addGroup(layout.createParallelGroup()
                 .addComponent(lbExpenseCategory)
-                .addComponent(cbCategory)
-                .addComponent(btnAddCategory));
+                .addComponent(bxCategory));
 
         vGroup.addGroup(layout.createParallelGroup()
                 .addComponent(lbExpenseFrequency)
