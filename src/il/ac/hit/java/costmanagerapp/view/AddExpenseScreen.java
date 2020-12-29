@@ -16,38 +16,10 @@ import javax.swing.*;
 public class AddExpenseScreen {
 
     private JPanel mainPanel;
-<<<<<<< Updated upstream
-
-    public AddExpenseScreen() {
-        createGUI();
-    }
-        
-    private void createGUI() {
-
-        JFrame mainFrame = new JFrame("Add Expense");
-        mainFrame.setSize(690,450);
-        //mainFrame.setSize(650,450);
-
-        //mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-
-        //Creating the menu bar
-        /*JMenuBar menuBar = new JMenuBar();
-        JMenu fileMenu = new JMenu("File");
-        JMenu helpMenu = new JMenu("Help");
-=======
->>>>>>> Stashed changes
 
     private GroupLayout layout;
     private GroupLayout.SequentialGroup vGroup;
 
-<<<<<<< Updated upstream
-        mainPanel = new JPanel();
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
-        //mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setLayout(null);
-        //mainPanel.setBackground(Color.decode("#ffba93"));
-=======
     private JLabel lbHeader;
     private JLabel lbExpenseAmount;
     private JLabel lbExpenseCurrency;
@@ -55,7 +27,6 @@ public class AddExpenseScreen {
     private JLabel lbExpenseCategory;
     private JLabel lbExpenseFrequency;
     private JLabel lbExpenseDate;
->>>>>>> Stashed changes
 
     private JTextField tfExpenseAmount;
     private JTextField tfExpenseDescription;
@@ -88,7 +59,7 @@ public class AddExpenseScreen {
 
 
     public AddExpenseScreen() {
-        
+
         //creating the main panel
         mainPanel = new JPanel();
         //creating the panel layout
@@ -183,65 +154,6 @@ public class AddExpenseScreen {
             }
         });
 
-<<<<<<< Updated upstream
-        JLabel expenseFrequency = new JLabel("Select Expense Frequency:");
-        expenseFrequency.setBounds(90, 250, 200, 20);
-
-        JRadioButton onetime = new JRadioButton(Frequency.ONE_TIME.name());
-        onetime.setBounds(250, 250, 90, 20);
-
-        JRadioButton monthly = new JRadioButton(Frequency.MONTHLY.name());
-        monthly.setBounds(340, 250, 90, 20);
-
-        JRadioButton yearly = new JRadioButton(Frequency.YEARLY.name());
-        yearly.setBounds(430, 250, 90, 20);
-
-        ButtonGroup frequencyGroup = new ButtonGroup();
-
-        frequencyGroup.add(onetime);
-        frequencyGroup.add(monthly);
-        frequencyGroup.add(yearly);
-
-        JLabel expenseDate = new JLabel("Enter Expense Date:");
-        expenseDate.setBounds(90, 300, 200, 25);
-        JTextField date = new HintTextField("dd/mm/yyyy");
-        date.setBounds(250, 300, 200 ,25);
-        date.setBorder(new RoundedBorder(3));
-
-        JButton addBtn = new JButton("Add Expense");
-        addBtn.setBounds(260, 350, 180, 30);
-        addBtn.setBorder(new RoundedBorder(13));
-
-
-        mainPanel.add(header);
-        mainPanel.add(expenseAmount);
-        mainPanel.add(amountTextField);
-        mainPanel.add(expenseDescription);
-        mainPanel.add(descriptionTextField);
-        mainPanel.add(expenseCategory);
-        mainPanel.add(category);
-        mainPanel.add(expenseDate);
-        mainPanel.add(date);
-        mainPanel.add(expenseCurrency);
-        mainPanel.add(usd);
-        mainPanel.add(euro);
-        mainPanel.add(yen);
-        mainPanel.add(pound);
-        mainPanel.add(nis);
-        mainPanel.add(expenseFrequency);
-        mainPanel.add(onetime);
-        mainPanel.add(monthly);
-        mainPanel.add(yearly);
-        mainPanel.add(addBtn);
-        mainPanel.add(newCategoryBtn);
-
-
-        mainFrame.add(mainPanel);
-        //mainFrame.setVisible(true);
-    }
-
-    public JPanel getPanel() {
-=======
         mainPanel.setLayout(layout);
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
@@ -305,7 +217,6 @@ public class AddExpenseScreen {
     }
 
     public JPanel getPanel () {
->>>>>>> Stashed changes
         return mainPanel;
     }
 
