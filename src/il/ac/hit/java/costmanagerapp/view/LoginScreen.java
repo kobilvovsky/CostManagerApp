@@ -2,66 +2,59 @@ package il.ac.hit.java.costmanagerapp.view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.font.LayoutPath;
+import java.util.concurrent.Flow;
 
-public class LoginScreen {
+public class LoginScreen  {
 
     private JFrame frame;
-    private JPanel panel;
-    private static JLabel userNameLabel;
-    private static JTextField userText;
-    private static JLabel passwordLabel;
-    private static JPasswordField passwordText;
-    private static JButton loginBtn;
-    private static JButton signUpBtn;
+    private JPanel upperPanel;
+    private JPanel middlePanel;
+    private JPanel lowerPanel;
+    private JPanel contentPane;
+    private JLabel userNameLabel;
+    private JTextField userText;
+    private JLabel passwordLabel;
+    private JPasswordField passwordText;
+    private JButton loginBtn;
+    private JButton signUpBtn;
 
     public LoginScreen() {
         frame = new JFrame();
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(350,200);
+        frame.setSize(600,400);
         frame.setTitle("CostManagerApp - Login");
+        frame.setLayout(new FlowLayout(FlowLayout.LEADING));
 
-        panel = new JPanel();
-        placeComponents(panel);
-        frame.add(panel,BorderLayout.CENTER);
-
-        frame.setVisible(true);
-
-
-    }
-
-    private static void placeComponents(JPanel panel) {
-        panel.setLayout(null);
-        panel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-
-
-//        Creating Username Label
-        userNameLabel = new JLabel("User name");
-        userNameLabel.setBounds(10,20,80,25);
-        panel.add(userNameLabel);
-
-        userText = new JTextField(20);
-        userText.setBounds(100,20,165,25);
-        panel.add(userText);
-
-        passwordLabel = new JLabel("Password");
-        passwordLabel.setBounds(10,50,80,25);
-        panel.add(passwordLabel);
-
-        passwordText = new JPasswordField(20);
-        passwordText.setBounds(100,50,165,25);
-        panel.add(passwordText);
-
-        // Creating login button
-        loginBtn = new JButton("login");
-        loginBtn.setBounds(190, 100, 80, 25);
-        panel.add(loginBtn);
-
-
+        userNameLabel = new JLabel("User name: ");
+        userText = new JTextField(15);
+        passwordLabel = new JLabel("Password:  ");
+        passwordText = new JPasswordField(15);
+        loginBtn = new JButton("  login  ");
         signUpBtn = new JButton("Sign up");
-        signUpBtn.setBounds(95, 100, 80, 25);
-        panel.add(signUpBtn);
+
+        upperPanel = new JPanel();
+        upperPanel.add(userNameLabel);
+        upperPanel.add(userText);
+
+        middlePanel = new JPanel();
+        middlePanel.add(passwordLabel);
+        middlePanel.add(passwordText);
+
+        lowerPanel=new JPanel();
+        lowerPanel.add(signUpBtn);
+        lowerPanel.add(loginBtn);
+
+        contentPane=new JPanel(new BorderLayout());
+        contentPane.setBorder(BorderFactory.createEmptyBorder(20,20,40,40));
+        contentPane.add(upperPanel,BorderLayout.NORTH);
+        contentPane.add(middlePanel,BorderLayout.CENTER);
+        contentPane.add(lowerPanel,BorderLayout.SOUTH);
+
+        frame.add(contentPane);
+
+        frame.pack();
+        frame.setVisible(true);
     }
-
-
 }

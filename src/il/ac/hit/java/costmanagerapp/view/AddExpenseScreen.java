@@ -5,6 +5,7 @@ import il.ac.hit.java.costmanagerapp.model.Currency;
 import il.ac.hit.java.costmanagerapp.model.Frequency;
 import il.ac.hit.java.costmanagerapp.view.viewutils.HintTextField;
 import il.ac.hit.java.costmanagerapp.view.viewutils.RoundedBorder;
+import il.ac.hit.java.costmanagerapp.viewmodel.IViewModel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,7 +15,7 @@ import java.util.Arrays;
 import javax.swing.*;
 import java.util.List;
 
-public class AddExpenseScreen {
+public class AddExpenseScreen implements IView {
 
     public AddExpenseScreen() {
         createGUI();
@@ -188,6 +189,20 @@ public class AddExpenseScreen {
         mainFrame.setVisible(true);
     }
 
+    @Override
+    public void setViewModel(IViewModel viewModel) {
+
+    }
+
+    @Override
+    public void showMessage() {
+
+    }
+
+    @Override
+    public void showItem() {
+
+    }
 }
 
 

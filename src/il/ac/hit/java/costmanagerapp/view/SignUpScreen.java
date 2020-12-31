@@ -1,12 +1,17 @@
 package il.ac.hit.java.costmanagerapp.view;
 
+import il.ac.hit.java.costmanagerapp.viewmodel.IViewModel;
+
 import javax.swing.*;
 import java.awt.*;
 
-public class SignUpScreen {
+public class SignUpScreen implements IView {
 
     private JFrame frame;
-    private JPanel panel;
+    private JPanel contentPane;
+    private JPanel upperPane;
+    private JPanel middlePane;
+    private JPanel lowerPane;
     private static JLabel userNameLabel;
     private static JTextField userText;
     private static JLabel passwordLabel;
@@ -20,39 +25,48 @@ public class SignUpScreen {
         frame.setSize(350,200);
         frame.setTitle("CostManagerApp - Sign up");
 
-        panel = new JPanel();
-        frame.add(panel, BorderLayout.CENTER);
-        placeComponents(panel);
+        userNameLabel = new JLabel("User name: ");
+        userText = new JTextField(15);
+        passwordLabel = new JLabel("Password:  ");
+        passwordText = new JPasswordField(15);
+        signUpBtn = new JButton("Sign up");
 
+        upperPane = new JPanel();
+        upperPane.add(userNameLabel);
+        upperPane.add(userText);
+
+        middlePane = new JPanel();
+        middlePane.add(passwordLabel);
+        middlePane.add(passwordText);
+
+        lowerPane =new JPanel();
+        lowerPane.add(signUpBtn);
+
+        contentPane = new JPanel(new BorderLayout());
+        contentPane.setBorder(BorderFactory.createEmptyBorder(20,20,40,40));
+        contentPane.add(upperPane,BorderLayout.NORTH);
+        contentPane.add(middlePane,BorderLayout.CENTER);
+        contentPane.add(lowerPane,BorderLayout.SOUTH);
+
+        frame.add(contentPane);
+
+        frame.pack();
         frame.setVisible(true);
 
 
     }
 
-    private static void placeComponents(JPanel panel) {
-        panel.setLayout(null);
-        panel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+    @Override
+    public void setViewModel(IViewModel viewModel) {
+    }
 
+    @Override
+    public void showMessage() {
 
-//        Creating Username Label
-        userNameLabel = new JLabel("User name");
-        userNameLabel.setBounds(10,20,80,25);
-        panel.add(userNameLabel);
+    }
 
-        userText = new JTextField(20);
-        userText.setBounds(100,20,165,25);
-        panel.add(userText);
+    @Override
+    public void showItem() {
 
-        passwordLabel = new JLabel("Password");
-        passwordLabel.setBounds(10,50,80,25);
-        panel.add(passwordLabel);
-
-        passwordText = new JPasswordField(20);
-        passwordText.setBounds(100,50,165,25);
-        panel.add(passwordText);
-
-        signUpBtn = new JButton("Sign up");
-        signUpBtn.setBounds(135, 100, 80, 25);
-        panel.add(signUpBtn);
     }
 }

@@ -1,12 +1,13 @@
 package il.ac.hit.java.costmanagerapp.view;
 
 import il.ac.hit.java.costmanagerapp.view.viewutils.HintTextField;
+import il.ac.hit.java.costmanagerapp.viewmodel.IViewModel;
 
 import javax.swing.*;
 import java.awt.*;
 
 
-public class GeneratePieScreen {
+public class GeneratePieScreen implements IView {
 
     private JFrame frame;
     private JPanel panel;
@@ -58,5 +59,19 @@ public class GeneratePieScreen {
         Generate.setBounds(95, 100, 100, 25);
         panel.add(Generate);
     }
-    
+
+    @Override
+    public void setViewModel(IViewModel viewModel) {
+
+    }
+
+    @Override
+    public void showMessage() {
+
+    }
+
+    @Override
+    public void showItem() {
+
+    }
 }

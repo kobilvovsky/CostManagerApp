@@ -1,10 +1,12 @@
 package il.ac.hit.java.costmanagerapp.view;
 
+import il.ac.hit.java.costmanagerapp.viewmodel.IViewModel;
+
 import javax.swing.*;
 import java.awt.*;
 
 
-public class MainScreen {
+public class MainScreen implements IView {
     private JFrame frame;
     private JPanel panel;
     private static JButton editBtn;
@@ -53,4 +55,18 @@ public class MainScreen {
 
     }
 
+    @Override
+    public void setViewModel(IViewModel viewModel) {
+
+    }
+
+    @Override
+    public void showMessage() {
+
+    }
+
+    @Override
+    public void showItem() {
+
+    }
 }
