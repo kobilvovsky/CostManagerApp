@@ -10,98 +10,146 @@ import il.ac.hit.java.costmanagerapp.viewmodel.IViewModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import javax.swing.*;
+import java.util.*;
 import java.util.List;
+import javax.swing.*;
 
 public class AddExpenseScreen implements IView {
 
+    private JPanel mainPanel;
+
+    private GroupLayout layout;
+    private GroupLayout.SequentialGroup vGroup;
+
+    private JLabel lbHeader;
+    private JLabel lbExpenseAmount;
+    private JLabel lbExpenseCurrency;
+    private JLabel lbExpenseDescription;
+    private JLabel lbExpenseCategory;
+    private JLabel lbExpenseFrequency;
+    private JLabel lbExpenseDate;
+
+    private JTextField tfExpenseAmount;
+    private JTextField tfExpenseDescription;
+    private JTextField tfExpenseDate;
+
+    private ButtonGroup bgCurrency;
+    private Box bxCurrency;
+    private ButtonGroup bgFrequency;
+    private Box bxFrequency;
+
+    private JRadioButton rbUSD;
+    private JRadioButton rbEURO;
+    private JRadioButton rbYEN;
+    private JRadioButton rbPOUND;
+    private JRadioButton rbNIS;
+
+    private JRadioButton rbOneTime;
+    private JRadioButton rbMonthly;
+    private JRadioButton rbYearly;
+
+    private JComboBox cbCategory;
+
+    private Box bxCategory;
+
+    private JButton btnAddExpense;
+    private JButton btnAddCategory;
+
+    private ArrayList<String> cats;
+    private Vector defaultCategory;
+    private DefaultComboBoxModel model;
+
+
+
     public AddExpenseScreen() {
-        createGUI();
+
+        //creating the main panel
+        mainPanel = new JPanel();
+        //creating the panel layout
+        layout = new GroupLayout(mainPanel);
+        //creating the main ui components
+        lbHeader = new JLabel("Add Expense");
+        lbHeader.setFont(new Font("San Francisco", Font.BOLD, 20));
+
+        lbExpenseAmount = new JLabel("Enter Expense Amount: ");
+        tfExpenseAmount = new JTextField(15);
+        tfExpenseAmount.setMaximumSize(new Dimension(200, 25));
+
+
+        lbExpenseCurrency = new JLabel("Select Expense Currency");
+        bgCurrency = new ButtonGroup();
+        bxCurrency = Box.createHorizontalBox();
+        rbEURO = new JRadioButton(Currency.EURO.name());
+        rbUSD = new JRadioButton(Currency.USD.name());
+        rbYEN = new JRadioButton(Currency.YEN.name());
+        rbPOUND = new JRadioButton(Currency.POUND.name());
+        rbNIS = new JRadioButton(Currency.NIS.name());
+
+        bgCurrency.add(rbEURO);
+        bgCurrency.add(rbUSD);
+        bgCurrency.add(rbNIS);
+        bgCurrency.add(rbPOUND);
+        bgCurrency.add(rbYEN);
+
+        bxCurrency.add(rbEURO);
+        bxCurrency.add(rbUSD);
+        bxCurrency.add(rbNIS);
+        bxCurrency.add(rbPOUND);
+        bxCurrency.add(rbYEN);
+
+        lbExpenseDescription = new JLabel("Enter Expense Description: ");
+        tfExpenseDescription = new JTextField();
+        tfExpenseDescription.setMaximumSize(new Dimension(200, 25));
+
+        lbExpenseCategory = new JLabel("Select Expense Category: ");
+        defaultCategory = new Vector();
+        Collections.addAll(defaultCategory, Category.INITIAL_CATEGORIES);
+        model = new DefaultComboBoxModel(defaultCategory);
+        cbCategory = new JComboBox(model);
+        cbCategory.setMaximumSize(new Dimension(200, 25));
+        btnAddCategory = new JButton("Add Category");
+        btnAddCategory.setBorder(new RoundedBorder(5));
+
+        bxCategory = Box.createHorizontalBox();
+
+        bxCategory.add(cbCategory);
+        bxCategory.add(Box.createRigidArea(new Dimension(5, 0)));
+        bxCategory.add(btnAddCategory);
+
+
+        lbExpenseFrequency = new JLabel("Select Expense Frequency");
+        bgFrequency = new ButtonGroup();
+        bxFrequency = Box.createHorizontalBox();
+
+        rbOneTime = new JRadioButton(Frequency.ONE_TIME.name());
+        rbMonthly = new JRadioButton(Frequency.MONTHLY.name());
+        rbYearly = new JRadioButton(Frequency.YEARLY.name());
+
+        bgFrequency.add(rbOneTime);
+        bgFrequency.add(rbMonthly);
+        bgFrequency.add(rbYearly);
+
+        bxFrequency.add(rbOneTime);
+        bxFrequency.add(rbMonthly);
+        bxFrequency.add(rbYearly);
+
+        lbExpenseDate = new JLabel("Enter Expense Date: ");
+        tfExpenseDate = new HintTextField("dd/mm/yyyy");
+        tfExpenseDate.setMaximumSize(new Dimension(200, 25));
+
+
+        btnAddExpense = new JButton("Add Expense");
+        btnAddExpense.setBorder(new RoundedBorder(5));
+        start();
+
     }
-        
-    private void createGUI() {
 
-        JFrame mainFrame = new JFrame("Add Expense");
-        mainFrame.setSize(690,450);
-
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-
-        //Creating the menu bar
-        /*JMenuBar menuBar = new JMenuBar();
-        JMenu fileMenu = new JMenu("File");
-        JMenu helpMenu = new JMenu("Help");
-
-        menuBar.add(fileMenu);
-        menuBar.add(helpMenu);*/
-
-        JPanel mainPanel = new JPanel();
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
-        //mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setLayout(null);
-        //mainPanel.setBackground(Color.decode("#ffba93"));
-
-        JLabel header = new JLabel("Add Expense");
-        header.setBounds(260, 10, 150, 20);
-        header.setFont(new Font("San Francisco", Font.BOLD, 20));
-        header.setForeground(Color.decode("#ec5858"));
-
-        JLabel expenseAmount = new JLabel("Enter Expense Amount:");
-        expenseAmount.setBounds(90,50,150,20);
-        JTextField amountTextField = new JTextField(16);
-        amountTextField.setBounds(250, 50 , 200, 25);
-        amountTextField.setBorder(new RoundedBorder(3));
-
-        JLabel expenseCurrency = new JLabel("Select Expense Currency:");
-        expenseCurrency.setBounds(90, 100, 200, 25);
-
-        JRadioButton usd = new JRadioButton(Currency.USD.name());
-        usd.setBounds(250, 100, 50, 20);
-
-        JRadioButton euro = new JRadioButton(Currency.EURO.name());
-        euro.setBounds(300, 100, 60, 20);
-
-        JRadioButton yen = new JRadioButton(Currency.YEN.name());
-        yen.setBounds(360, 100, 50, 20);
-
-        JRadioButton pound = new JRadioButton(Currency.POUND.name());
-        pound.setBounds(410, 100, 70, 20);
-
-        JRadioButton nis = new JRadioButton(Currency.NIS.name());
-        nis.setBounds(480, 100, 50, 20);
-
-        ButtonGroup currencyGroup = new ButtonGroup();
-
-        currencyGroup.add(usd);
-        currencyGroup.add(euro);
-        currencyGroup.add(yen);
-        currencyGroup.add(pound);
-        currencyGroup.add(nis);
-
-
-        JLabel expenseDescription = new JLabel("Enter Expense Description:");
-        expenseDescription.setBounds(90, 150, 200, 20);
-        JTextField descriptionTextField = new JTextField(16);
-        descriptionTextField.setBounds(250, 150,200, 25);
-        descriptionTextField.setBorder(new RoundedBorder(3));
-
-        JLabel expenseCategory = new JLabel("Select Expense Category:");
-        expenseCategory.setBounds(90, 200, 200, 20);
-
-        JComboBox category = new JComboBox(Category.INITIAL_CATEGORIES);
-        category.setBounds(250, 200, 200 ,25);
-        category.setBorder(new RoundedBorder(3));
-
-        JButton newCategoryBtn = new JButton("Add Category");
-        newCategoryBtn.setBounds(460, 200 ,110, 25);
-        newCategoryBtn.setBorder(new RoundedBorder(13));
-        newCategoryBtn.addActionListener(new ActionListener() {
+    public void start() {
+        btnAddCategory.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String result = (String)JOptionPane.showInputDialog(
-                        mainFrame,
+                        mainPanel,
                         "Add your own category",
                         "Add New Category",
                         JOptionPane.PLAIN_MESSAGE,
@@ -110,83 +158,73 @@ public class AddExpenseScreen implements IView {
                         "Enter your category"
                 );
                 if ((result != null) && (result.length() > 0)) {
-                    category.setVisible(false);
-                    JTextField privateCategory = new JTextField(result);
-                    privateCategory.setBounds(250, 200, 200, 25);
-                    privateCategory.setBorder(new RoundedBorder(3));
-
-                    JButton reverseBtn = new JButton("Default");
-                    reverseBtn.setBounds(580, 200, 70, 25);
-                    reverseBtn.setBorder(new RoundedBorder(13));
-                    reverseBtn.setVisible(true);
-                    mainPanel.add(reverseBtn);
-                    mainPanel.repaint();
-                    reverseBtn.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            privateCategory.setVisible(false);
-                            category.setVisible(true);
-                        }
-                    });
-                    mainPanel.add(privateCategory);
+                    model.addElement(result);
+                    cbCategory.setSelectedItem(result);
                 }
             }
         });
 
-        JLabel expenseFrequency = new JLabel("Select Expense Frequency:");
-        expenseFrequency.setBounds(90, 250, 200, 20);
+        mainPanel.setLayout(layout);
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
+        //layout.linkSize(SwingConstants.HORIZONTAL, btnAddCategory, btnAddExpense);
+        GroupLayout.ParallelGroup hGroup = layout.createParallelGroup(GroupLayout.Alignment.CENTER); // Will align the labels the way you wanted
 
-        JRadioButton onetime = new JRadioButton(Frequency.ONE_TIME.name());
-        onetime.setBounds(250, 250, 90, 20);
+        hGroup.addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup()
+                        .addComponent(lbExpenseAmount)
+                        .addComponent(lbExpenseCurrency)
+                        .addComponent(lbExpenseDescription)
+                        .addComponent(lbExpenseCategory)
+                        .addComponent(lbExpenseFrequency)
+                        .addComponent(lbExpenseDate))
+                .addGroup(layout.createParallelGroup()
+                        .addComponent(tfExpenseAmount)
+                        .addComponent(bxCurrency)
+                        .addComponent(tfExpenseDescription)
+                        .addComponent(bxCategory)
+                        .addComponent(bxFrequency)
+                        .addComponent(tfExpenseDate)));
+        hGroup.addComponent(btnAddExpense);
 
-        JRadioButton monthly = new JRadioButton(Frequency.MONTHLY.name());
-        monthly.setBounds(340, 250, 90, 20);
+        layout.setHorizontalGroup(hGroup);
 
-        JRadioButton yearly = new JRadioButton(Frequency.YEARLY.name());
-        yearly.setBounds(430, 250, 90, 20);
+        // Vertical
+        GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
 
-        ButtonGroup frequencyGroup = new ButtonGroup();
+        vGroup.addGroup(layout.createParallelGroup()
+                .addComponent(lbExpenseAmount)
+                .addComponent(tfExpenseAmount));
 
-        frequencyGroup.add(onetime);
-        frequencyGroup.add(monthly);
-        frequencyGroup.add(yearly);
+        vGroup.addGroup(layout.createParallelGroup()
+                .addComponent(lbExpenseCurrency)
+                .addComponent(bxCurrency));
 
-        JLabel expenseDate = new JLabel("Enter Expense Date:");
-        expenseDate.setBounds(90, 300, 200, 25);
-        JTextField date = new HintTextField("dd/mm/yyyy");
-        date.setBounds(250, 300, 200 ,25);
-        date.setBorder(new RoundedBorder(3));
+        vGroup.addGroup(layout.createParallelGroup()
+                .addComponent(lbExpenseDescription)
+                .addComponent(tfExpenseDescription));
 
-        JButton addBtn = new JButton("Add Expense");
-        addBtn.setBounds(260, 350, 180, 30);
-        addBtn.setBorder(new RoundedBorder(13));
+        vGroup.addGroup(layout.createParallelGroup()
+                .addComponent(lbExpenseCategory)
+                .addComponent(bxCategory));
 
+        vGroup.addGroup(layout.createParallelGroup()
+                .addComponent(lbExpenseFrequency)
+                .addComponent(bxFrequency));
 
-        mainPanel.add(header);
-        mainPanel.add(expenseAmount);
-        mainPanel.add(amountTextField);
-        mainPanel.add(expenseDescription);
-        mainPanel.add(descriptionTextField);
-        mainPanel.add(expenseCategory);
-        mainPanel.add(category);
-        mainPanel.add(expenseDate);
-        mainPanel.add(date);
-        mainPanel.add(expenseCurrency);
-        mainPanel.add(usd);
-        mainPanel.add(euro);
-        mainPanel.add(yen);
-        mainPanel.add(pound);
-        mainPanel.add(nis);
-        mainPanel.add(expenseFrequency);
-        mainPanel.add(onetime);
-        mainPanel.add(monthly);
-        mainPanel.add(yearly);
-        mainPanel.add(addBtn);
-        mainPanel.add(newCategoryBtn);
+        vGroup.addGroup(layout.createParallelGroup()
+                .addComponent(lbExpenseDate)
+                .addComponent(tfExpenseDate));
 
+        vGroup.addGroup(layout.createParallelGroup()
+                .addComponent(btnAddExpense));
 
-        mainFrame.add(mainPanel);
-        mainFrame.setVisible(true);
+        layout.setVerticalGroup(vGroup);
+
+    }
+
+    public JPanel getPanel () {
+        return mainPanel;
     }
 
     @Override
