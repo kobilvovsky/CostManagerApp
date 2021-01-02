@@ -15,7 +15,6 @@ public class MainScreen implements IView {
     private JPanel leftPanel;
     private JPanel leftGridPanel;
     private JPanel mainPanel;
-    private JPanel dynamicPanel;
 
     private JButton editBtn;
     private JButton addBtn;
@@ -29,7 +28,6 @@ public class MainScreen implements IView {
         leftPanel = new JPanel();
         leftGridPanel = new JPanel();
         mainPanel = new JPanel();
-        dynamicPanel = new JPanel();
         container = frame.getContentPane();
 
         editBtn = new JButton("Edit Expense");
@@ -54,6 +52,23 @@ public class MainScreen implements IView {
             }
         });
 
+        reportBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GeneratePieScreen pieScreen = new GeneratePieScreen();
+                resetView(pieScreen.getPanel());
+            }
+        });
+
+        logoutBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LoginScreen loginScreen = new LoginScreen();
+                frame.dispose(); // close window
+                frame.setVisible(false); // hide window
+            }
+        });
+
         start();
     }
 
@@ -70,15 +85,10 @@ public class MainScreen implements IView {
 
     public void start() {
         container.setLayout(new BorderLayout());
-        //frame.getRootPane().setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.DARK_GRAY));
 
         leftPanel.setBorder(new LineBorder(Color.BLACK, 2));
         leftPanel.setLayout(new FlowLayout(4, 4,4));
-        //leftPanel.setBackground(Color.CYAN);
-
         leftGridPanel.setLayout(new GridLayout(5, 1, 5, 5));
-        //leftGridPanel.setBorder(new LineBorder(Color.BLACK, 2));
-        //leftGridPanel.setBackground(Color.CYAN);
 
         leftGridPanel.add(viewBtn);
         leftGridPanel.add(addBtn);
@@ -88,8 +98,6 @@ public class MainScreen implements IView {
         leftPanel.add(leftGridPanel);
 
         mainPanel.setBorder(new LineBorder(Color.BLACK, 2));
-        mainPanel.setBackground(Color.YELLOW);
-        //mainPanel.add(dynamicPanel);
         container.add(mainPanel);
         container.add(leftPanel, BorderLayout.WEST);
 
@@ -119,9 +127,5 @@ public class MainScreen implements IView {
     @Override
     public void showMessage() {
 
-    }
-
-    @Override
-    public void showItem() {
     }
 }

@@ -2,8 +2,7 @@ package il.ac.hit.java.costmanagerapp.model;
 import java.util.Date;
 
 public class Expense {
-    private int id;
-    private String name;
+    //private int id;
     private int ownerID;
     private int cost; // cost of expense
     private Category category;
@@ -13,10 +12,9 @@ public class Expense {
     private Date dueDate;
     private Frequency type;
 
-    public Expense(int id, int ownerId, String name, int cost, Category category, Currency currency, String description, Date dueDate, Frequency type) {
-        setId(id);
+    public Expense(/*int id, */int ownerId, int cost, Category category, Currency currency, String description, Date dueDate, Frequency type) {
+        //setId(id);
         setOwner(ownerId);
-        setName(name);
         setCost(cost);
         setCategory(category);
         setCurrency(currency);
@@ -34,21 +32,13 @@ public class Expense {
         this.ownerID = ownerID;
     }
 
-    public int getId() {
+/*    public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    }*/
 
     public int getCost() {
         return cost;
@@ -117,9 +107,8 @@ public class Expense {
     @Override
     public String toString() {
         return "Expense{" +
-                "id=" + getId() +
-                ", ownerID=" + getOwner() +
-                ", name='" + getName() + '\'' +
+                //"id=" + getId() +
+                "ownerID=" + getOwner() +
                 ", cost=" + getCost() +
                 ", category=" + getCategory() +
                 ", sum=" + getSum() +

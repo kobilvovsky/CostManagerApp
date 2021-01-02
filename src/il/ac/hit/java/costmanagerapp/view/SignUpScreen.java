@@ -64,9 +64,4 @@ public class SignUpScreen implements IView {
     public void showMessage() {
 
     }
-
-    @Override
-    public void showItem() {
-
-    }
 }

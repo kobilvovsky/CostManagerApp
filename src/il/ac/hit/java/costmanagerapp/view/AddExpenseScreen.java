@@ -236,11 +236,6 @@ public class AddExpenseScreen implements IView {
     public void showMessage() {
 
     }
-
-    @Override
-    public void showItem() {
-
-    }
 }
 
 

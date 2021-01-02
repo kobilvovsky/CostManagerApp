@@ -16,7 +16,7 @@ public class ExpenseList {
         return list;
     }
 
-    public Expense retrieve(String name) {
+ /*   public Expense retrieve(int id name) {
         Iterator<Expense> iterator = list.iterator();
 
         while (iterator.hasNext()) {
@@ -26,7 +26,7 @@ public class ExpenseList {
             }
         }
         return null;
-    }
+    }*/
 
     public void addExpense(Expense ex) { list.add(ex); }
     public void removeExpense(Expense ex) {

@@ -1,5 +1,7 @@
 package il.ac.hit.java.costmanagerapp.view;
 
+import il.ac.hit.java.costmanagerapp.model.Frequency;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -16,14 +18,14 @@ public class ViewScreen {
 
     public void start() {
         String data[][] = {
-                {"1", "1", "expName", "100", "2", "USD", "abba...", "2020-12-17", "2020-12-21", "1"},
-                {"2", "1", "expName2", "200", "3", "EURO", "qqqq...", "2020-12-17", "2020-01-20", "1"},
-                {"3", "2", "expName3", "300", "1", "USD", "zzzz...", "2020-12-17", "2020-12-23", "1"},
-                {"4", "3", "expName4", "400", "1", "NIS", "aaaa...", "2020-12-17", "2020-12-25", "2"},
-                {"5", "1", "expName5", "500", "2", "USD", "nnnnnnnn...", "2020-12-17", "2020-01-01", "3"},
+                {"1", "100", "2", "USD", "abba...", "2020-12-17", "2020-12-21", Frequency.ONE_TIME.name()},
+                {"2", "200", "3", "EURO", "qqqq...", "2020-12-17", "2020-01-20", Frequency.ONE_TIME.name()},
+                {"3", "300", "1", "USD", "zzzz...", "2020-12-17", "2020-12-23", Frequency.ONE_TIME.name()},
+                {"4", "400", "1", "NIS", "aaaa...", "2020-12-17", "2020-12-25", Frequency.MONTHLY.name()},
+                {"5", "500", "2", "USD", "nnnnnnnn...", "2020-12-17", "2020-01-01", Frequency.YEARLY.name()},
         };
 
-        String column[] = {"Id", "OwnerId", "Name", "Cost", "Category", "Currency", "Description", "CreatedAt", "dueDate", "Type"};
+        String column[] = {"Id", "Cost", "Category", "Currency", "Description", "CreatedAt", "dueDate", "Frequency"};
         table = new JTable(data, column);
         table.setFillsViewportHeight(true);
         sp = new JScrollPane(table);

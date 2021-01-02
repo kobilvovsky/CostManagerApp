@@ -18,10 +18,6 @@ public class View implements IView{
     public void showMessage() {
     }
 
-    @Override
-    public void showItem() {
-    }
-
     public View(){
         SwingUtilities.invokeLater(new Runnable() {
             @Override
