@@ -1,5 +1,7 @@
 package il.ac.hit.java.costmanagerapp.view;
 
+import il.ac.hit.java.costmanagerapp.viewmodel.IViewModel;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -8,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class MainScreen {
+public class MainScreen implements IView {
     private JFrame frame;
     private JPanel leftPanel;
     private JPanel leftGridPanel;
@@ -83,7 +85,6 @@ public class MainScreen {
         leftGridPanel.add(editBtn);
         leftGridPanel.add(reportBtn);
         leftGridPanel.add(logoutBtn);
-
         leftPanel.add(leftGridPanel);
 
         mainPanel.setBorder(new LineBorder(Color.BLACK, 2));
@@ -108,5 +109,19 @@ public class MainScreen {
         frame.setSize(950, 500);
         frame.setLocation(500, 500);
         frame.setVisible(true);
+    }
+  
+      @Override
+    public void setViewModel(IViewModel viewModel) {
+
+    }
+
+    @Override
+    public void showMessage() {
+
+    }
+
+    @Override
+    public void showItem() {
     }
 }
