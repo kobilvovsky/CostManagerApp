@@ -20,4 +20,3 @@ public interface IModel {
     public void createUsers() throws CostManagerException, SQLException;
 
     public void addExpense(Expense e) throws SQLException;
-}

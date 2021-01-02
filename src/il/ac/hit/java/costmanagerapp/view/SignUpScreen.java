@@ -8,15 +8,15 @@ import java.awt.*;
 public class SignUpScreen implements IView {
 
     private JFrame frame;
-    private JPanel contentPane;
-    private JPanel upperPane;
-    private JPanel middlePane;
-    private JPanel lowerPane;
-    private static JLabel userNameLabel;
-    private static JTextField userText;
-    private static JLabel passwordLabel;
-    private static JPasswordField passwordText;
-    private static JButton signUpBtn;
+    private JPanel panelMain;
+    private JPanel panelUpper;
+    private JPanel panelMiddle;
+    private JPanel panelLower;
+    private JLabel lblUserName;
+    private JLabel lblPassword;
+    private JPasswordField tfPassword;
+    private JTextField tfUserName;
+    private JButton btnSignUp;
 
     public SignUpScreen() {
         frame = new JFrame();
@@ -25,30 +25,30 @@ public class SignUpScreen implements IView {
         frame.setSize(350,200);
         frame.setTitle("CostManagerApp - Sign up");
 
-        userNameLabel = new JLabel("User name: ");
-        userText = new JTextField(15);
-        passwordLabel = new JLabel("Password:  ");
-        passwordText = new JPasswordField(15);
-        signUpBtn = new JButton("Sign up");
+        lblUserName = new JLabel("User name: ");
+        tfUserName = new JTextField(15);
+        lblPassword = new JLabel("Password:  ");
+        tfPassword = new JPasswordField(15);
+        btnSignUp = new JButton("Sign up");
 
-        upperPane = new JPanel();
-        upperPane.add(userNameLabel);
-        upperPane.add(userText);
+        panelUpper = new JPanel();
+        panelUpper.add(lblUserName);
+        panelUpper.add(tfUserName);
 
-        middlePane = new JPanel();
-        middlePane.add(passwordLabel);
-        middlePane.add(passwordText);
+        panelMiddle = new JPanel();
+        panelMiddle.add(lblPassword);
+        panelMiddle.add(tfPassword);
 
-        lowerPane =new JPanel();
-        lowerPane.add(signUpBtn);
+        panelLower =new JPanel();
+        panelLower.add(btnSignUp);
 
-        contentPane = new JPanel(new BorderLayout());
-        contentPane.setBorder(BorderFactory.createEmptyBorder(20,20,40,40));
-        contentPane.add(upperPane,BorderLayout.NORTH);
-        contentPane.add(middlePane,BorderLayout.CENTER);
-        contentPane.add(lowerPane,BorderLayout.SOUTH);
+        panelMain = new JPanel(new BorderLayout());
+        panelMain.setBorder(BorderFactory.createEmptyBorder(20,20,40,40));
+        panelMain.add(panelUpper,BorderLayout.NORTH);
+        panelMain.add(panelMiddle,BorderLayout.CENTER);
+        panelMain.add(panelLower,BorderLayout.SOUTH);
 
-        frame.add(contentPane);
+        frame.add(panelMain);
 
         frame.pack();
         frame.setVisible(true);

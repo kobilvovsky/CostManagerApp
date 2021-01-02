@@ -2,22 +2,20 @@ package il.ac.hit.java.costmanagerapp.view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.font.LayoutPath;
-import java.util.concurrent.Flow;
 
 public class LoginScreen  {
 
     private JFrame frame;
-    private JPanel upperPanel;
-    private JPanel middlePanel;
-    private JPanel lowerPanel;
+    private JPanel panelUpper;
+    private JPanel panelMiddle;
+    private JPanel panelLower;
     private JPanel contentPane;
-    private JLabel userNameLabel;
-    private JTextField userText;
-    private JLabel passwordLabel;
-    private JPasswordField passwordText;
-    private JButton loginBtn;
-    private JButton signUpBtn;
+    private JLabel lblUserName;
+    private JLabel lblPassword;
+    private JTextField tfUserName;
+    private JPasswordField tfPassword;
+    private JButton btnLogin;
+    private JButton btnSignUp;
 
     public LoginScreen() {
         frame = new JFrame();
@@ -27,30 +25,30 @@ public class LoginScreen  {
         frame.setTitle("CostManagerApp - Login");
         frame.setLayout(new FlowLayout(FlowLayout.LEADING));
 
-        userNameLabel = new JLabel("User name: ");
-        userText = new JTextField(15);
-        passwordLabel = new JLabel("Password:  ");
-        passwordText = new JPasswordField(15);
-        loginBtn = new JButton("  login  ");
-        signUpBtn = new JButton("Sign up");
+        lblUserName = new JLabel("User name: ");
+        tfUserName = new JTextField(15);
+        lblPassword = new JLabel("Password:  ");
+        tfPassword = new JPasswordField(15);
+        btnLogin = new JButton("  login  ");
+        btnSignUp = new JButton("Sign up");
 
-        upperPanel = new JPanel();
-        upperPanel.add(userNameLabel);
-        upperPanel.add(userText);
+        panelUpper = new JPanel();
+        panelUpper.add(lblUserName);
+        panelUpper.add(tfUserName);
 
-        middlePanel = new JPanel();
-        middlePanel.add(passwordLabel);
-        middlePanel.add(passwordText);
+        panelMiddle = new JPanel();
+        panelMiddle.add(lblPassword);
+        panelMiddle.add(tfPassword);
 
-        lowerPanel=new JPanel();
-        lowerPanel.add(signUpBtn);
-        lowerPanel.add(loginBtn);
+        panelLower =new JPanel();
+        panelLower.add(btnSignUp);
+        panelLower.add(btnLogin);
 
         contentPane=new JPanel(new BorderLayout());
         contentPane.setBorder(BorderFactory.createEmptyBorder(20,20,40,40));
-        contentPane.add(upperPanel,BorderLayout.NORTH);
-        contentPane.add(middlePanel,BorderLayout.CENTER);
-        contentPane.add(lowerPanel,BorderLayout.SOUTH);
+        contentPane.add(panelUpper,BorderLayout.NORTH);
+        contentPane.add(panelMiddle,BorderLayout.CENTER);
+        contentPane.add(panelLower,BorderLayout.SOUTH);
 
         frame.add(contentPane);
 
