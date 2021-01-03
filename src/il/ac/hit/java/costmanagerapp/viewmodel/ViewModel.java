@@ -2,6 +2,7 @@ package il.ac.hit.java.costmanagerapp.viewmodel;
 
 import il.ac.hit.java.costmanagerapp.model.Expense;
 import il.ac.hit.java.costmanagerapp.model.IModel;
+import il.ac.hit.java.costmanagerapp.model.exceptions.CostManagerException;
 import il.ac.hit.java.costmanagerapp.view.IView;
 
 import java.sql.SQLException;
@@ -14,9 +15,9 @@ public class ViewModel implements IViewModel {
     private IView view;
     private ExecutorService pool;
 
-//    public ViewModel() {
-//        pool = Executors.newFixedThreadPool(10);
-//    }
+    public ViewModel() {
+        pool = Executors.newFixedThreadPool(10);
+    }
 
     @Override
     public void setModel(IModel model) {
@@ -30,12 +31,21 @@ public class ViewModel implements IViewModel {
 
     @Override
     public void addExpense(Expense expense) {
-        try {
-            model.addExpense(expense);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        pool.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    model.addExpense(expense);
+                } catch (SQLException throwable) { //needs to be replaced with own exception!
+                    throwable.printStackTrace();
+                    //Show message
+                }
+
+            }
+        });
     }
+
+
 }
 
     //

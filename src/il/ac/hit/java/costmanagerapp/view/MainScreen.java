@@ -124,7 +124,7 @@ public class MainScreen implements IView {
     }
 
     @Override
-    public void showMessage() {
+    public void showMessage(String strMessage,String strTitle) {
 
     }
 }

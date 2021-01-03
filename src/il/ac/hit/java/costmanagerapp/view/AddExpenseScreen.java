@@ -289,11 +289,12 @@ public class AddExpenseScreen implements IView {
 
     @Override
     public void setViewModel(IViewModel viewModel) {
-
+        System.out.println("Reached set ViewModel");
+        this.vm=viewModel;
     }
 
     @Override
-    public void showMessage() {
+    public void showMessage(String strMessage, String strTitle) {
 
     }
 }

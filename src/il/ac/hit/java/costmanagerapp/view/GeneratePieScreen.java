@@ -54,7 +54,7 @@ public class GeneratePieScreen implements IView {
     }
 
     @Override
-    public void showMessage() {
+    public void showMessage(String strMessage, String strTitle) {
 
     }
 }

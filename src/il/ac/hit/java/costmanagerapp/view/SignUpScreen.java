@@ -24,7 +24,7 @@ public class SignUpScreen implements IView {
 
     public SignUpScreen() {
         frame = new JFrame();
-        
+
         //Create frame settings
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(350,200);
@@ -89,7 +89,7 @@ public class SignUpScreen implements IView {
     }
 
     @Override
-    public void showMessage() {
+    public void showMessage(String strMessage, String strTitle) {
 
     }
 }

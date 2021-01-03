@@ -2,13 +2,14 @@ package il.ac.hit.java.costmanagerapp.view;
 
 import il.ac.hit.java.costmanagerapp.view.viewutils.RoundedBorder;
 import il.ac.hit.java.costmanagerapp.view.viewutils.messageBox;
+import il.ac.hit.java.costmanagerapp.viewmodel.IViewModel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class LoginScreen  {
+public class LoginScreen  implements IView{
 
     private JFrame frame;
     private JPanel panelUpper;
@@ -50,7 +51,7 @@ public class LoginScreen  {
                     frame.dispose();
                 }
                 else{
-                    messageBox.infoBox("user name or password is incorrect","Login error");
+                    showMessage("user name or password is incorrect","Login error");
                 }
             }
         });
@@ -97,4 +98,13 @@ public class LoginScreen  {
         frame.setVisible(true);
     }
 
+    @Override
+    public void setViewModel(IViewModel viewModel) {
+
+    }
+
+    @Override
+    public void showMessage(String strMessage,String strTitle) {
+        messageBox.infoBox("user name or password is incorrect","Login error");
+    }
 }
