@@ -14,9 +14,9 @@ public class ViewModel implements IViewModel {
     private IView view;
     private ExecutorService pool;
 
-    public ViewModel() {
-        pool = Executors.newFixedThreadPool(10);
-    }
+//    public ViewModel() {
+//        pool = Executors.newFixedThreadPool(10);
+//    }
 
     @Override
     public void setModel(IModel model) {

@@ -65,7 +65,6 @@ public class MainScreen implements IView {
             public void actionPerformed(ActionEvent e) {
                 LoginScreen loginScreen = new LoginScreen();
                 frame.dispose(); // close window
-                frame.setVisible(false); // hide window
             }
         });
 

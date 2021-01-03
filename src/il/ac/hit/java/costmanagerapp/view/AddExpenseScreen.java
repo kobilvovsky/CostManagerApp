@@ -2,6 +2,7 @@ package il.ac.hit.java.costmanagerapp.view;
 
 import il.ac.hit.java.costmanagerapp.model.Category;
 import il.ac.hit.java.costmanagerapp.model.Currency;
+import il.ac.hit.java.costmanagerapp.model.Expense;
 import il.ac.hit.java.costmanagerapp.model.Frequency;
 import il.ac.hit.java.costmanagerapp.view.viewutils.HintTextField;
 import il.ac.hit.java.costmanagerapp.view.viewutils.RoundedBorder;
@@ -11,7 +12,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
-import java.util.List;
 import javax.swing.*;
 
 public class AddExpenseScreen implements IView {
@@ -59,6 +59,8 @@ public class AddExpenseScreen implements IView {
     private Vector defaultCategory;
     private DefaultComboBoxModel model;
 
+    private IViewModel vm;
+
 
 
     public AddExpenseScreen() {
@@ -80,10 +82,15 @@ public class AddExpenseScreen implements IView {
         bgCurrency = new ButtonGroup();
         bxCurrency = Box.createHorizontalBox();
         rbEURO = new JRadioButton(Currency.EURO.name());
+        rbEURO.setActionCommand("EURO");
         rbUSD = new JRadioButton(Currency.USD.name());
+        rbUSD.setActionCommand("USD");
         rbYEN = new JRadioButton(Currency.YEN.name());
+        rbYEN.setActionCommand("YEN");
         rbPOUND = new JRadioButton(Currency.POUND.name());
+        rbPOUND.setActionCommand("POUND");
         rbNIS = new JRadioButton(Currency.NIS.name());
+        rbNIS.setActionCommand("NIS");
 
         bgCurrency.add(rbEURO);
         bgCurrency.add(rbUSD);
@@ -122,8 +129,11 @@ public class AddExpenseScreen implements IView {
         bxFrequency = Box.createHorizontalBox();
 
         rbOneTime = new JRadioButton(Frequency.ONE_TIME.name());
+        rbOneTime.setActionCommand("ONE_TIME");
         rbMonthly = new JRadioButton(Frequency.MONTHLY.name());
+        rbMonthly.setActionCommand("MONTHLY");
         rbYearly = new JRadioButton(Frequency.YEARLY.name());
+        rbYearly.setActionCommand("YEARLY");
 
         bgFrequency.add(rbOneTime);
         bgFrequency.add(rbMonthly);
@@ -221,6 +231,56 @@ public class AddExpenseScreen implements IView {
 
         layout.setVerticalGroup(vGroup);
 
+        btnAddExpense.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    double amount = Double.parseDouble(tfExpenseAmount.getText());
+                    String description = tfExpenseDescription.getText();
+
+                    String categoryStr = String.valueOf(cbCategory.getSelectedItem());
+                    Category category = new Category(categoryStr);
+                    String frequencyStr = bgFrequency.getSelection().getActionCommand();
+                    Frequency frequency = null;
+                    switch (frequencyStr) {
+                        case "ONE_TIME":
+                            frequency = Frequency.ONE_TIME;
+                            break;
+                        case "MONTHLY":
+                            frequency = Frequency.MONTHLY;
+                            break;
+                        default:
+                            frequency = Frequency.YEARLY;
+                    }
+                    String currencyStr = bgCurrency.getSelection().getActionCommand();
+                    Currency currency = null;
+                    switch (currencyStr) {
+                        case "USD":
+                            currency = Currency.USD;
+                            break;
+                        case "EURO":
+                            currency = Currency.EURO;
+                            break;
+                        case "YEN":
+                            currency = Currency.YEN;
+                            break;
+                        case "POUND":
+                            currency = Currency.POUND;
+                            break;
+                        default:
+                            currency = Currency.NIS;
+                    }
+                    String date = tfExpenseDate.getText();
+
+                    //Need to send Expense parameter after confirming with Erez and updating the branch.
+                    Expense expense = new Expense(0,amount,category,currency,description,date,frequency);
+                    vm.addExpense(expense);
+                } catch (NumberFormatException ex) {
+                    //adding the relevant exception..
+                }
+            }
+        });
+
     }
 
     public JPanel getPanel () {
@@ -237,5 +297,4 @@ public class AddExpenseScreen implements IView {
 
     }
 }
-
 

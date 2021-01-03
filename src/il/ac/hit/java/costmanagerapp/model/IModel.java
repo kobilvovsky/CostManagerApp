@@ -9,14 +9,20 @@ import java.sql.Statement;
 
 public interface IModel {
     public void setConnection(Connection connection);
+
     public Connection getConnection();
+
     public Statement getStatement();
+
     public ResultSet getRs();
 
     public void createTables() throws CostManagerException, SQLException;
+
     public void dropTables() throws CostManagerException, SQLException;
 
     public void createExpenses() throws CostManagerException, SQLException;
+
     public void createUsers() throws CostManagerException, SQLException;
 
     public void addExpense(Expense e) throws SQLException;
+}

@@ -1,10 +1,12 @@
 package il.ac.hit.java.costmanagerapp.model;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Expense {
     //private int id;
     private int ownerID;
-    private int cost; // cost of expense
+    private double cost; // cost of expense
     private Category category;
     private Currency currency;
     private String description;
@@ -12,7 +14,7 @@ public class Expense {
     private Date dueDate;
     private Frequency type;
 
-    public Expense(/*int id, */int ownerId, int cost, Category category, Currency currency, String description, Date dueDate, Frequency type) {
+    public Expense(/*int id, */int ownerId, double cost, Category category, Currency currency, String description, String dueDate, Frequency type) {
         //setId(id);
         setOwner(ownerId);
         setCost(cost);
@@ -40,12 +42,14 @@ public class Expense {
         this.id = id;
     }*/
 
-    public int getCost() {
+    public double getCost() {
         return cost;
     }
 
-    public void setCost(int cost) {
-        this.cost = cost;
+    //Rounding number to .2 decimal digits
+    public void setCost(double cost) {
+
+        this.cost = Math.round(cost*100)/100;
     }
 
     public Category getCategory() {
@@ -56,10 +60,10 @@ public class Expense {
         this.category = category;
     }
 
-    public int getSum() { // total of expense over period of time (monthly, yearly)
+    public double getSum() { // total of expense over period of time (monthly, yearly)
         switch (getType()) {
             case YEARLY:
-                return getCost() * 12;
+                return Math.round((getCost() * 12)*100)/100;
         }
         return getCost();
     }
@@ -92,8 +96,13 @@ public class Expense {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
-        this.dueDate = dueDate;
+    public void setDueDate(String dueDate) {
+
+        try {
+            this.dueDate = new SimpleDateFormat("dd/MM/yyyy").parse(dueDate);
+        } catch (ParseException e) { //add relevant exception
+            e.printStackTrace();
+        }
     }
 
     public Frequency getType() {
