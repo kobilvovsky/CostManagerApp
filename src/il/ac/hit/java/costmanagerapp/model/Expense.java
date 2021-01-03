@@ -97,12 +97,7 @@ public class Expense {
     }
 
     public void setDueDate(String dueDate) {
-
-        try {
-            this.dueDate = new SimpleDateFormat("dd/MM/yyyy").parse(dueDate);
-        } catch (ParseException e) { //add relevant exception
-            e.printStackTrace();
-        }
+        this.dueDate = java.sql.Date.valueOf(dueDate);
     }
 
     public Frequency getType() {

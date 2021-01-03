@@ -152,7 +152,7 @@ public class AddExpenseScreen implements IView {
         bxFrequency.add(rbYearly);
 
         lbExpenseDate = new JLabel("Enter Expense Date: ");
-        tfExpenseDate = new HintTextField("dd/mm/yyyy");
+        tfExpenseDate = new HintTextField("yyyy-mm-dd");
         tfExpenseDate.setMaximumSize(new Dimension(200, 25));
 
 
@@ -284,6 +284,7 @@ public class AddExpenseScreen implements IView {
                     Expense expense = new Expense(0,amount,category,currency,description,date,frequency);
                     vm.addExpense(expense);
                 } catch (NumberFormatException ex) {
+                    System.out.println(ex);
                     //adding the relevant exception..
                 }
             }

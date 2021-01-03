@@ -3,6 +3,8 @@ import java.sql.*;
 
 public class DerbyDBModel implements IModel {
 
+    private static DerbyDBModel single_instance = null;
+
     public static String driver = "org.apache.derby.jdbc.EmbeddedDriver";
     public static String connectionString = "jdbc:derby:CostManagerDB;create=true";
 
@@ -10,34 +12,51 @@ public class DerbyDBModel implements IModel {
     Statement statement;
     ResultSet resultSet = null;
 
-    public DerbyDBModel() throws ClassNotFoundException {
+    private DerbyDBModel() throws ClassNotFoundException {
         try {
-            connection = null;
-            Class.forName(driver);
-            setConnection(DriverManager.getConnection(connectionString));
-            setStatement(getConnection().createStatement());
-
-            createTables();
-            setRs(getStatement().executeQuery("SELECT id, description, dueDate FROM Expense WHERE dueDate >= '2020-12-01' AND dueDate <= '2020-12-30'")); // execute = multiple results
-
-            while(getRs().next()) {
-                System.out.println("id=" + getRs().getInt("id") + " description=" + getRs().getString("description")
-                + " dueDate=" + getRs().getDate("dueDate"));
-            }
-
-            dropTables();
-
-        } catch (SQLException e) { //catch (SQLException | ClassNotFoundException e)
+            init();
+        } catch (SQLException e) {
             System.out.println("Cant Create derby DB");
             e.printStackTrace();
         } finally {
-            if(getStatement() != null) try { getStatement().close(); } catch (Exception e) {};
-            if(getConnection() != null) try { getConnection().close(); } catch (Exception e) {};
-            if(getRs() != null) try { getRs().close(); } catch (Exception e) {};
+            close();
         }
     }
 
-    public String[][] getUserExpenses() throws SQLException {
+    public static DerbyDBModel getInstance() throws ClassNotFoundException {
+        if (single_instance == null)
+            single_instance = new DerbyDBModel();
+
+        return single_instance;
+    }
+
+    private void init() throws ClassNotFoundException, SQLException {
+        connection = null;
+        Class.forName(driver);
+        setConnection(DriverManager.getConnection(connectionString));
+        setStatement(getConnection().createStatement());
+    }
+
+    private void close() {
+        if(getStatement() != null) try { getStatement().close(); } catch (Exception e) {};
+        if(getConnection() != null) try { getConnection().close(); } catch (Exception e) {};
+        if(getRs() != null) try { getRs().close(); } catch (Exception e) {};
+    }
+
+    public void simpleQuery() throws SQLException, ClassNotFoundException {
+        init();
+        setRs(getStatement().executeQuery("SELECT id, description, dueDate FROM Expense WHERE dueDate >= '2020-12-01' AND dueDate <= '2020-12-30'")); // execute = multiple results
+
+        while(getRs().next()) {
+            System.out.println("id=" + getRs().getInt("id") + " description=" + getRs().getString("description")
+                    + " dueDate=" + getRs().getDate("dueDate"));
+        }
+
+        close();
+    }
+
+    public String[][] getUserExpenses() throws SQLException, ClassNotFoundException {
+        init();
         setRs(getStatement().executeQuery("SELECT id, cost, category, currency, description, creationDate, dueDate, frequency FROM Expense WHERE ownerid = 1"));
 
         String data[][] = new String[0][];
@@ -57,9 +76,14 @@ public class DerbyDBModel implements IModel {
             col = 0;
         }
 
+        close();
+
         return data;
     }
-    public int isUserMatched(Username username, Password password) throws SQLException {
+
+    public int isUserMatched(Username username, Password password) throws SQLException, ClassNotFoundException {
+        init();
+
         try (PreparedStatement stmt = connection.prepareStatement(
                 "SELECT * FROM Users WHERE username = ? AND password = ?")) {
             stmt.setString(1, username.getName());
@@ -68,6 +92,8 @@ public class DerbyDBModel implements IModel {
             if (getRs().next())
                 return getRs().getInt("id");
         }
+
+        close();
         return -1;
     }
 
@@ -95,24 +121,31 @@ public class DerbyDBModel implements IModel {
         this.resultSet = rs;
     }
 
-    public void createTables() throws SQLException {
+    public void createTables() throws SQLException, ClassNotFoundException {
+        init();
         createUsers();
         createExpenses();
+        close();
     }
 
-    public void dropTables() throws SQLException {
+    public void dropTables() throws SQLException, ClassNotFoundException {
+        init();
         getStatement().execute("DROP TABLE Users");
         getStatement().execute("DROP TABLE Expense");
+        close();
     }
 
-    public void createUsers() throws SQLException {
+    public void createUsers() throws SQLException, ClassNotFoundException {
+        init();
         getStatement().execute("CREATE TABLE Users(id int, username varchar(250), password varchar(100))");
         getStatement().execute("INSERT INTO Users values (1, 'erez', 'erez')");
         getStatement().execute("INSERT INTO Users values (2, 'nati', 'nati')");
         getStatement().execute("INSERT INTO Users values (3, 'kobi', 'kobi')");
+        close();
     }
 
-    public void createExpenses() throws SQLException {
+    public void createExpenses() throws SQLException, ClassNotFoundException {
+        init();
         getStatement().execute("CREATE TABLE Expense(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
                 "ownerid int, cost int, category varchar(250) NOT NULL," +
                 "currency int, description varchar(250) NOT NULL," +
@@ -123,29 +156,38 @@ public class DerbyDBModel implements IModel {
         getStatement().execute("INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (2, 300, 'Tax',   1, 'zzzz...', '2020-12-17', '2020-12-23', 1)");
         getStatement().execute("INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (3, 400, 'Car',   3, 'aaaa...', '2020-12-17', '2020-12-25', 2)");
         getStatement().execute("INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (1, 500, 'Car',   1, '1234...', '2020-12-17', '2022-01-01', 3)");
+        close();
     }
 
-    public void addExpense(Expense e) throws SQLException {
-        connection = null;
+    public void addExpense(Expense e) throws SQLException, ClassNotFoundException {
+        init();
+
+        System.out.println(e.toString());
+
         try {
-            Class.forName(driver);
-        } catch (ClassNotFoundException classNotFoundException) {
-            classNotFoundException.printStackTrace();
+            PreparedStatement insertStatement = connection.prepareStatement(
+                    "INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (?, ?, ?, ?, ?, ?, ?, ?)");
+            insertStatement.setInt(1, e.getOwner());
+            insertStatement.setInt(2, (int) e.getCost());
+            insertStatement.setString(3, e.getCategory().toString());
+            insertStatement.setInt(4, e.getCurrency().getId());
+            insertStatement.setString(5, e.getDescription());
+            insertStatement.setDate(6, (Date) e.getCreationDate());
+            insertStatement.setDate(7, (Date) e.getDueDate());
+            insertStatement.setInt(8, e.getType().getId());
+            insertStatement.execute();
+        } catch (SQLException | NumberFormatException throwables) {
+            throwables.printStackTrace();
         }
-        setConnection(DriverManager.getConnection(connectionString));
-        setStatement(getConnection().createStatement());
-        e.toString();
-        getStatement().execute("INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (" +
-           // e.getId() + "," +
-            e.getOwner() + "," +
-            e.getCost() + "," +
-            e.getCategory() + "," +
-            e.getCurrency() + "," +
-            e.getDescription() + "," +
-            e.getCreationDate() + "," +
-            e.getDueDate() + "," +
-            e.getType() +
-        ")");
+
+        setRs(getStatement().executeQuery("SELECT id, description, creationDate, dueDate FROM Expense")); // execute = multiple results
+
+        while(getRs().next()) {
+            System.out.println("id=" + getRs().getInt("id") + " description=" + getRs().getString("description")
+                    + " creationDate=" + getRs().getDate("creationDate") + " dueDate=" + getRs().getDate("dueDate"));
+        }
+
+        close();
     }
 
 }

@@ -12,9 +12,7 @@ import java.util.concurrent.Executors;
 
 public class ViewModel implements IViewModel {
 
-    private IModel model= new DerbyDBModel();
-
-
+    private IModel model = DerbyDBModel.getInstance();
 
     private IView view;
     private ExecutorService pool;
@@ -40,7 +38,7 @@ public class ViewModel implements IViewModel {
             public void run() {
                 try {
                     model.addExpense(expense);
-                } catch (SQLException throwable) { //needs to be replaced with own exception!
+                } catch (SQLException | ClassNotFoundException throwable) { //needs to be replaced with own exception!
                     throwable.printStackTrace();
                     //Show message
                 }

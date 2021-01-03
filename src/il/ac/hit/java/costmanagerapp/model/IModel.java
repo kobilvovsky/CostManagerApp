@@ -16,13 +16,13 @@ public interface IModel {
 
     public ResultSet getRs();
 
-    public void createTables() throws CostManagerException, SQLException;
+    public void createTables() throws CostManagerException, SQLException, ClassNotFoundException;
 
-    public void dropTables() throws CostManagerException, SQLException;
+    public void dropTables() throws CostManagerException, SQLException, ClassNotFoundException;
 
-    public void createExpenses() throws CostManagerException, SQLException;
+    public void createExpenses() throws CostManagerException, SQLException, ClassNotFoundException;
 
-    public void createUsers() throws CostManagerException, SQLException;
+    public void createUsers() throws CostManagerException, SQLException, ClassNotFoundException;
 
-    public void addExpense(Expense e) throws SQLException;
+    public void addExpense(Expense e) throws SQLException, ClassNotFoundException;
 }
