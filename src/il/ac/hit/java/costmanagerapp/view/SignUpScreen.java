@@ -22,6 +22,8 @@ public class SignUpScreen implements IView {
     private JTextField tfUserName;
     private JButton btnSignUp;
 
+    private IViewModel vm;
+
     public SignUpScreen() {
         frame = new JFrame();
 
@@ -47,7 +49,7 @@ public class SignUpScreen implements IView {
                     frame.dispose();
                 }
                 else{
-                    messageBox.infoBox("user name or password is incorrect","Login error");
+                    showMessage("user name or password is incorrect","Login error");
                 }
             }
         });
@@ -86,10 +88,11 @@ public class SignUpScreen implements IView {
 
     @Override
     public void setViewModel(IViewModel viewModel) {
+        this.vm=viewModel;
     }
 
     @Override
     public void showMessage(String strMessage, String strTitle) {
-
+        messageBox.infoBox(strMessage,strTitle);
     }
 }

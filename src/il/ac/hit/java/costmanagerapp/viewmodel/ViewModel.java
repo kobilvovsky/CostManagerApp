@@ -1,5 +1,6 @@
 package il.ac.hit.java.costmanagerapp.viewmodel;
 
+import il.ac.hit.java.costmanagerapp.model.DerbyDBModel;
 import il.ac.hit.java.costmanagerapp.model.Expense;
 import il.ac.hit.java.costmanagerapp.model.IModel;
 import il.ac.hit.java.costmanagerapp.model.exceptions.CostManagerException;
@@ -11,11 +12,14 @@ import java.util.concurrent.Executors;
 
 public class ViewModel implements IViewModel {
 
-    private IModel model;
+    private IModel model= new DerbyDBModel();
+
+
+
     private IView view;
     private ExecutorService pool;
 
-    public ViewModel() {
+    public ViewModel() throws ClassNotFoundException {
         pool = Executors.newFixedThreadPool(10);
     }
 

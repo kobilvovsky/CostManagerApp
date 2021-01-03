@@ -7,6 +7,7 @@ import il.ac.hit.java.costmanagerapp.model.Frequency;
 import il.ac.hit.java.costmanagerapp.view.viewutils.HintTextField;
 import il.ac.hit.java.costmanagerapp.view.viewutils.RoundedBorder;
 import il.ac.hit.java.costmanagerapp.viewmodel.IViewModel;
+import il.ac.hit.java.costmanagerapp.viewmodel.ViewModel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -61,6 +62,13 @@ public class AddExpenseScreen implements IView {
 
     private IViewModel vm;
 
+    {
+        try {
+            vm = new ViewModel();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     public AddExpenseScreen() {

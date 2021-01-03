@@ -28,6 +28,7 @@ public class DerbyDBModel implements IModel {
             dropTables();
 
         } catch (SQLException e) { //catch (SQLException | ClassNotFoundException e)
+            System.out.println("Cant Create derby DB");
             e.printStackTrace();
         } finally {
             if(getStatement() != null) try { getStatement().close(); } catch (Exception e) {};
@@ -125,6 +126,15 @@ public class DerbyDBModel implements IModel {
     }
 
     public void addExpense(Expense e) throws SQLException {
+        connection = null;
+        try {
+            Class.forName(driver);
+        } catch (ClassNotFoundException classNotFoundException) {
+            classNotFoundException.printStackTrace();
+        }
+        setConnection(DriverManager.getConnection(connectionString));
+        setStatement(getConnection().createStatement());
+        e.toString();
         getStatement().execute("INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (" +
            // e.getId() + "," +
             e.getOwner() + "," +
