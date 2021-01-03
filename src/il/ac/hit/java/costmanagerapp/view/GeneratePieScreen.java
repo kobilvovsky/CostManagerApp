@@ -4,12 +4,8 @@ import il.ac.hit.java.costmanagerapp.view.viewutils.HintTextField;
 import il.ac.hit.java.costmanagerapp.viewmodel.IViewModel;
 
 import javax.swing.*;
-import java.awt.*;
-
-
 public class GeneratePieScreen implements IView {
 
-    private JFrame frame;
     private JPanel panel;
     private static JLabel startDateLabel;
     private static JTextField startDateField;
@@ -18,26 +14,14 @@ public class GeneratePieScreen implements IView {
     private static JButton Generate;
 
     public GeneratePieScreen() {
-        frame = new JFrame();
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(350,200);
-        frame.setTitle("CostManagerApp - Generate pie");
-
         panel = new JPanel();
-        frame.add(panel, BorderLayout.CENTER);
-        placeComponents(panel);
-
-        frame.setVisible(true);
-
+        start();
     }
 
-    private void placeComponents(JPanel panel) {
+    private void start() {
         panel.setLayout(null);
         panel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
-
-//        Creating Username Label
         startDateLabel = new JLabel("Start Date: ");
         startDateLabel.setBounds(10,20,80,25);
         panel.add(startDateLabel);
@@ -60,18 +44,17 @@ public class GeneratePieScreen implements IView {
         panel.add(Generate);
     }
 
+    public JPanel getPanel() {
+        return panel;
+    }
+
     @Override
     public void setViewModel(IViewModel viewModel) {
 
     }
 
     @Override
-    public void showMessage() {
-
-    }
-
-    @Override
-    public void showItem() {
+    public void showMessage(String strMessage, String strTitle) {
 
     }
 }

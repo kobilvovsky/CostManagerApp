@@ -3,70 +3,128 @@ package il.ac.hit.java.costmanagerapp.view;
 import il.ac.hit.java.costmanagerapp.viewmodel.IViewModel;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class MainScreen implements IView {
     private JFrame frame;
-    private JPanel panel;
-    private static JButton editBtn;
-    private static JButton addBtn;
-    private static JButton reportBtn;
-    private static JButton logoutBtn;
+    private JPanel leftPanel;
+    private JPanel leftGridPanel;
+    private JPanel mainPanel;
 
+    private JButton editBtn;
+    private JButton addBtn;
+    private JButton viewBtn;
+    private JButton reportBtn;
+    private JButton logoutBtn;
+    private Container container;
 
     public MainScreen() {
         frame = new JFrame();
+        leftPanel = new JPanel();
+        leftGridPanel = new JPanel();
+        mainPanel = new JPanel();
+        container = frame.getContentPane();
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(300,300);
+        editBtn = new JButton("Edit Expense");
+        reportBtn = new JButton("Generate Report");
+        viewBtn = new JButton("View Expenses");
+        addBtn = new JButton("Add Expense");
+        logoutBtn = new JButton("Logout");
+
+        viewBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ViewScreen viewScreen = new ViewScreen();
+                resetView(viewScreen.getPanel());
+            }
+        });
+
+        addBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AddExpenseScreen addScreen = new AddExpenseScreen();
+                resetView(addScreen.getPanel());
+            }
+        });
+
+        reportBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GeneratePieScreen pieScreen = new GeneratePieScreen();
+                resetView(pieScreen.getPanel());
+            }
+        });
+
+        logoutBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LoginScreen loginScreen = new LoginScreen();
+                frame.dispose(); // close window
+            }
+        });
+
+        start();
+    }
+
+    public void resetView(JPanel newPanel) {
+        container.remove(mainPanel);
+        container.repaint();
+        container.revalidate();
+
+        mainPanel = newPanel;
+        container.add(newPanel);
+        container.repaint();
+        container.revalidate();
+    }
+
+    public void start() {
+        container.setLayout(new BorderLayout());
+
+        leftPanel.setBorder(new LineBorder(Color.BLACK, 2));
+        leftPanel.setLayout(new FlowLayout(4, 4,4));
+        leftGridPanel.setLayout(new GridLayout(5, 1, 5, 5));
+
+        leftGridPanel.add(viewBtn);
+        leftGridPanel.add(addBtn);
+        leftGridPanel.add(editBtn);
+        leftGridPanel.add(reportBtn);
+        leftGridPanel.add(logoutBtn);
+        leftPanel.add(leftGridPanel);
+
+        mainPanel.setBorder(new LineBorder(Color.BLACK, 2));
+        container.add(mainPanel);
+        container.add(leftPanel, BorderLayout.WEST);
+
+        frame.addWindowListener(new WindowAdapter() {
+            /**
+             * Invoked when a window is in the process of being closed.
+             * The close operation can be overridden at this point.
+             *
+             * @param e
+             */
+            @Override
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
         frame.setTitle("CostManagerApp - Menu");
-
-        panel = new JPanel();
-        placeComponents(panel);
-        frame.add(panel);
-
+        frame.setSize(950, 500);
+        frame.setLocation(500, 500);
         frame.setVisible(true);
     }
-
-    private static void placeComponents(JPanel panel) {
-        panel.setLayout(null);
-        panel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-
-        editBtn = new JButton("<html>Edit<br /> Expense</html>");
-        editBtn.setFont(new Font("Arial", Font.PLAIN, 17));
-        editBtn.setBounds(20, 20, 100, 75);
-        panel.add(editBtn);
-
-        reportBtn = new JButton("<html>Generate<br />Report</html>");
-        reportBtn.setFont(new Font("Arial", Font.PLAIN, 17));
-        reportBtn.setBounds(20, 105, 100, 75);
-        panel.add(reportBtn);
-
-        addBtn = new JButton("<html>Add<br />Expense</html>");
-        addBtn.setFont(new Font("Arial", Font.PLAIN, 17));
-        addBtn.setBounds(145, 20, 100, 75);
-        panel.add(addBtn);
-
-        logoutBtn = new JButton("<html>Logout");
-        logoutBtn.setFont(new Font("Arial", Font.PLAIN, 17));
-        logoutBtn.setBounds(145, 105, 100, 75);
-        panel.add(logoutBtn);
-
-    }
-
-    @Override
+  
+      @Override
     public void setViewModel(IViewModel viewModel) {
 
     }
 
     @Override
-    public void showMessage() {
-
-    }
-
-    @Override
-    public void showItem() {
+    public void showMessage(String strMessage,String strTitle) {
 
     }
 }

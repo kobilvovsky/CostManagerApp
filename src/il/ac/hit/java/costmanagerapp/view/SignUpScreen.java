@@ -1,54 +1,84 @@
 package il.ac.hit.java.costmanagerapp.view;
 
+import il.ac.hit.java.costmanagerapp.view.viewutils.RoundedBorder;
+import il.ac.hit.java.costmanagerapp.view.viewutils.messageBox;
 import il.ac.hit.java.costmanagerapp.viewmodel.IViewModel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class SignUpScreen implements IView {
 
     private JFrame frame;
-    private JPanel contentPane;
-    private JPanel upperPane;
-    private JPanel middlePane;
-    private JPanel lowerPane;
-    private static JLabel userNameLabel;
-    private static JTextField userText;
-    private static JLabel passwordLabel;
-    private static JPasswordField passwordText;
-    private static JButton signUpBtn;
+    private JPanel panelMain;
+    private JPanel panelUpper;
+    private JPanel panelMiddle;
+    private JPanel panelLower;
+    private JLabel lblUserName;
+    private JLabel lblPassword;
+    private JPasswordField tfPassword;
+    private JTextField tfUserName;
+    private JButton btnSignUp;
+
+    private IViewModel vm;
 
     public SignUpScreen() {
         frame = new JFrame();
 
+        //Create frame settings
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(350,200);
         frame.setTitle("CostManagerApp - Sign up");
 
-        userNameLabel = new JLabel("User name: ");
-        userText = new JTextField(15);
-        passwordLabel = new JLabel("Password:  ");
-        passwordText = new JPasswordField(15);
-        signUpBtn = new JButton("Sign up");
+        //declare all widgets
+        lblUserName = new JLabel("User name: ");
+        tfUserName = new JTextField(15);
+        lblPassword = new JLabel("Password:  ");
+        tfPassword = new JPasswordField(15);
+        btnSignUp = new JButton("Sign up");
 
-        upperPane = new JPanel();
-        upperPane.add(userNameLabel);
-        upperPane.add(userText);
+        //Sign up listener
+        btnSignUp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String pass=String.valueOf(tfPassword.getPassword());
+                if(!tfUserName.getText().isEmpty() && !pass.isEmpty()) {
+                    MainScreen mainScreen = new MainScreen();
+                    frame.dispose();
+                }
+                else{
+                    showMessage("user name or password is incorrect","Login error");
+                }
+            }
+        });
 
-        middlePane = new JPanel();
-        middlePane.add(passwordLabel);
-        middlePane.add(passwordText);
+        //Rounding button
+        btnSignUp.setBorder(new RoundedBorder(3));
 
-        lowerPane =new JPanel();
-        lowerPane.add(signUpBtn);
+        //Adding user name field&label to panel
+        panelUpper = new JPanel();
+        panelUpper.add(lblUserName);
+        panelUpper.add(tfUserName);
 
-        contentPane = new JPanel(new BorderLayout());
-        contentPane.setBorder(BorderFactory.createEmptyBorder(20,20,40,40));
-        contentPane.add(upperPane,BorderLayout.NORTH);
-        contentPane.add(middlePane,BorderLayout.CENTER);
-        contentPane.add(lowerPane,BorderLayout.SOUTH);
+        //Adding password field&label to panel
+        panelMiddle = new JPanel();
+        panelMiddle.add(lblPassword);
+        panelMiddle.add(tfPassword);
 
-        frame.add(contentPane);
+        //Adding sigh up button to panel
+        panelLower =new JPanel();
+        panelLower.add(btnSignUp);
+
+        //layout manager
+        panelMain = new JPanel(new BorderLayout());
+        panelMain.setBorder(BorderFactory.createEmptyBorder(20,20,40,40));
+        panelMain.add(panelUpper,BorderLayout.NORTH);
+        panelMain.add(panelMiddle,BorderLayout.CENTER);
+        panelMain.add(panelLower,BorderLayout.SOUTH);
+
+        frame.add(panelMain);
 
         frame.pack();
         frame.setVisible(true);
@@ -58,15 +88,11 @@ public class SignUpScreen implements IView {
 
     @Override
     public void setViewModel(IViewModel viewModel) {
+        this.vm=viewModel;
     }
 
     @Override
-    public void showMessage() {
-
-    }
-
-    @Override
-    public void showItem() {
-
+    public void showMessage(String strMessage, String strTitle) {
+        messageBox.infoBox(strMessage,strTitle);
     }
 }
