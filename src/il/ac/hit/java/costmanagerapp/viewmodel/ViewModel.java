@@ -50,29 +50,5 @@ public class ViewModel implements IViewModel {
 
 }
 
-    //
-//    @Override
-//    public String[][] getUserExpenses() {
-//
-//
-//
-//    }
-//
-//    @Override
-//    public void addCostItem(CostItem item) {
-//        pool.submit(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    model.addCostItem(item);
-//                    view.showMessage("cost item was added successfully");
-//                    CostItem[] items = model.getCostItems();
-//                    view.showItems(items);
-//                } catch(CostManagerException e) {
-//                    view.showMessage(e.getMessage());
-//                }
-//            }
-//        });
-//
-//    }
+
 
