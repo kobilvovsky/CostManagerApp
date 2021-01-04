@@ -75,16 +75,15 @@ public class MainScreen implements IView {
         container.remove(mainPanel);
         container.repaint();
         container.revalidate();
-
         mainPanel = newPanel;
-        container.add(newPanel);
+        //container.add(newPanel);
+        container.add(newPanel,BorderLayout.CENTER);
         container.repaint();
         container.revalidate();
     }
 
     public void start() {
         container.setLayout(new BorderLayout());
-
         leftPanel.setBorder(new LineBorder(Color.BLACK, 2));
         leftPanel.setLayout(new FlowLayout(4, 4,4));
         leftGridPanel.setLayout(new GridLayout(5, 1, 5, 5));
@@ -113,8 +112,9 @@ public class MainScreen implements IView {
             }
         });
         frame.setTitle("CostManagerApp - Menu");
-        frame.setSize(950, 500);
-        frame.setLocation(500, 500);
+        frame.setSize(680, 300);
+        frame.setLocationRelativeTo(null);
+        //frame.setLocation(500, 500);
         frame.setVisible(true);
     }
   

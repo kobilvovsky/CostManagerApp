@@ -95,6 +95,7 @@ public class LoginScreen  implements IView{
         frame.add(contentPane);
 
         frame.pack();
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 

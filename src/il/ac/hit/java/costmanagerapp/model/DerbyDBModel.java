@@ -169,7 +169,7 @@ public class DerbyDBModel implements IModel {
                     "INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (?, ?, ?, ?, ?, ?, ?, ?)");
             insertStatement.setInt(1, e.getOwner());
             insertStatement.setInt(2, (int) e.getCost());
-            insertStatement.setString(3, e.getCategory().toString());
+            insertStatement.setString(3, e.getCategory().getCategoryName());
             insertStatement.setInt(4, e.getCurrency().getId());
             insertStatement.setString(5, e.getDescription());
             insertStatement.setDate(6, (Date) e.getCreationDate());
@@ -180,11 +180,11 @@ public class DerbyDBModel implements IModel {
             throwables.printStackTrace();
         }
 
-        setRs(getStatement().executeQuery("SELECT id, description, creationDate, dueDate FROM Expense")); // execute = multiple results
+        setRs(getStatement().executeQuery("SELECT id, description, creationDate, category, dueDate FROM Expense")); // execute = multiple results
 
         while(getRs().next()) {
             System.out.println("id=" + getRs().getInt("id") + " description=" + getRs().getString("description")
-                    + " creationDate=" + getRs().getDate("creationDate") + " dueDate=" + getRs().getDate("dueDate"));
+                    + " creationDate=" + getRs().getDate("creationDate") + " dueDate=" + getRs().getDate("dueDate") + " category=" + getRs().getString("category"));
         }
 
         close();

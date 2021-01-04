@@ -81,6 +81,7 @@ public class SignUpScreen implements IView {
         frame.add(panelMain);
 
         frame.pack();
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
 
