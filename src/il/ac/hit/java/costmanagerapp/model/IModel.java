@@ -16,9 +16,9 @@ public interface IModel {
 
     public ResultSet getRs();
 
-    public void createTables() throws CostManagerException, SQLException, ClassNotFoundException;
+    public String[][] getUserExpenses() throws SQLException, ClassNotFoundException;
 
-    public void dropTables() throws CostManagerException, SQLException, ClassNotFoundException;
+    public boolean isUserMatched(String username, String password) throws SQLException, ClassNotFoundException;
 
     public void createExpenses() throws CostManagerException, SQLException, ClassNotFoundException;
 

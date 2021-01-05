@@ -81,22 +81,6 @@ public class DerbyDBModel implements IModel {
         return data;
     }
 
-    public int isUserMatched(Username username, Password password) throws SQLException, ClassNotFoundException {
-        init();
-
-        try (PreparedStatement stmt = connection.prepareStatement(
-                "SELECT * FROM Users WHERE username = ? AND password = ?")) {
-            stmt.setString(1, username.getName());
-            stmt.setString(2, password.getPassword());
-            setRs(stmt.executeQuery());
-            if (getRs().next())
-                return getRs().getInt("id");
-        }
-
-        close();
-        return -1;
-    }
-
     public void setConnection(Connection connection) {
         this.connection = connection;
     }
@@ -188,6 +172,31 @@ public class DerbyDBModel implements IModel {
         }
 
         close();
+    }
+
+    //getStatement().execute("INSERT INTO Users values (1, 'erez', 'erez')");
+
+    public boolean isUserMatched(String username, String password) throws SQLException, ClassNotFoundException {
+        init();
+        boolean r = false;
+
+        try {
+            PreparedStatement selectStatement = connection.prepareStatement("SELECT id FROM Users WHERE username = ? AND password = ?");
+            selectStatement.setString(1, username);
+            selectStatement.setString(2, password);
+            setRs(selectStatement.executeQuery());
+
+            while(getRs().next()) {
+                r = true;
+                System.out.println(getRs().getInt("id"));
+            }
+
+        } catch (SQLException | NumberFormatException throwables) {
+            throwables.printStackTrace();
+        }
+
+        close();
+        return r;
     }
 
 }
