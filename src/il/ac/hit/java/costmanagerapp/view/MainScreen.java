@@ -3,6 +3,7 @@ package il.ac.hit.java.costmanagerapp.view;
 import il.ac.hit.java.costmanagerapp.viewmodel.IViewModel;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -77,7 +78,7 @@ public class MainScreen implements IView {
         container.revalidate();
         mainPanel = newPanel;
         //container.add(newPanel);
-        container.add(newPanel,BorderLayout.CENTER);
+        container.add(newPanel);
         container.repaint();
         container.revalidate();
     }
@@ -96,8 +97,9 @@ public class MainScreen implements IView {
         leftPanel.add(leftGridPanel);
 
         mainPanel.setBorder(new LineBorder(Color.BLACK, 2));
-        container.add(mainPanel);
+        container.add(mainPanel, BorderLayout.EAST);
         container.add(leftPanel, BorderLayout.WEST);
+
 
         frame.addWindowListener(new WindowAdapter() {
             /**
@@ -112,7 +114,7 @@ public class MainScreen implements IView {
             }
         });
         frame.setTitle("CostManagerApp - Menu");
-        frame.setSize(680, 300);
+        frame.setSize(900, 700);
         frame.setLocationRelativeTo(null);
         //frame.setLocation(500, 500);
         frame.setVisible(true);
