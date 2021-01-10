@@ -1,11 +1,11 @@
 package il.ac.hit.java.costmanagerapp.model;
 
 public enum Currency {
-    USD(1),
-    EURO(2),
-    YEN(3),
-    POUND(4),
-    NIS(5);
+    USD(0),
+    EURO(1),
+    YEN(2),
+    POUND(3),
+    NIS(4);
 
     private int id;
 
@@ -15,6 +15,10 @@ public enum Currency {
 
     public int getId() {
         return id;
+    }
+
+    public static String stringToCurrency(String id) {
+        return (Currency.values()[Integer.parseInt(id)]).toString();
     }
 
     public void setId(int id) {

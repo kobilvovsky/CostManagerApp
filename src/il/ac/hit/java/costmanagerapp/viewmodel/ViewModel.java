@@ -51,8 +51,8 @@ public class ViewModel implements IViewModel {
     public void addUser(User user) {
         try {
             model.addUser(user);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -87,6 +87,11 @@ public class ViewModel implements IViewModel {
         });
         System.out.println(r[0]);
         return r[0];
+    }
+
+    @Override
+    public String[][] getUserExpenses() throws SQLException, ClassNotFoundException {
+        return model.getUserExpenses();
     }
 }
 
