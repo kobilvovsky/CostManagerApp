@@ -17,14 +17,6 @@ public class DerbyDBModel implements IModel {
     private DerbyDBModel() throws ClassNotFoundException {
         try {
             init();
-
-
-            setRs(getStatement().executeQuery("SELECT id, description, creationDate, category, dueDate FROM Expense")); // execute = multiple results
-
-            while(getRs().next()) {
-                System.out.println("id=" + getRs().getInt("id") + " description=" + getRs().getString("description")
-                        + " creationDate=" + getRs().getDate("creationDate") + " dueDate=" + getRs().getDate("dueDate") + " category=" + getRs().getString("category"));
-            }
         } catch (SQLException e) {
             System.out.println("Cant Create derby DB");
             e.printStackTrace();
@@ -128,10 +120,10 @@ public class DerbyDBModel implements IModel {
 
     public void createUsers() throws SQLException, ClassNotFoundException {
         init();
-        getStatement().execute("CREATE TABLE Users(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), username varchar(250) NULL, password varchar(100), UNIQUE (id))");
-        getStatement().execute("INSERT INTO Users values ('erez', 'erez')");
-        getStatement().execute("INSERT INTO Users values ('nati', 'nati')");
-        getStatement().execute("INSERT INTO Users values ('kobi', 'kobi')");
+        getStatement().execute("CREATE TABLE Users(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), username varchar(250) NOT NULL, password varchar(100) NOT NULL, UNIQUE (id))");
+        getStatement().execute("INSERT INTO Users(username, password) values ('erez', 'erez')");
+        getStatement().execute("INSERT INTO Users(username, password) values ('nati', 'nati')");
+        getStatement().execute("INSERT INTO Users(username, password) values ('kobi', 'kobi')");
         close();
     }
 
@@ -166,6 +158,7 @@ public class DerbyDBModel implements IModel {
                     "INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (?, ?, ?, ?, ?, ?, ?, ?)");
             insertStatement.setInt(1, e.getOwner());
             insertStatement.setFloat(2, e.getCost());
+            System.out.println(e.getCost());
             insertStatement.setString(3, e.getCategory().getCategoryName());
             insertStatement.setInt(4, e.getCurrency().getId());
             insertStatement.setString(5, e.getDescription());

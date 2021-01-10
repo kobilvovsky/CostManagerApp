@@ -282,6 +282,7 @@ public class View implements IView {//, Runnable {
                     try
                     {
                         float amount = Float.parseFloat(tfExpenseAmount.getText());
+                        System.out.println(amount);
                         String description = tfExpenseDescription.getText();
 
                         String categoryStr = String.valueOf(cbCategory.getSelectedItem());

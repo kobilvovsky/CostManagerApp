@@ -47,7 +47,7 @@ public class Expense {
     //Rounding number to .2 decimal digits
     public void setCost(float cost) {
 
-        this.cost = Math.round(cost*100)/100;
+        this.cost = cost;
     }
 
     public Category getCategory() {
