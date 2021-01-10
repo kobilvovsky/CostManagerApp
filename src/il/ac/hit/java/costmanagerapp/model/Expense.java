@@ -4,7 +4,7 @@ import java.util.Date;
 public class Expense {
     //private int id;
     private int ownerID;
-    private float cost; // cost of expense
+    private double cost; // cost of expense
     private Category category;
     private Currency currency;
     private String description;
@@ -12,7 +12,7 @@ public class Expense {
     private Date dueDate;
     private Frequency type;
 
-    public Expense(/*int id, */int ownerId, float cost, Category category, Currency currency, String description, String dueDate, Frequency type) {
+    public Expense(/*int id, */int ownerId, double cost, Category category, Currency currency, String description, String dueDate, Frequency type) {
         //setId(id);
         setOwner(ownerId);
         setCost(cost);
@@ -40,14 +40,15 @@ public class Expense {
         this.id = id;
     }*/
 
-    public float getCost() {
+    public double getCost() {
         return cost;
     }
 
     //Rounding number to .2 decimal digits
-    public void setCost(float cost) {
-
-        this.cost = cost;
+    public void setCost(double cost) {
+        double c = Math.round(cost * 100);
+        double d = c/100;
+        this.cost = d;
     }
 
     public Category getCategory() {

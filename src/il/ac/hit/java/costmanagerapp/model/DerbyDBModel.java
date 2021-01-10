@@ -13,7 +13,6 @@ public class DerbyDBModel implements IModel {
     Statement statement;
     ResultSet resultSet = null;
 
-
     private DerbyDBModel() throws ClassNotFoundException {
         try {
             init();
@@ -53,7 +52,7 @@ public class DerbyDBModel implements IModel {
         while(getRs().next()) {
             ArrayList<String> currExpense = new ArrayList<>();
             currExpense.add(String.valueOf(getRs().getInt("id")));
-            currExpense.add(String.valueOf(getRs().getFloat("cost")));
+            currExpense.add(String.valueOf(getRs().getDouble("cost")));
             currExpense.add(getRs().getString("category"));
             currExpense.add(Currency.stringToCurrency(String.valueOf(getRs().getInt("currency"))));
             currExpense.add(getRs().getString("description"));
@@ -140,7 +139,7 @@ public class DerbyDBModel implements IModel {
     public void createExpenses() throws SQLException, ClassNotFoundException {
         init();
         getStatement().execute("CREATE TABLE Expense(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
-                "ownerid int, cost real, category varchar(250) NOT NULL," +
+                "ownerid int, cost float, category varchar(250) NOT NULL," +
                 "currency int, description varchar(250) NOT NULL," +
                 "creationDate DATE, dueDate DATE, frequency int," +
                 "UNIQUE (id))");
@@ -151,14 +150,11 @@ public class DerbyDBModel implements IModel {
     public void addExpense(Expense e) throws SQLException, ClassNotFoundException {
         init();
 
-        System.out.println(e.toString());
-
         try {
             PreparedStatement insertStatement = connection.prepareStatement(
                     "INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (?, ?, ?, ?, ?, ?, ?, ?)");
             insertStatement.setInt(1, e.getOwner());
-            insertStatement.setFloat(2, e.getCost());
-            System.out.println(e.getCost());
+            insertStatement.setDouble(2, e.getCost());
             insertStatement.setString(3, e.getCategory().getCategoryName());
             insertStatement.setInt(4, e.getCurrency().getId());
             insertStatement.setString(5, e.getDescription());
@@ -170,10 +166,10 @@ public class DerbyDBModel implements IModel {
             throwables.printStackTrace();
         }
 
-        setRs(getStatement().executeQuery("SELECT id, description, creationDate, category, dueDate FROM Expense")); // execute = multiple results
+        setRs(getStatement().executeQuery("SELECT id, cost, description, creationDate, category, dueDate FROM Expense")); // execute = multiple results
 
         while(getRs().next()) {
-            System.out.println("id=" + getRs().getInt("id") + " description=" + getRs().getString("description")
+            System.out.println("id=" + getRs().getInt("id") + " cost=" + getRs().getDouble("cost") + " description=" + getRs().getString("description")
                     + " creationDate=" + getRs().getDate("creationDate") + " dueDate=" + getRs().getDate("dueDate") + " category=" + getRs().getString("category"));
         }
 
@@ -201,5 +197,4 @@ public class DerbyDBModel implements IModel {
         close();
         return r;
     }
-
 }
