@@ -6,8 +6,8 @@ public class User {
     private Password userPassword;
 
     //User instance will be crated after retrieving the new id from the DB
-    public User(int userId, Username userName, Password userPassword) {
-        setId(userId);
+    public User(Username userName, Password userPassword) {
+//        setId(userId);
         setUserName(userName);
         setUserPassword(userPassword);
     }

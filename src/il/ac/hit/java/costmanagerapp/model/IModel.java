@@ -25,4 +25,6 @@ public interface IModel {
     public void createUsers() throws CostManagerException, SQLException, ClassNotFoundException;
 
     public void addExpense(Expense e) throws SQLException, ClassNotFoundException;
+
+    public void addUser(User user) throws SQLException, ClassNotFoundException;
 }

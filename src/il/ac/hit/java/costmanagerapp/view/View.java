@@ -1,9 +1,6 @@
 package il.ac.hit.java.costmanagerapp.view;
 
-import il.ac.hit.java.costmanagerapp.model.Category;
-import il.ac.hit.java.costmanagerapp.model.Currency;
-import il.ac.hit.java.costmanagerapp.model.Expense;
-import il.ac.hit.java.costmanagerapp.model.Frequency;
+import il.ac.hit.java.costmanagerapp.model.*;
 import il.ac.hit.java.costmanagerapp.view.viewutils.HintTextField;
 import il.ac.hit.java.costmanagerapp.view.viewutils.RoundedBorder;
 import il.ac.hit.java.costmanagerapp.view.viewutils.messageBox;
@@ -623,6 +620,11 @@ public class View implements IView {//, Runnable {
                 public void actionPerformed(ActionEvent e) {
                     String pass=String.valueOf(tfPassword.getPassword());
                     if(!tfUserName.getText().isEmpty() && !pass.isEmpty()) {
+                        Username username = new Username(tfUserName.getText());
+                        Password password = new Password(tfPassword.getPassword().toString());
+                        User user= new User(username,password);
+                        vm.addUser(user);
+                        //check user was actually saved (receive some sort of boolean back)
                         View.MainScreen mainScreen = new View.MainScreen();
                         frame.dispose();
                     }

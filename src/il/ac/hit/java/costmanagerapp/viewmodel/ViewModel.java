@@ -3,6 +3,7 @@ package il.ac.hit.java.costmanagerapp.viewmodel;
 import il.ac.hit.java.costmanagerapp.model.DerbyDBModel;
 import il.ac.hit.java.costmanagerapp.model.Expense;
 import il.ac.hit.java.costmanagerapp.model.IModel;
+import il.ac.hit.java.costmanagerapp.model.User;
 import il.ac.hit.java.costmanagerapp.model.exceptions.CostManagerException;
 import il.ac.hit.java.costmanagerapp.view.IView;
 import il.ac.hit.java.costmanagerapp.view.View;
@@ -44,6 +45,17 @@ public class ViewModel implements IViewModel {
                 }
             }
         });
+    }
+
+    @Override
+    public void addUser(User user) {
+        try {
+            model.addUser(user);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

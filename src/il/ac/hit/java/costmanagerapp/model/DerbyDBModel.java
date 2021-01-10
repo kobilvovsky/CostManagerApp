@@ -12,6 +12,7 @@ public class DerbyDBModel implements IModel {
     Statement statement;
     ResultSet resultSet = null;
 
+
     private DerbyDBModel() throws ClassNotFoundException {
         try {
             init();
@@ -121,10 +122,20 @@ public class DerbyDBModel implements IModel {
 
     public void createUsers() throws SQLException, ClassNotFoundException {
         init();
-        getStatement().execute("CREATE TABLE Users(id int, username varchar(250), password varchar(100))");
-        getStatement().execute("INSERT INTO Users values (1, 'erez', 'erez')");
-        getStatement().execute("INSERT INTO Users values (2, 'nati', 'nati')");
-        getStatement().execute("INSERT INTO Users values (3, 'kobi', 'kobi')");
+        getStatement().execute("CREATE TABLE Users(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), username varchar(250) NULL, password varchar(100), UNIQUE (id))");
+        getStatement().execute("INSERT INTO Users values ('erez', 'erez')");
+        getStatement().execute("INSERT INTO Users values ('nati', 'nati')");
+        getStatement().execute("INSERT INTO Users values ('kobi', 'kobi')");
+        close();
+    }
+
+    public void addUser(User user) throws SQLException, ClassNotFoundException {
+        init();
+        PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO Users(username, password) values (?, ?)");
+        insertStatement.setString(1, user.getUserName().getName());
+        insertStatement.setString(2,user.getUserPassword().getPassword());
+        insertStatement.execute();
+
         close();
     }
 
@@ -140,6 +151,13 @@ public class DerbyDBModel implements IModel {
         getStatement().execute("INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (2, 300, 'Tax',   1, 'zzzz...', '2020-12-17', '2020-12-23', 1)");
         getStatement().execute("INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (3, 400, 'Car',   3, 'aaaa...', '2020-12-17', '2020-12-25', 2)");
         getStatement().execute("INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (1, 500, 'Car',   1, '1234...', '2020-12-17', '2022-01-01', 3)");
+
+
+        while(getRs().next()) {
+            System.out.println("id=" + getRs().getInt("id") + " description=" + getRs().getString("description")
+                    + " creationDate=" + getRs().getDate("creationDate") + " dueDate=" + getRs().getDate("dueDate") + " category=" + getRs().getString("category"));
+        }
+
         close();
     }
 
