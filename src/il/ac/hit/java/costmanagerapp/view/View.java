@@ -422,13 +422,15 @@ public class View implements IView {//, Runnable {
                     String pass=String.valueOf(tfPassword.getPassword());
                     //checking that all fields are filled correctly
                     if(!tfUserName.getText().isEmpty() && !pass.isEmpty()) {
-                        boolean r = vm.isUserMatched(tfUserName.getText(), pass);
-                        System.out.println(r);
-                        if(r) {
-                            MainScreen mainScreen = new MainScreen();
-                            frame.dispose();
-                        } else
-                            System.out.println("WRONG PASSWORD U DUMBASS!!");
+                        MainScreen mainScreen = new MainScreen();
+                        frame.dispose();
+//                        boolean r = vm.isUserMatched(tfUserName.getText(), pass);
+//                        System.out.println(r);
+//                        if(r) {
+//                            MainScreen mainScreen = new MainScreen();
+//                            frame.dispose();
+//                        } else
+//                            System.out.println("WRONG PASSWORD U DUMBASS!!");
                     }
                 }
             });
@@ -676,6 +678,7 @@ public class View implements IView {//, Runnable {
         }
 
         public void start() {
+
             String data[][] = {
                     {"1", "100", "2", "USD", "abba...", "2020-12-17", "2020-12-21", Frequency.ONE_TIME.name()},
                     {"2", "200", "3", "EURO", "qqqq...", "2020-12-17", "2020-01-20", Frequency.ONE_TIME.name()},
