@@ -65,7 +65,6 @@ public class View implements IView {//, Runnable {
         private GroupLayout layout;
         private GroupLayout.SequentialGroup vGroup;
 
-        private JLabel lbHeader;
         private JLabel lbExpenseAmount;
         private JLabel lbExpenseCurrency;
         private JLabel lbExpenseDescription;
@@ -109,14 +108,11 @@ public class View implements IView {//, Runnable {
             //creating the panel layout
             layout = new GroupLayout(mainPanel);
             //creating the main ui components
-            lbHeader = new JLabel("Add Expense");
-            lbHeader.setFont(new Font("San Francisco", Font.BOLD, 20));
 
             lbExpenseAmount = new JLabel("Enter Expense Amount: ");
             tfExpenseAmount = new JTextField(15);
             tfExpenseAmount.setMaximumSize(new Dimension(200, 25));
-
-
+            
             lbExpenseCurrency = new JLabel("Select Expense Currency");
             bgCurrency = new ButtonGroup();
             bxCurrency = Box.createHorizontalBox();
@@ -350,7 +346,6 @@ public class View implements IView {//, Runnable {
         private GroupLayout layout;
         private GroupLayout.SequentialGroup vGroup;
 
-        private JLabel lbHeader;
         private JLabel lbExpenseAmount;
         private JLabel lbExpenseCurrency;
         private JLabel lbExpenseDescription;
@@ -394,9 +389,6 @@ public class View implements IView {//, Runnable {
             //creating the panel layout
             layout = new GroupLayout(mainPanel);
             //creating the main ui components
-            lbHeader = new JLabel("Add Expense");
-            lbHeader.setFont(new Font("San Francisco", Font.BOLD, 20));
-
             lbExpenseAmount = new JLabel("Enter Expense Amount: ");
             tfExpenseAmount = new JTextField(15);
             tfExpenseAmount.setMaximumSize(new Dimension(200, 25));
@@ -472,7 +464,7 @@ public class View implements IView {//, Runnable {
             tfExpenseDate.setMaximumSize(new Dimension(200, 25));
 
 
-            btnAddExpense = new JButton("Add Expense");
+            btnAddExpense = new JButton("Update Expense");
             btnAddExpense.setBorder(new RoundedBorder(5));
             start();
         }
@@ -626,6 +618,11 @@ public class View implements IView {//, Runnable {
         private JLabel endDateLabel;
         private JTextField endDateField;
         private JButton Generate;
+        private PieChartComponent pieChart;
+        private GroupLayout layout;
+        private GroupLayout.SequentialGroup vGroup;
+        private Box temp;
+
 
         public GeneratePieScreen() {
             panel = new JPanel();
@@ -633,29 +630,88 @@ public class View implements IView {//, Runnable {
         }
 
         private void start() {
-            panel.setLayout(null);
-            panel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
+            temp = Box.createHorizontalBox();
+            pieChart = new PieChartComponent();
+            temp.add(Box.createRigidArea(new Dimension(190, 0)));
+            temp.add(pieChart);
+
+            layout = new GroupLayout(panel);
+
+            temp.setVisible(false);
+
 
             startDateLabel = new JLabel("Start Date: ");
-            startDateLabel.setBounds(10,20,80,25);
-            panel.add(startDateLabel);
+
 
             startDateField = new HintTextField("dd/mm/yyyy");
-            startDateField.setBounds(100,20,165,25);
-            panel.add(startDateField);
+            startDateField.setMaximumSize(new Dimension(200, 25));
+
 
             endDateLabel = new JLabel("End Date: ");
-            endDateLabel.setBounds(10,50,80,25);
-            panel.add(endDateLabel);
+
 
             endDateField = new HintTextField("dd/mm/yyyy");
-            endDateField.setBounds(100,50,165,25);
-            panel.add(endDateField);
+            endDateField.setMaximumSize(new Dimension(200, 25));
 
 
             Generate = new JButton("Generate");
-            Generate.setBounds(95, 100, 100, 25);
-            panel.add(Generate);
+
+            Generate.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    temp.setVisible(true);
+
+                }
+            });
+            panel.setLayout(layout);
+            layout.setAutoCreateGaps(true);
+            layout.setAutoCreateContainerGaps(true);
+
+
+            GroupLayout.ParallelGroup hGroup = layout.createParallelGroup(GroupLayout.Alignment.CENTER);
+
+            hGroup.addGroup(layout.createSequentialGroup()
+
+                    .addGroup(layout.createParallelGroup()
+                            .addComponent(startDateLabel)
+                            .addComponent(endDateLabel))
+
+
+                    .addGroup(layout.createParallelGroup()
+                            .addComponent(startDateField)
+                            .addComponent(endDateField)));
+
+            hGroup.addComponent(Generate);
+            hGroup.addComponent(temp);
+
+
+
+            layout.setHorizontalGroup(hGroup);
+
+            // Vertical
+            vGroup = layout.createSequentialGroup();
+
+            vGroup.addGroup(layout.createParallelGroup()
+                    .addComponent(startDateLabel)
+                    .addComponent(startDateField));
+
+            vGroup.addGroup(layout.createParallelGroup()
+                    .addComponent(endDateLabel)
+                    .addComponent(endDateField));
+
+            vGroup.addGroup(layout.createParallelGroup()
+                    .addComponent(Generate));
+
+            vGroup.addGap(20);
+
+            vGroup.addGroup(layout.createParallelGroup()
+                    .addComponent(temp));
+
+            layout.setVerticalGroup(vGroup);
+
+
+
         }
 
         public JPanel getPanel() {
