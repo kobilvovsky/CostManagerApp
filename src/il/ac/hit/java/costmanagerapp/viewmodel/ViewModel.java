@@ -76,6 +76,11 @@ public class ViewModel implements IViewModel {
         System.out.println(r[0]);
         return r[0];
     }
+
+    @Override
+    public String[][] getUserExpenses() throws SQLException, ClassNotFoundException {
+        return model.getUserExpenses();
+    }
 }
 
 

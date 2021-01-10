@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Vector;
@@ -325,8 +326,7 @@ public class View implements IView {//, Runnable {
                         //Need to send Expense parameter after confirming with Erez and updating the branch.
                         Expense expense = new Expense(0, amount, category, currency, description, date, frequency);
                         vm.addExpense(expense);
-                    } catch (NumberFormatException ex)
-                    {
+                    } catch (NumberFormatException | SQLException | ClassNotFoundException ex) {
                         System.out.println(ex);
                         //adding the relevant exception..
                     }
@@ -508,8 +508,13 @@ public class View implements IView {//, Runnable {
             viewBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    ViewScreen viewScreen = new ViewScreen();
-                    resetView(viewScreen.getPanel());
+                    ViewScreen viewScreen = null;
+                    try {
+                        viewScreen = new ViewScreen();
+                        resetView(viewScreen.getPanel());
+                    } catch (SQLException | ClassNotFoundException throwables) {
+                        throwables.printStackTrace();
+                    }
                 }
             });
 
@@ -661,8 +666,6 @@ public class View implements IView {//, Runnable {
             frame.pack();
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
-
-
         }
     }
 
@@ -671,22 +674,13 @@ public class View implements IView {//, Runnable {
         private JTable table;
         private JScrollPane sp;
 
-        public ViewScreen() {
+        public ViewScreen() throws SQLException, ClassNotFoundException {
             panel = new JPanel(new BorderLayout());
-
-            start();
+            getTable();
         }
 
-        public void start() {
-
-            String data[][] = {
-                    {"1", "100", "2", "USD", "abba...", "2020-12-17", "2020-12-21", Frequency.ONE_TIME.name()},
-                    {"2", "200", "3", "EURO", "qqqq...", "2020-12-17", "2020-01-20", Frequency.ONE_TIME.name()},
-                    {"3", "300", "1", "USD", "zzzz...", "2020-12-17", "2020-12-23", Frequency.ONE_TIME.name()},
-                    {"4", "400", "1", "NIS", "aaaa...", "2020-12-17", "2020-12-25", Frequency.MONTHLY.name()},
-                    {"5", "500", "2", "USD", "nnnnnnnn...", "2020-12-17", "2020-01-01", Frequency.YEARLY.name()},
-            };
-
+        public void getTable() throws SQLException, ClassNotFoundException {
+            String data[][] = vm.getUserExpenses();
             String column[] = {"Id", "Cost", "Category", "Currency", "Description", "CreatedAt", "dueDate", "Frequency"};
             table = new JTable(data, column);
             table.setFillsViewportHeight(true);

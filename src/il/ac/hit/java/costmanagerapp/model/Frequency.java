@@ -1,9 +1,9 @@
 package il.ac.hit.java.costmanagerapp.model;
 
 public enum Frequency {
-    ONE_TIME(1),
-    MONTHLY(2),
-    YEARLY(3);
+    ONE_TIME(0),
+    MONTHLY(1),
+    YEARLY(2);
 
     private int id;
 
@@ -13,6 +13,10 @@ public enum Frequency {
 
     public int getId() {
         return id;
+    }
+
+    public static String stringToFrequency(String id) {
+        return (Frequency.values()[Integer.parseInt(id)]).toString();
     }
 
     public void setId(int id) {

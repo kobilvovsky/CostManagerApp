@@ -10,6 +10,7 @@ public interface IViewModel {
 
     public void setModel(IModel model);
     public void setView(IView view);
-    public void addExpense(Expense expense);
+    public void addExpense(Expense expense) throws SQLException, ClassNotFoundException;
     public boolean isUserMatched(String username, String password);
+    public String[][] getUserExpenses() throws SQLException, ClassNotFoundException;
 }
