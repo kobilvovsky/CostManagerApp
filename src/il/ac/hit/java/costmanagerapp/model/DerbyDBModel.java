@@ -15,6 +15,7 @@ public class DerbyDBModel implements IModel {
     Statement statement;
     ResultSet resultSet = null;
 
+<<<<<<< HEAD
     private DerbyDBModel() throws CostManagerException {
         try {
             Class.forName(driver);
@@ -24,11 +25,28 @@ public class DerbyDBModel implements IModel {
     }
 
     public static DerbyDBModel getInstance() throws CostManagerException {
+=======
+    /**
+     * DerbyDBModel constructor
+     * @throws ClassNotFoundException if database wasn't initiated properly
+     */
+    private DerbyDBModel() throws ClassNotFoundException {
+        Class.forName(driver);
+    }
+
+    /**
+     * Gets singleton instance of DerbyDBModel object
+     * @return instance of DerbyDBModel
+     * @throws ClassNotFoundException if database wasn't initiated properly
+     */
+    public static DerbyDBModel getInstance() throws ClassNotFoundException {
+>>>>>>> 662700b1250f6a7e0c60b873e8a579c483d2ee9f
         if (single_instance == null)
             single_instance = new DerbyDBModel();
         return single_instance;
     }
 
+<<<<<<< HEAD
     private void init() throws CostManagerException {
         connection = null;
         try {
@@ -39,15 +57,32 @@ public class DerbyDBModel implements IModel {
             throw new CostManagerException(e.getMessage());
         }
 
+=======
+    /**
+     * Initialize a connection to the database
+     * @throws SQLException if there was an error with a query
+     */
+    private void init() throws SQLException {
+        connection = null;
+        setConnection(DriverManager.getConnection(connectionString));
+        setStatement(getConnection().createStatement());
+>>>>>>> 662700b1250f6a7e0c60b873e8a579c483d2ee9f
     }
 
+    /**
+     * Closes the connection to the database
+     */
     private void close() {
         if(getStatement() != null) try { getStatement().close(); } catch (Exception e) {};
         if(getConnection() != null) try { getConnection().close(); } catch (Exception e) {};
         if(getRs() != null) try { getRs().close(); } catch (Exception e) {};
     }
 
+<<<<<<< HEAD
     public String[][] getUserExpenses() throws CostManagerException {
+=======
+    public String[][] getUserExpenses() throws SQLException {
+>>>>>>> 662700b1250f6a7e0c60b873e8a579c483d2ee9f
         init();
         ArrayList<ArrayList<String>> allExpenses = new ArrayList<>();
         try {
@@ -108,14 +143,24 @@ public class DerbyDBModel implements IModel {
         this.resultSet = rs;
     }
 
+<<<<<<< HEAD
     public void createTables() throws CostManagerException {
+=======
+    // ALPHA
+    public void createTables() throws SQLException {
+>>>>>>> 662700b1250f6a7e0c60b873e8a579c483d2ee9f
         init();
         createUsers();
         createExpenses();
         close();
     }
 
+<<<<<<< HEAD
     public void dropTables() throws CostManagerException {
+=======
+    // ALPHA
+    public void dropTables() throws SQLException {
+>>>>>>> 662700b1250f6a7e0c60b873e8a579c483d2ee9f
         init();
         try {
             getStatement().execute("DROP TABLE Users");
@@ -127,7 +172,12 @@ public class DerbyDBModel implements IModel {
         close();
     }
 
+<<<<<<< HEAD
     public void createUsers() throws CostManagerException {
+=======
+    // ALPHA
+    public void createUsers() throws SQLException {
+>>>>>>> 662700b1250f6a7e0c60b873e8a579c483d2ee9f
         init();
         try {
             getStatement().execute("CREATE TABLE Users(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), username varchar(250) NOT NULL, password varchar(100) NOT NULL, UNIQUE (id))");
@@ -140,7 +190,11 @@ public class DerbyDBModel implements IModel {
         close();
     }
 
+<<<<<<< HEAD
     public void addUser(User user) throws CostManagerException {
+=======
+    public void addUser(User user) throws SQLException {
+>>>>>>> 662700b1250f6a7e0c60b873e8a579c483d2ee9f
         init();
         try {
             PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO Users(username, password) values (?, ?)");
@@ -153,7 +207,12 @@ public class DerbyDBModel implements IModel {
         close();
     }
 
+<<<<<<< HEAD
     public void createExpenses() throws CostManagerException {
+=======
+    // ALPHA
+    public void createExpenses() throws SQLException {
+>>>>>>> 662700b1250f6a7e0c60b873e8a579c483d2ee9f
         init();
         try {
             getStatement().execute("CREATE TABLE Expense(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
@@ -167,7 +226,11 @@ public class DerbyDBModel implements IModel {
         close();
     }
 
+<<<<<<< HEAD
     public void addExpense(Expense e) throws CostManagerException {
+=======
+    public void addExpense(Expense e) throws SQLException {
+>>>>>>> 662700b1250f6a7e0c60b873e8a579c483d2ee9f
         init();
 
         try {
@@ -199,7 +262,11 @@ public class DerbyDBModel implements IModel {
 
         close();
     }
+<<<<<<< HEAD
     public boolean isUserMatched(String username, String password) throws CostManagerException {
+=======
+    public boolean isUserMatched(String username, String password) throws SQLException {
+>>>>>>> 662700b1250f6a7e0c60b873e8a579c483d2ee9f
         init();
         boolean r = false;
         try {
