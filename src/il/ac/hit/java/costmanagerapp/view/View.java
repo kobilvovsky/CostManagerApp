@@ -20,14 +20,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Vector;
 
-public class View implements IView {//, Runnable {
+public class View implements IView {
 
     private IViewModel vm;
     private LoginScreen ui;
 
     @Override
     public void setViewModel(IViewModel vm) {
-        this.vm=vm;
+        this.vm = vm;
     }
 
     @Override
@@ -44,21 +44,17 @@ public class View implements IView {//, Runnable {
         }
     }
 
-    public View(){
+    /**
+     * View constructor
+     */
+    public View() {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 View.this.ui=new LoginScreen();
             }
         });
-//        Thread t = new Thread();
-//        t.start();
     }
-
-//    @Override
-//    public void run() {
-//        View.this.ui = new LoginScreen();
-//    }
 
     public class AddExpenseScreen {
         private JPanel mainPanel;
@@ -103,12 +99,12 @@ public class View implements IView {//, Runnable {
         private Vector defaultCategory;
         private DefaultComboBoxModel model;
 
+        /**
+         * Add expense screen constructor
+         */
         public AddExpenseScreen() {
-            //creating the main panel
             mainPanel = new JPanel();
-            //creating the panel layout
             layout = new GroupLayout(mainPanel);
-            //creating the main ui components
 
             lbExpenseAmount = new JLabel("Enter Expense Amount: ");
             tfExpenseAmount = new JTextField(15);
@@ -186,39 +182,11 @@ public class View implements IView {//, Runnable {
 
             btnAddExpense = new JButton("Add Expense");
             btnAddExpense.setBorder(new RoundedBorder(5));
-            start();
-
-        }
-
-        public void start()
-        {
-            btnAddCategory.addActionListener(new ActionListener()
-            {
-                @Override
-                public void actionPerformed(ActionEvent e)
-                {
-                    String result = (String) JOptionPane.showInputDialog(
-                            mainPanel,
-                            "Add your own category",
-                            "Add New Category",
-                            JOptionPane.PLAIN_MESSAGE,
-                            null,
-                            null,
-                            "Enter your category"
-                    );
-                    if ((result != null) && (result.length() > 0))
-                    {
-                        model.addElement(result);
-                        cbCategory.setSelectedItem(result);
-                    }
-                }
-            });
 
             mainPanel.setLayout(layout);
             layout.setAutoCreateGaps(true);
             layout.setAutoCreateContainerGaps(true);
-            //layout.linkSize(SwingConstants.HORIZONTAL, btnAddCategory, btnAddExpense);
-            GroupLayout.ParallelGroup hGroup = layout.createParallelGroup(GroupLayout.Alignment.CENTER); // Will align the labels the way you wanted
+            GroupLayout.ParallelGroup hGroup = layout.createParallelGroup(GroupLayout.Alignment.CENTER);
 
             hGroup.addGroup(layout.createSequentialGroup()
                     .addGroup(layout.createParallelGroup()
@@ -239,7 +207,6 @@ public class View implements IView {//, Runnable {
 
             layout.setHorizontalGroup(hGroup);
 
-            // Vertical
             GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
 
             vGroup.addGroup(layout.createParallelGroup()
@@ -271,13 +238,36 @@ public class View implements IView {//, Runnable {
 
             layout.setVerticalGroup(vGroup);
 
-            btnAddExpense.addActionListener(new ActionListener()
-            {
+            createListeners();
+        }
+
+        /**
+         * Creates all listeners of the screen
+         */
+        public void createListeners() {
+            btnAddCategory.addActionListener(new ActionListener() {
                 @Override
-                public void actionPerformed(ActionEvent e)
-                {
-                    try
-                    {
+                public void actionPerformed(ActionEvent e) {
+                    String result = (String) JOptionPane.showInputDialog(
+                            mainPanel,
+                            "Add your own category",
+                            "Add New Category",
+                            JOptionPane.PLAIN_MESSAGE,
+                            null,
+                            null,
+                            "Enter your category"
+                    );
+                    if ((result != null) && (result.length() > 0)) {
+                        model.addElement(result);
+                        cbCategory.setSelectedItem(result);
+                    }
+                }
+            });
+
+            btnAddExpense.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
                         double amount = Double.parseDouble(tfExpenseAmount.getText());
                         System.out.println(amount);
                         String description = tfExpenseDescription.getText();
@@ -286,8 +276,7 @@ public class View implements IView {//, Runnable {
                         Category category = new Category(categoryStr);
                         String frequencyStr = bgFrequency.getSelection().getActionCommand();
                         Frequency frequency = null;
-                        switch (frequencyStr)
-                        {
+                        switch (frequencyStr) {
                             case "ONE_TIME":
                                 frequency = Frequency.ONE_TIME;
                                 break;
@@ -297,10 +286,11 @@ public class View implements IView {//, Runnable {
                             default:
                                 frequency = Frequency.YEARLY;
                         }
+
                         String currencyStr = bgCurrency.getSelection().getActionCommand();
                         Currency currency = null;
-                        switch (currencyStr)
-                        {
+
+                        switch (currencyStr) {
                             case "USD":
                                 currency = Currency.USD;
                                 break;
@@ -331,9 +321,12 @@ public class View implements IView {//, Runnable {
                     }
                 }
             });
-
         }
 
+        /**
+         * Gets screen's panel
+         * @return JPanel object
+         */
         public JPanel getPanel() {
             return mainPanel;
         }
@@ -382,16 +375,16 @@ public class View implements IView {//, Runnable {
         private Vector defaultCategory;
         private DefaultComboBoxModel model;
 
+        /**
+         * Edit expense screen constructor
+         */
         public EditExpenseScreen() {
-            //creating the main panel
             mainPanel = new JPanel();
-            //creating the panel layout
             layout = new GroupLayout(mainPanel);
-            //creating the main ui components
+
             lbExpenseAmount = new JLabel("Enter Expense Amount: ");
             tfExpenseAmount = new JTextField(15);
             tfExpenseAmount.setMaximumSize(new Dimension(200, 25));
-
 
             lbExpenseCurrency = new JLabel("Select Expense Currency");
             bgCurrency = new ButtonGroup();
@@ -438,7 +431,6 @@ public class View implements IView {//, Runnable {
             bxCategory.add(Box.createRigidArea(new Dimension(5, 0)));
             bxCategory.add(btnAddCategory);
 
-
             lbExpenseFrequency = new JLabel("Select Expense Frequency");
             bgFrequency = new ButtonGroup();
             bxFrequency = Box.createHorizontalBox();
@@ -462,37 +454,13 @@ public class View implements IView {//, Runnable {
             tfExpenseDate = new HintTextField("yyyy-mm-dd");
             tfExpenseDate.setMaximumSize(new Dimension(200, 25));
 
-
             btnAddExpense = new JButton("Update Expense");
             btnAddExpense.setBorder(new RoundedBorder(5));
-            start();
-        }
-
-        public void start() {
-            btnAddCategory.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String result = (String)JOptionPane.showInputDialog(
-                            mainPanel,
-                            "Add your own category",
-                            "Add New Category",
-                            JOptionPane.PLAIN_MESSAGE,
-                            null,
-                            null,
-                            "Enter your category"
-                    );
-                    if ((result != null) && (result.length() > 0)) {
-                        model.addElement(result);
-                        cbCategory.setSelectedItem(result);
-                    }
-                }
-            });
 
             mainPanel.setLayout(layout);
             layout.setAutoCreateGaps(true);
             layout.setAutoCreateContainerGaps(true);
-            //layout.linkSize(SwingConstants.HORIZONTAL, btnAddCategory, btnAddExpense);
-            GroupLayout.ParallelGroup hGroup = layout.createParallelGroup(GroupLayout.Alignment.CENTER); // Will align the labels the way you wanted
+            GroupLayout.ParallelGroup hGroup = layout.createParallelGroup(GroupLayout.Alignment.CENTER);
 
             hGroup.addGroup(layout.createSequentialGroup()
                     .addGroup(layout.createParallelGroup()
@@ -513,7 +481,6 @@ public class View implements IView {//, Runnable {
 
             layout.setHorizontalGroup(hGroup);
 
-            // Vertical
             GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
 
             vGroup.addGroup(layout.createParallelGroup()
@@ -544,6 +511,28 @@ public class View implements IView {//, Runnable {
                     .addComponent(btnAddExpense));
 
             layout.setVerticalGroup(vGroup);
+            createListeners();
+        }
+
+        public void createListeners() {
+            btnAddCategory.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String result = (String)JOptionPane.showInputDialog(
+                            mainPanel,
+                            "Add your own category",
+                            "Add New Category",
+                            JOptionPane.PLAIN_MESSAGE,
+                            null,
+                            null,
+                            "Enter your category"
+                    );
+                    if ((result != null) && (result.length() > 0)) {
+                        model.addElement(result);
+                        cbCategory.setSelectedItem(result);
+                    }
+                }
+            });
 
 //        btnAddExpense.addActionListener(new ActionListener() {
 //            @Override
@@ -622,14 +611,11 @@ public class View implements IView {//, Runnable {
         private GroupLayout.SequentialGroup vGroup;
         private Box temp;
 
-
+        /**
+         * Pie chart constructor
+         */
         public GeneratePieScreen() {
             panel = new JPanel();
-            start();
-        }
-
-        private void start() {
-
             temp = Box.createHorizontalBox();
             pieChart = new PieChartComponent();
             temp.add(Box.createRigidArea(new Dimension(190, 0)));
@@ -639,34 +625,21 @@ public class View implements IView {//, Runnable {
 
             temp.setVisible(false);
 
-
             startDateLabel = new JLabel("Start Date: ");
-
 
             startDateField = new HintTextField("dd/mm/yyyy");
             startDateField.setMaximumSize(new Dimension(200, 25));
 
-
             endDateLabel = new JLabel("End Date: ");
-
 
             endDateField = new HintTextField("dd/mm/yyyy");
             endDateField.setMaximumSize(new Dimension(200, 25));
 
-
             Generate = new JButton("Generate");
 
-            Generate.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    temp.setVisible(true);
-
-                }
-            });
             panel.setLayout(layout);
             layout.setAutoCreateGaps(true);
             layout.setAutoCreateContainerGaps(true);
-
 
             GroupLayout.ParallelGroup hGroup = layout.createParallelGroup(GroupLayout.Alignment.CENTER);
 
@@ -684,11 +657,8 @@ public class View implements IView {//, Runnable {
             hGroup.addComponent(Generate);
             hGroup.addComponent(temp);
 
-
-
             layout.setHorizontalGroup(hGroup);
 
-            // Vertical
             vGroup = layout.createSequentialGroup();
 
             vGroup.addGroup(layout.createParallelGroup()
@@ -709,10 +679,25 @@ public class View implements IView {//, Runnable {
 
             layout.setVerticalGroup(vGroup);
 
-
-
+            createListeners();
         }
 
+        /**
+         * Creates all listeners of the screen
+         */
+        private void createListeners() {
+            Generate.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    temp.setVisible(true);
+                }
+            });
+        }
+
+        /**
+         * Gets screen's panel
+         * @return JPanel object
+         */
         public JPanel getPanel() {
             return panel;
         }
@@ -731,16 +716,18 @@ public class View implements IView {//, Runnable {
         private JButton btnLogin;
         private JButton btnSignUp;
 
+        /**
+         * Login screen constructor
+         */
+
         public LoginScreen() {
             frame = new JFrame();
 
-            //Create frame settings
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(600,400);
             frame.setTitle("CostManagerApp - Login");
             frame.setLayout(new FlowLayout(FlowLayout.LEADING));
 
-            //declare all widgets
             lblUserName = new JLabel("User name: ");
             tfUserName = new JTextField(15);
             lblPassword = new JLabel("Password:  ");
@@ -748,7 +735,40 @@ public class View implements IView {//, Runnable {
             btnLogin = new JButton("  login  ");
             btnSignUp = new JButton("  Sign up  ");
 
-            //Login Button action listener
+            btnLogin.setBorder(new RoundedBorder(3));
+            btnSignUp.setBorder(new RoundedBorder(3));
+
+            panelUpper = new JPanel();
+            panelUpper.add(lblUserName);
+            panelUpper.add(tfUserName);
+
+            panelMiddle = new JPanel();
+            panelMiddle.add(lblPassword);
+            panelMiddle.add(tfPassword);
+
+            panelLower =new JPanel();
+            panelLower.add(btnSignUp);
+            panelLower.add(btnLogin);
+
+            contentPane=new JPanel(new BorderLayout());
+            contentPane.setBorder(BorderFactory.createEmptyBorder(20,20,40,40));
+            contentPane.add(panelUpper,BorderLayout.NORTH);
+            contentPane.add(panelMiddle,BorderLayout.CENTER);
+            contentPane.add(panelLower,BorderLayout.SOUTH);
+
+            frame.add(contentPane);
+
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+
+            createListeners();
+        }
+
+        /**
+         * Creates all listeners of the screen
+         */
+        private void createListeners() {
             btnLogin.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -768,7 +788,6 @@ public class View implements IView {//, Runnable {
                 }
             });
 
-            //Sign up listener
             btnSignUp.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -777,38 +796,6 @@ public class View implements IView {//, Runnable {
                     frame.dispose();
                 }
             });
-
-            //Rounding all buttons
-            btnLogin.setBorder(new RoundedBorder(3));
-            btnSignUp.setBorder(new RoundedBorder(3));
-
-            //Adding user name field&label to panel
-            panelUpper = new JPanel();
-            panelUpper.add(lblUserName);
-            panelUpper.add(tfUserName);
-
-            //Adding password field&label to panel
-            panelMiddle = new JPanel();
-            panelMiddle.add(lblPassword);
-            panelMiddle.add(tfPassword);
-
-            //Adding login&sigh up buttons to panel
-            panelLower =new JPanel();
-            panelLower.add(btnSignUp);
-            panelLower.add(btnLogin);
-
-            //layout manager
-            contentPane=new JPanel(new BorderLayout());
-            contentPane.setBorder(BorderFactory.createEmptyBorder(20,20,40,40));
-            contentPane.add(panelUpper,BorderLayout.NORTH);
-            contentPane.add(panelMiddle,BorderLayout.CENTER);
-            contentPane.add(panelLower,BorderLayout.SOUTH);
-
-            frame.add(contentPane);
-
-            frame.pack();
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
         }
     }
 
@@ -825,6 +812,10 @@ public class View implements IView {//, Runnable {
         private JButton logoutBtn;
         private Container container;
 
+        /**
+         * Main screen constructor of the project
+         */
+
         public MainScreen() {
             frame = new JFrame();
             leftPanel = new JPanel();
@@ -838,6 +829,61 @@ public class View implements IView {//, Runnable {
             addBtn = new JButton("Add Expense");
             logoutBtn = new JButton("Logout");
 
+            container.setLayout(new BorderLayout());
+            leftPanel.setBorder(new LineBorder(Color.BLACK, 2));
+            leftPanel.setLayout(new FlowLayout(4, 4,4));
+            leftGridPanel.setLayout(new GridLayout(5, 1, 5, 5));
+
+            leftGridPanel.add(viewBtn);
+            leftGridPanel.add(addBtn);
+            leftGridPanel.add(editBtn);
+            leftGridPanel.add(reportBtn);
+            leftGridPanel.add(logoutBtn);
+            leftPanel.add(leftGridPanel);
+
+            mainPanel.setBorder(new LineBorder(Color.BLACK, 2));
+            container.add(mainPanel);
+            container.add(leftPanel, BorderLayout.WEST);
+
+            frame.addWindowListener(new WindowAdapter() {
+                /**
+                 * Invoked when a window is in the process of being closed.
+                 * The close operation can be overridden at this point.
+                 *
+                 * @param e
+                 */
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    System.exit(0);
+                }
+            });
+            frame.setTitle("CostManagerApp - Menu");
+            frame.setSize(680, 300);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+
+            createListeners();
+        }
+
+        /**
+         * Sets main screen UI to new screen
+         * @param newPanel JPanel of new screen
+         */
+        public void resetView(JPanel newPanel) {
+            container.remove(mainPanel);
+            container.repaint();
+            container.revalidate();
+            mainPanel = newPanel;
+
+            container.add(newPanel,BorderLayout.CENTER);
+            container.repaint();
+            container.revalidate();
+        }
+
+        /**
+         * Creates all listeners of the screen
+         */
+        public void createListeners() {
             viewBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -882,58 +928,9 @@ public class View implements IView {//, Runnable {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     View.LoginScreen loginScreen = new View.LoginScreen();
-                    frame.dispose(); // close window
+                    frame.dispose();
                 }
             });
-
-            start();
-        }
-
-        public void resetView(JPanel newPanel) {
-            container.remove(mainPanel);
-            container.repaint();
-            container.revalidate();
-            mainPanel = newPanel;
-            //container.add(newPanel);
-            container.add(newPanel,BorderLayout.CENTER);
-            container.repaint();
-            container.revalidate();
-        }
-
-        public void start() {
-            container.setLayout(new BorderLayout());
-            leftPanel.setBorder(new LineBorder(Color.BLACK, 2));
-            leftPanel.setLayout(new FlowLayout(4, 4,4));
-            leftGridPanel.setLayout(new GridLayout(5, 1, 5, 5));
-
-            leftGridPanel.add(viewBtn);
-            leftGridPanel.add(addBtn);
-            leftGridPanel.add(editBtn);
-            leftGridPanel.add(reportBtn);
-            leftGridPanel.add(logoutBtn);
-            leftPanel.add(leftGridPanel);
-
-            mainPanel.setBorder(new LineBorder(Color.BLACK, 2));
-            container.add(mainPanel);
-            container.add(leftPanel, BorderLayout.WEST);
-
-            frame.addWindowListener(new WindowAdapter() {
-                /**
-                 * Invoked when a window is in the process of being closed.
-                 * The close operation can be overridden at this point.
-                 *
-                 * @param e
-                 */
-                @Override
-                public void windowClosing(WindowEvent e) {
-                    System.exit(0);
-                }
-            });
-            frame.setTitle("CostManagerApp - Menu");
-            frame.setSize(680, 300);
-            frame.setLocationRelativeTo(null);
-            //frame.setLocation(500, 500);
-            frame.setVisible(true);
         }
     }
 
@@ -951,20 +948,22 @@ public class View implements IView {//, Runnable {
 
         private IViewModel vm;
 
+        /**
+         * Sign Up screen constructor
+         */
         public SignUpScreen() {
             frame = new JFrame();
 
-            //Create frame settings
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(350,200);
             frame.setTitle("CostManagerApp - Sign up");
 
-            //declare all widgets
             lblUserName = new JLabel("User name: ");
             tfUserName = new JTextField(15);
             lblPassword = new JLabel("Password:  ");
             tfPassword = new JPasswordField(15);
             btnSignUp = new JButton("Sign up");
+
 
             //Sign up listener
             btnSignUp.addActionListener(new ActionListener() {
@@ -990,36 +989,6 @@ public class View implements IView {//, Runnable {
                     }
                 }
             });
-
-            //Rounding button
-            btnSignUp.setBorder(new RoundedBorder(3));
-
-            //Adding user name field&label to panel
-            panelUpper = new JPanel();
-            panelUpper.add(lblUserName);
-            panelUpper.add(tfUserName);
-
-            //Adding password field&label to panel
-            panelMiddle = new JPanel();
-            panelMiddle.add(lblPassword);
-            panelMiddle.add(tfPassword);
-
-            //Adding sigh up button to panel
-            panelLower =new JPanel();
-            panelLower.add(btnSignUp);
-
-            //layout manager
-            panelMain = new JPanel(new BorderLayout());
-            panelMain.setBorder(BorderFactory.createEmptyBorder(20,20,40,40));
-            panelMain.add(panelUpper,BorderLayout.NORTH);
-            panelMain.add(panelMiddle,BorderLayout.CENTER);
-            panelMain.add(panelLower,BorderLayout.SOUTH);
-
-            frame.add(panelMain);
-
-            frame.pack();
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
         }
     }
 
@@ -1028,11 +997,22 @@ public class View implements IView {//, Runnable {
         private JTable table;
         private JScrollPane sp;
 
+              /**
+         * View screen constructor (table)
+         * @throws SQLException if there was an error with a query
+         * @throws ClassNotFoundException if database wasn't initiated properly
+         */
         public ViewScreen() throws CostManagerException {
             panel = new JPanel(new BorderLayout());
             getTable();
         }
 
+
+          /**
+         * Sets table data by requesting all expenses of a user from the database
+         * @throws SQLException if there was an error with a query
+         * @throws ClassNotFoundException if database wasn't initiated properly
+         */
         public void getTable() throws CostManagerException {
             String data[][] = vm.getUserExpenses();
             String column[] = {"Id", "Cost", "Category", "Currency", "Description", "CreatedAt", "dueDate", "Frequency"};
@@ -1041,6 +1021,11 @@ public class View implements IView {//, Runnable {
             sp = new JScrollPane(table);
             panel.add(sp, BorderLayout.CENTER);
         }
+
+        /**
+         * Gets screen's panel
+         * @return JPanel object
+         */
 
         public JPanel getPanel() {
             return panel;

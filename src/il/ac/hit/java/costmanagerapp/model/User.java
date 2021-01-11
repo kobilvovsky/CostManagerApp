@@ -5,37 +5,61 @@ public class User {
     private Username userName;
     private Password userPassword;
 
-    //User instance will be crated after retrieving the new id from the DB
+    /**
+     * User constructor
+     * @param userName username object
+     * @param userPassword password object
+     */
     public User(Username userName, Password userPassword) {
-//        setId(userId);
+        //setId(userId);
         setUserName(userName);
         setUserPassword(userPassword);
     }
 
-    public int getId() {
-        return userId;
-    }
+//    public int getId() {
+//        return userId;
+//    }
+//
+//    public void setId(int userId) {
+//        this.userId = userId;
+//    }
 
-    public void setId(int userId) {
-        this.userId = userId;
-    }
-
+    /**
+     * Gets username object
+     * @return username object
+     */
     public Username getUserName() {
         return userName;
     }
 
+    /**
+     * Sets username object
+     * @param userName username object
+     */
     public void setUserName(Username userName) {
         this.userName = userName;
     }
 
+    /**
+     * Gets password object
+     * @return password object
+     */
     public Password getUserPassword() {
         return userPassword;
     }
 
+    /**
+     * Sets password object
+     * @param userPassword
+     */
     public void setUserPassword(Password userPassword) {
         this.userPassword = userPassword;
     }
 
+    /**
+     * Prints user variables data
+     * @return user object as string
+     */
     @Override
     public String toString() {
         return "User{" +

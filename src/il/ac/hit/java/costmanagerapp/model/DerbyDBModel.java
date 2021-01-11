@@ -15,6 +15,10 @@ public class DerbyDBModel implements IModel {
     Statement statement;
     ResultSet resultSet = null;
 
+    /**
+     * DerbyDBModel constructor
+     * @throws ClassNotFoundException if database wasn't initiated properly
+     */
     private DerbyDBModel() throws CostManagerException {
         try {
             Class.forName(driver);
@@ -22,13 +26,24 @@ public class DerbyDBModel implements IModel {
             throw new CostManagerException("Could not find the Derby JAR file.");
         }
     }
-
+  
+    /**
+     * Gets singleton instance of DerbyDBModel object
+     * @return instance of DerbyDBModel
+     * @throws ClassNotFoundException if database wasn't initiated properly
+     */
     public static DerbyDBModel getInstance() throws CostManagerException {
         if (single_instance == null)
             single_instance = new DerbyDBModel();
         return single_instance;
+
     }
 
+
+      /**
+     * Initialize a connection to the database
+     * @throws SQLException if there was an error with a query
+     */
     private void init() throws CostManagerException {
         connection = null;
         try {
@@ -40,7 +55,9 @@ public class DerbyDBModel implements IModel {
         }
 
     }
-
+    /**
+     * Closes the connection to the database
+     */
     private void close() {
         if(getStatement() != null) try { getStatement().close(); } catch (Exception e) {};
         if(getConnection() != null) try { getConnection().close(); } catch (Exception e) {};
@@ -108,6 +125,7 @@ public class DerbyDBModel implements IModel {
         this.resultSet = rs;
     }
 
+      // ALPHA
     public void createTables() throws CostManagerException {
         init();
         createUsers();
@@ -115,6 +133,7 @@ public class DerbyDBModel implements IModel {
         close();
     }
 
+      // ALPHA
     public void dropTables() throws CostManagerException {
         init();
         try {
@@ -127,6 +146,7 @@ public class DerbyDBModel implements IModel {
         close();
     }
 
+      // ALPHA
     public void createUsers() throws CostManagerException {
         init();
         try {
@@ -153,6 +173,7 @@ public class DerbyDBModel implements IModel {
         close();
     }
 
+    // ALPHA
     public void createExpenses() throws CostManagerException {
         init();
         try {
@@ -169,7 +190,6 @@ public class DerbyDBModel implements IModel {
 
     public void addExpense(Expense e) throws CostManagerException {
         init();
-
         try {
             PreparedStatement insertStatement = connection.prepareStatement(
                     "INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (?, ?, ?, ?, ?, ?, ?, ?)");

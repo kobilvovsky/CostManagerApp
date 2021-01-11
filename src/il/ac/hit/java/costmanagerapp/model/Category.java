@@ -13,23 +13,45 @@ public class Category {
 
     private String categoryName;
 
+    /**
+     * Category constructor
+     * @param category category as text
+     */
     public Category(String category) {
         checkArgument(isValidCategory(category), MESSAGE_CATEGORY_CONSTRAINTS);
         setCategoryName(category);
     }
 
+    /**
+     * Gets category's name
+     * @return category's name
+     */
     public String getCategoryName() {
         return categoryName;
     }
 
+    /**
+     * Sets category's name
+     * @param categoryName category's name
+     */
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
 
-    public static boolean isValidCategory(String test) {
-        return test.matches(CATEGORY_VALIDATION_REGEX);
+    /**
+     * Checks if catergory name is valid
+     * @param name category name
+     * @return true if valid, otherwise false
+     */
+    public static boolean isValidCategory(String name) {
+        return name.matches(CATEGORY_VALIDATION_REGEX);
     }
 
+    /**
+     * Checks if category object is the same as another category object
+     * @param other category object
+     * @return true if same, otherwise false
+     */
     @Override
     public boolean equals(Object other) {
         return other == this
