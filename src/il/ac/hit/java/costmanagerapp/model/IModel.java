@@ -16,15 +16,15 @@ public interface IModel {
 
     public ResultSet getRs();
 
-    public String[][] getUserExpenses() throws SQLException, ClassNotFoundException;
+    public String[][] getUserExpenses() throws CostManagerException;
 
-    public boolean isUserMatched(String username, String password) throws SQLException, ClassNotFoundException;
+    public boolean isUserMatched(String username, String password) throws CostManagerException;
 
-    public void createExpenses() throws CostManagerException, SQLException, ClassNotFoundException;
+    public void createExpenses() throws CostManagerException;
 
-    public void createUsers() throws CostManagerException, SQLException, ClassNotFoundException;
+    public void createUsers() throws CostManagerException;
 
-    public void addExpense(Expense e) throws SQLException, ClassNotFoundException;
+    public void addExpense(Expense e) throws CostManagerException;
 
-    public void addUser(User user) throws SQLException, ClassNotFoundException;
+    public void addUser(User user) throws CostManagerException;
 }
