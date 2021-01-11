@@ -3,9 +3,8 @@ package il.ac.hit.java.costmanagerapp.view;
 import il.ac.hit.java.costmanagerapp.model.*;
 import il.ac.hit.java.costmanagerapp.view.viewutils.HintTextField;
 import il.ac.hit.java.costmanagerapp.view.viewutils.RoundedBorder;
-import il.ac.hit.java.costmanagerapp.view.viewutils.messageBox;
+import il.ac.hit.java.costmanagerapp.view.viewutils.MessageBox;
 import il.ac.hit.java.costmanagerapp.viewmodel.IViewModel;
-import il.ac.hit.java.costmanagerapp.viewmodel.ViewModel;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -32,12 +31,12 @@ public class View implements IView {//, Runnable {
     @Override
     public void showMessage(String strMessage, String strTitle) {
         if (SwingUtilities.isEventDispatchThread()) {
-            messageBox.infoBox(strMessage, strTitle);
+            MessageBox.infoBox(strMessage, strTitle);
         } else {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    messageBox.infoBox(strMessage, strTitle);
+                    MessageBox.infoBox(strMessage, strTitle);
                 }
             });
         }
