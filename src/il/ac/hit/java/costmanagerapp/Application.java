@@ -1,7 +1,6 @@
 package il.ac.hit.java.costmanagerapp;
 import il.ac.hit.java.costmanagerapp.model.DerbyDBModel;
 import il.ac.hit.java.costmanagerapp.model.IModel;
-import il.ac.hit.java.costmanagerapp.model.exceptions.CostManagerException;
 import il.ac.hit.java.costmanagerapp.view.IView;
 import il.ac.hit.java.costmanagerapp.view.View;
 import il.ac.hit.java.costmanagerapp.viewmodel.IViewModel;
@@ -12,7 +11,7 @@ import java.sql.SQLException;
 
 public class Application {
 
-    public static void main(String[] args) throws  CostManagerException {
+    public static void main(String[] args) throws ClassNotFoundException {
         IModel model = DerbyDBModel.getInstance();
         IView view = new View();
         IViewModel vm = new ViewModel();

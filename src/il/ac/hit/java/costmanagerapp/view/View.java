@@ -1,7 +1,6 @@
 package il.ac.hit.java.costmanagerapp.view;
 
 import il.ac.hit.java.costmanagerapp.model.*;
-import il.ac.hit.java.costmanagerapp.model.exceptions.CostManagerException;
 import il.ac.hit.java.costmanagerapp.view.viewutils.HintTextField;
 import il.ac.hit.java.costmanagerapp.view.viewutils.RoundedBorder;
 import il.ac.hit.java.costmanagerapp.view.viewutils.MessageBox;
@@ -16,7 +15,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Vector;
 
@@ -322,8 +320,10 @@ public class View implements IView {//, Runnable {
                         Expense expense = new Expense(0, amount, category, currency, description, date, frequency);
                         try {
                             vm.addExpense(expense);
-                        } catch (CostManagerException costManagerException) {
-                            costManagerException.printStackTrace();
+                        } catch (SQLException throwable) {
+                            throwable.printStackTrace();
+                        } catch (ClassNotFoundException classNotFoundException) {
+                            classNotFoundException.printStackTrace();
                         }
                     } catch (NumberFormatException ex) {
                         System.out.println(ex);
@@ -844,13 +844,10 @@ public class View implements IView {//, Runnable {
                     ViewScreen viewScreen = null;
                     try {
                         viewScreen = new ViewScreen();
-                    } catch (CostManagerException ex) {
-                       ex.getCause();
+                        resetView(viewScreen.getPanel());
+                    } catch (SQLException | ClassNotFoundException throwables) {
+                        throwables.printStackTrace();
                     }
-
-
-                    resetView(viewScreen.getPanel());
-
                 }
             });
 
@@ -973,14 +970,9 @@ public class View implements IView {//, Runnable {
                     String pass=String.valueOf(tfPassword.getPassword());
                     if(!tfUserName.getText().isEmpty() && !pass.isEmpty()) {
                         Username username = new Username(tfUserName.getText());
-                        Password password = new Password(Arrays.toString(tfPassword.getPassword()));
+                        Password password = new Password(tfPassword.getPassword().toString());
                         User user= new User(username,password);
-                        try {
-                            vm.addUser(user);
-                        } catch (CostManagerException costManagerException) {
-                            System.out.println(costManagerException.getMessage());
-                            showMessage("Input Error", "Login Error");
-                        }
+                        vm.addUser(user);
                         //check user was actually saved (receive some sort of boolean back)
                         View.MainScreen mainScreen = new View.MainScreen();
                         frame.dispose();
@@ -1028,12 +1020,12 @@ public class View implements IView {//, Runnable {
         private JTable table;
         private JScrollPane sp;
 
-        public ViewScreen() throws CostManagerException {
+        public ViewScreen() throws SQLException, ClassNotFoundException {
             panel = new JPanel(new BorderLayout());
             getTable();
         }
 
-        public void getTable() throws CostManagerException {
+        public void getTable() throws SQLException, ClassNotFoundException {
             String data[][] = vm.getUserExpenses();
             String column[] = {"Id", "Cost", "Category", "Currency", "Description", "CreatedAt", "dueDate", "Frequency"};
             table = new JTable(data, column);

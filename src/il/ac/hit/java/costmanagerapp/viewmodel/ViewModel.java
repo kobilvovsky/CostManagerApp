@@ -33,23 +33,29 @@ public class ViewModel implements IViewModel {
     }
 
     @Override
-    public void addExpense(Expense expense) throws CostManagerException{
+    public void addExpense(Expense expense) {
         pool.submit(new Runnable() {
             @Override
             public void run() {
                 try {
                     model.addExpense(expense);
-                } catch (CostManagerException e) {
-                    System.out.println(e.getMessage());
-                    view.showMessage("Error in adding expense", "Error");
+                } catch (SQLException | ClassNotFoundException throwable) { //needs to be replaced with own exception!
+                    throwable.printStackTrace();
+                    //Show message
                 }
             }
         });
     }
 
     @Override
-    public void addUser(User user) throws CostManagerException{
-        model.addUser(user);
+    public void addUser(User user) {
+        try {
+            model.addUser(user);
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -84,7 +90,7 @@ public class ViewModel implements IViewModel {
     }
 
     @Override
-    public String[][] getUserExpenses() throws CostManagerException {
+    public String[][] getUserExpenses() throws SQLException, ClassNotFoundException {
         return model.getUserExpenses();
     }
 }
