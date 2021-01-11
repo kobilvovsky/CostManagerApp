@@ -13,17 +13,19 @@ public class DerbyDBModel implements IModel {
     Statement statement;
     ResultSet resultSet = null;
 
+    /**
+     * DerbyDBModel constructor
+     * @throws ClassNotFoundException if database wasn't initiated properly
+     */
     private DerbyDBModel() throws ClassNotFoundException {
-        try {
-            init();
-        } catch (SQLException e) {
-            System.out.println("Cant Create derby DB");
-            e.printStackTrace();
-        } finally {
-            close();
-        }
+        Class.forName(driver);
     }
 
+    /**
+     * Gets singleton instance of DerbyDBModel object
+     * @return instance of DerbyDBModel
+     * @throws ClassNotFoundException if database wasn't initiated properly
+     */
     public static DerbyDBModel getInstance() throws ClassNotFoundException {
         if (single_instance == null)
             single_instance = new DerbyDBModel();
@@ -31,20 +33,26 @@ public class DerbyDBModel implements IModel {
         return single_instance;
     }
 
-    private void init() throws ClassNotFoundException, SQLException {
+    /**
+     * Initialize a connection to the database
+     * @throws SQLException if there was an error with a query
+     */
+    private void init() throws SQLException {
         connection = null;
-        Class.forName(driver);
         setConnection(DriverManager.getConnection(connectionString));
         setStatement(getConnection().createStatement());
     }
 
+    /**
+     * Closes the connection to the database
+     */
     private void close() {
         if(getStatement() != null) try { getStatement().close(); } catch (Exception e) {};
         if(getConnection() != null) try { getConnection().close(); } catch (Exception e) {};
         if(getRs() != null) try { getRs().close(); } catch (Exception e) {};
     }
 
-    public String[][] getUserExpenses() throws SQLException, ClassNotFoundException {
+    public String[][] getUserExpenses() throws SQLException {
         init();
         setRs(getStatement().executeQuery("SELECT id, cost, category, currency, description, creationDate, dueDate, frequency FROM Expense"));
 
@@ -103,21 +111,24 @@ public class DerbyDBModel implements IModel {
         this.resultSet = rs;
     }
 
-    public void createTables() throws SQLException, ClassNotFoundException {
+    // ALPHA
+    public void createTables() throws SQLException {
         init();
         createUsers();
         createExpenses();
         close();
     }
 
-    public void dropTables() throws SQLException, ClassNotFoundException {
+    // ALPHA
+    public void dropTables() throws SQLException {
         init();
         getStatement().execute("DROP TABLE Users");
         getStatement().execute("DROP TABLE Expense");
         close();
     }
 
-    public void createUsers() throws SQLException, ClassNotFoundException {
+    // ALPHA
+    public void createUsers() throws SQLException {
         init();
         getStatement().execute("CREATE TABLE Users(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), username varchar(250) NOT NULL, password varchar(100) NOT NULL, UNIQUE (id))");
         getStatement().execute("INSERT INTO Users(username, password) values ('erez', 'erez')");
@@ -126,7 +137,7 @@ public class DerbyDBModel implements IModel {
         close();
     }
 
-    public void addUser(User user) throws SQLException, ClassNotFoundException {
+    public void addUser(User user) throws SQLException {
         init();
         PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO Users(username, password) values (?, ?)");
         insertStatement.setString(1, user.getUserName().getName());
@@ -136,7 +147,8 @@ public class DerbyDBModel implements IModel {
         close();
     }
 
-    public void createExpenses() throws SQLException, ClassNotFoundException {
+    // ALPHA
+    public void createExpenses() throws SQLException {
         init();
         getStatement().execute("CREATE TABLE Expense(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
                 "ownerid int, cost float, category varchar(250) NOT NULL," +
@@ -147,7 +159,7 @@ public class DerbyDBModel implements IModel {
         close();
     }
 
-    public void addExpense(Expense e) throws SQLException, ClassNotFoundException {
+    public void addExpense(Expense e) throws SQLException {
         init();
 
         try {
@@ -175,7 +187,7 @@ public class DerbyDBModel implements IModel {
 
         close();
     }
-    public boolean isUserMatched(String username, String password) throws SQLException, ClassNotFoundException {
+    public boolean isUserMatched(String username, String password) throws SQLException {
         init();
         boolean r = false;
 

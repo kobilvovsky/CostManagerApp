@@ -5,12 +5,13 @@ import il.ac.hit.java.costmanagerapp.view.IView;
 import il.ac.hit.java.costmanagerapp.view.View;
 import il.ac.hit.java.costmanagerapp.viewmodel.IViewModel;
 import il.ac.hit.java.costmanagerapp.viewmodel.ViewModel;
-//import org.apache.derby.impl.tools.sysinfo.Main;
-
-import java.sql.SQLException;
 
 public class Application {
 
+    /**
+     * Runs the main function of the project
+     * @throws ClassNotFoundException if DerbyDB was not initiated properly
+     */
     public static void main(String[] args) throws ClassNotFoundException {
         IModel model = DerbyDBModel.getInstance();
         IView view = new View();

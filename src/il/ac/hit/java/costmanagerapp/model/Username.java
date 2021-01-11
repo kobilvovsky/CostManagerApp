@@ -3,9 +3,6 @@ package il.ac.hit.java.costmanagerapp.model;
 import static java.util.Objects.requireNonNull;
 import static il.ac.hit.java.costmanagerapp.model.utils.AppUtils.checkArgument;
 
-
-//Instance is created when user registers and login
-
 public class Username implements Comparable<Username> {
     public static final String MESSAGE_NAME_CONSTRAINTS =
             "Names must be at most 250 characters long, cannot be empty and cannot contain white spaces or any of "
@@ -18,17 +15,28 @@ public class Username implements Comparable<Username> {
 
     private String name;
 
-
+    /**
+     * Username constructor
+     * @param name name of the user
+     */
     public Username(String name) {
         requireNonNull(name);
         checkArgument(isValidName(name), MESSAGE_NAME_CONSTRAINTS);
         setName(name);
     }
 
+    /**
+     * Gets user name
+     * @return user name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets user name
+     * @param name name of the user
+     */
     public void setName(String name) {
         this.name = name;
     }
@@ -41,11 +49,20 @@ public class Username implements Comparable<Username> {
     }
 
 
+    /**
+     * Prints username variables data
+     * @return username object as string
+     */
     @Override
     public String toString() {
         return name;
     }
 
+    /**
+     * Checks if username equals to a different username object
+     * @param other username object
+     * @return true if match, otherwise false
+     */
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
@@ -53,7 +70,11 @@ public class Username implements Comparable<Username> {
                 && name.equalsIgnoreCase(((Username) other).name)); // state check
     }
 
-
+    /**
+     * Compares entered username as text to another username text
+     * @param o username object
+     * @return true if match, otherwise false
+     */
     @Override
     public int compareTo(Username o) {
         return String.CASE_INSENSITIVE_ORDER.compare(this.name, o.name);
