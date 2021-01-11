@@ -18,6 +18,7 @@ public class ViewModel implements IViewModel {
 
     private IModel model;
     private IView view;
+    private View.ViewScreen vscreen;
     private ExecutorService pool;
 
     public ViewModel() { pool = Executors.newFixedThreadPool(10); }
@@ -39,9 +40,12 @@ public class ViewModel implements IViewModel {
             public void run() {
                 try {
                     model.addExpense(expense);
+                    view.showMessage("Expense was added successfully!", "Add Expense");
                 } catch (SQLException | ClassNotFoundException throwable) { //needs to be replaced with own exception!
                     throwable.printStackTrace();
                     //Show message
+
+                    view.showMessage("Error in adding new expense!", "Add expense failure!");
                 }
             }
         });
@@ -49,17 +53,26 @@ public class ViewModel implements IViewModel {
 
     @Override
     public void addUser(User user) {
-        try {
-            model.addUser(user);
-        } catch (SQLException throwable) {
-            throwable.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        pool.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    model.addUser(user);
+                    view.showMessage("User was added successfully!", "Add user");
+                } catch (SQLException throwable) {
+                    throwable.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                    //Show message
+                    view.showMessage("Error in adding new user!", "Add user failure!");
+
+                }
+            }
+        });
     }
 
     @Override
-    public boolean isUserMatched(String username, String password) {
+    public boolean isUserMatched(String username, String password) {    // login checks
         Boolean r[] = {false};
         pool.submit(new Callable<Boolean>() {
             @Override
@@ -90,8 +103,21 @@ public class ViewModel implements IViewModel {
     }
 
     @Override
-    public String[][] getUserExpenses() throws SQLException, ClassNotFoundException {
-        return model.getUserExpenses();
+    public void getUserExpenses() throws SQLException, ClassNotFoundException {
+        pool.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String[][] data = model.getUserExpenses();
+//                    view.setTable(data);
+                } catch (SQLException throwable) {
+                    throwable.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 }
 

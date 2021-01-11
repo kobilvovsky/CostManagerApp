@@ -14,5 +14,5 @@ public interface IViewModel {
     public void addUser(User user);
     public void addExpense(Expense expense) throws SQLException, ClassNotFoundException;
     public boolean isUserMatched(String username, String password);
-    public String[][] getUserExpenses() throws SQLException, ClassNotFoundException;
+    public void getUserExpenses() throws SQLException, ClassNotFoundException;
 }

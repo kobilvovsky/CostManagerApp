@@ -1026,7 +1026,11 @@ public class View implements IView {//, Runnable {
         }
 
         public void getTable() throws SQLException, ClassNotFoundException {
-            String data[][] = vm.getUserExpenses();
+            vm.getUserExpenses();
+
+        }
+
+        public void setTable(String data[][]){
             String column[] = {"Id", "Cost", "Category", "Currency", "Description", "CreatedAt", "dueDate", "Frequency"};
             table = new JTable(data, column);
             table.setFillsViewportHeight(true);
