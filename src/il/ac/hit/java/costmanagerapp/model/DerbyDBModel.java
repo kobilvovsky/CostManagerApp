@@ -1,4 +1,6 @@
 package il.ac.hit.java.costmanagerapp.model;
+import il.ac.hit.java.costmanagerapp.model.exceptions.CostManagerException;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -13,29 +15,30 @@ public class DerbyDBModel implements IModel {
     Statement statement;
     ResultSet resultSet = null;
 
-    private DerbyDBModel() throws ClassNotFoundException {
+    private DerbyDBModel() throws CostManagerException {
         try {
-            init();
-        } catch (SQLException e) {
-            System.out.println("Cant Create derby DB");
-            e.printStackTrace();
-        } finally {
-            close();
+            Class.forName(driver);
+        } catch (ClassNotFoundException e) {
+            throw new CostManagerException("Could not find the Derby JAR file.");
         }
     }
 
-    public static DerbyDBModel getInstance() throws ClassNotFoundException {
+    public static DerbyDBModel getInstance() throws CostManagerException {
         if (single_instance == null)
             single_instance = new DerbyDBModel();
-
         return single_instance;
     }
 
-    private void init() throws ClassNotFoundException, SQLException {
+    private void init() throws CostManagerException {
         connection = null;
-        Class.forName(driver);
-        setConnection(DriverManager.getConnection(connectionString));
-        setStatement(getConnection().createStatement());
+        try {
+            setConnection(DriverManager.getConnection(connectionString));
+            setStatement(getConnection().createStatement());
+        }
+        catch (SQLException e) {
+            throw new CostManagerException(e.getMessage());
+        }
+
     }
 
     private void close() {
@@ -44,24 +47,26 @@ public class DerbyDBModel implements IModel {
         if(getRs() != null) try { getRs().close(); } catch (Exception e) {};
     }
 
-    public String[][] getUserExpenses() throws SQLException, ClassNotFoundException {
+    public String[][] getUserExpenses() throws CostManagerException {
         init();
-        setRs(getStatement().executeQuery("SELECT id, cost, category, currency, description, creationDate, dueDate, frequency FROM Expense"));
-
         ArrayList<ArrayList<String>> allExpenses = new ArrayList<>();
-        while(getRs().next()) {
-            ArrayList<String> currExpense = new ArrayList<>();
-            currExpense.add(String.valueOf(getRs().getInt("id")));
-            currExpense.add(String.valueOf(getRs().getDouble("cost")));
-            currExpense.add(getRs().getString("category"));
-            currExpense.add(Currency.stringToCurrency(String.valueOf(getRs().getInt("currency"))));
-            currExpense.add(getRs().getString("description"));
-            currExpense.add(getRs().getDate("creationDate").toString());
-            currExpense.add(getRs().getDate("dueDate").toString());
-            currExpense.add(Frequency.stringToFrequency(String.valueOf(getRs().getInt("frequency"))));
-            allExpenses.add(currExpense);
+        try {
+            setRs(getStatement().executeQuery("SELECT id, cost, category, currency, description, creationDate, dueDate, frequency FROM Expense"));
+            while(getRs().next()) {
+                ArrayList<String> currExpense = new ArrayList<>();
+                currExpense.add(String.valueOf(getRs().getInt("id")));
+                currExpense.add(String.valueOf(getRs().getDouble("cost")));
+                currExpense.add(getRs().getString("category"));
+                currExpense.add(Currency.stringToCurrency(String.valueOf(getRs().getInt("currency"))));
+                currExpense.add(getRs().getString("description"));
+                currExpense.add(getRs().getDate("creationDate").toString());
+                currExpense.add(getRs().getDate("dueDate").toString());
+                currExpense.add(Frequency.stringToFrequency(String.valueOf(getRs().getInt("frequency"))));
+                allExpenses.add(currExpense);
+            }
+        } catch (SQLException e) {
+            throw new CostManagerException(e.getMessage());
         }
-
         close();
 
         String[][] data = new String[allExpenses.size()][];
@@ -103,51 +108,66 @@ public class DerbyDBModel implements IModel {
         this.resultSet = rs;
     }
 
-    public void createTables() throws SQLException, ClassNotFoundException {
+    public void createTables() throws CostManagerException {
         init();
         createUsers();
         createExpenses();
         close();
     }
 
-    public void dropTables() throws SQLException, ClassNotFoundException {
+    public void dropTables() throws CostManagerException {
         init();
-        getStatement().execute("DROP TABLE Users");
-        getStatement().execute("DROP TABLE Expense");
-        close();
-    }
-
-    public void createUsers() throws SQLException, ClassNotFoundException {
-        init();
-        getStatement().execute("CREATE TABLE Users(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), username varchar(250) NOT NULL, password varchar(100) NOT NULL, UNIQUE (id))");
-        getStatement().execute("INSERT INTO Users(username, password) values ('erez', 'erez')");
-        getStatement().execute("INSERT INTO Users(username, password) values ('nati', 'nati')");
-        getStatement().execute("INSERT INTO Users(username, password) values ('kobi', 'kobi')");
-        close();
-    }
-
-    public void addUser(User user) throws SQLException, ClassNotFoundException {
-        init();
-        PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO Users(username, password) values (?, ?)");
-        insertStatement.setString(1, user.getUserName().getName());
-        insertStatement.setString(2,user.getUserPassword().getPassword());
-        insertStatement.execute();
+        try {
+            getStatement().execute("DROP TABLE Users");
+            getStatement().execute("DROP TABLE Expense");
+        } catch (SQLException e) {
+            throw new CostManagerException(e.getMessage());
+        }
 
         close();
     }
 
-    public void createExpenses() throws SQLException, ClassNotFoundException {
+    public void createUsers() throws CostManagerException {
         init();
-        getStatement().execute("CREATE TABLE Expense(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
-                "ownerid int, cost float, category varchar(250) NOT NULL," +
-                "currency int, description varchar(250) NOT NULL," +
-                "creationDate DATE, dueDate DATE, frequency int," +
-                "UNIQUE (id))");
-
+        try {
+            getStatement().execute("CREATE TABLE Users(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), username varchar(250) NOT NULL, password varchar(100) NOT NULL, UNIQUE (id))");
+            getStatement().execute("INSERT INTO Users(username, password) values ('erez', 'erez')");
+            getStatement().execute("INSERT INTO Users(username, password) values ('nati', 'nati')");
+            getStatement().execute("INSERT INTO Users(username, password) values ('kobi', 'kobi')");
+        } catch (SQLException e) {
+            throw new CostManagerException(e.getMessage());
+        }
         close();
     }
 
-    public void addExpense(Expense e) throws SQLException, ClassNotFoundException {
+    public void addUser(User user) throws CostManagerException {
+        init();
+        try {
+            PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO Users(username, password) values (?, ?)");
+            insertStatement.setString(1, user.getUserName().getName());
+            insertStatement.setString(2,user.getUserPassword().getPassword());
+            insertStatement.execute();
+        } catch (SQLException e) {
+            throw new CostManagerException("Could not add user.");
+        }
+        close();
+    }
+
+    public void createExpenses() throws CostManagerException {
+        init();
+        try {
+            getStatement().execute("CREATE TABLE Expense(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
+                    "ownerid int, cost float, category varchar(250) NOT NULL," +
+                    "currency int, description varchar(250) NOT NULL," +
+                    "creationDate DATE, dueDate DATE, frequency int," +
+                    "UNIQUE (id))");
+        } catch (SQLException e) {
+            throw new CostManagerException(e.getMessage());
+        }
+        close();
+    }
+
+    public void addExpense(Expense e) throws CostManagerException {
         init();
 
         try {
@@ -162,23 +182,26 @@ public class DerbyDBModel implements IModel {
             insertStatement.setDate(7, (Date) e.getDueDate());
             insertStatement.setInt(8, e.getType().getId());
             insertStatement.execute();
-        } catch (SQLException | NumberFormatException throwables) {
-            throwables.printStackTrace();
-        }
 
-        setRs(getStatement().executeQuery("SELECT id, cost, description, creationDate, category, dueDate FROM Expense")); // execute = multiple results
 
-        while(getRs().next()) {
-            System.out.println("id=" + getRs().getInt("id") + " cost=" + getRs().getDouble("cost") + " description=" + getRs().getString("description")
-                    + " creationDate=" + getRs().getDate("creationDate") + " dueDate=" + getRs().getDate("dueDate") + " category=" + getRs().getString("category"));
+            setRs(getStatement().executeQuery("SELECT id, cost, description, creationDate, category, dueDate FROM Expense"));
+
+            while(getRs().next()) {
+                System.out.println("id=" + getRs().getInt("id") + " cost=" + getRs().getDouble("cost") + " description=" + getRs().getString("description")
+                        + " creationDate=" + getRs().getDate("creationDate") + " dueDate=" + getRs().getDate("dueDate") + " category=" + getRs().getString("category"));
+            }
+
+        } catch (SQLException ex1) {
+            throw new CostManagerException("The query was incorrect");
+        } catch (NumberFormatException ex2) {
+            throw new CostManagerException("Entered wrong data type");
         }
 
         close();
     }
-    public boolean isUserMatched(String username, String password) throws SQLException, ClassNotFoundException {
+    public boolean isUserMatched(String username, String password) throws CostManagerException {
         init();
         boolean r = false;
-
         try {
             PreparedStatement selectStatement = connection.prepareStatement("SELECT id FROM Users WHERE username = ? AND password = ?");
             selectStatement.setString(1, username);
@@ -190,8 +213,10 @@ public class DerbyDBModel implements IModel {
                 System.out.println(getRs().getInt("id"));
             }
 
-        } catch (SQLException | NumberFormatException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException ex1) {
+            throw new CostManagerException("The query was incorrect");
+        } catch (NumberFormatException ex2) {
+            throw new CostManagerException("Entered wrong data type");
         }
 
         close();
