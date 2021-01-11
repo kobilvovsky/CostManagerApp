@@ -533,7 +533,7 @@ public class View implements IView {
                     }
                 }
             });
-
+        }
 //        btnAddExpense.addActionListener(new ActionListener() {
 //            @Override
 //            public void actionPerformed(ActionEvent e) {
@@ -591,8 +591,10 @@ public class View implements IView {
 //            }
 //        });
 
-        }
-
+        /**
+         * Gets screen's panel
+         * @return JPanel object
+         */
         public JPanel getPanel () {
             return mainPanel;
         }
@@ -719,7 +721,6 @@ public class View implements IView {
         /**
          * Login screen constructor
          */
-
         public LoginScreen() {
             frame = new JFrame();
 
@@ -817,7 +818,6 @@ public class View implements IView {
         /**
          * Main screen constructor of the project
          */
-
         public MainScreen() {
             frame = new JFrame();
             leftPanel = new JPanel();
@@ -896,9 +896,7 @@ public class View implements IView {
                        ex.getCause();
                     }
 
-
                     resetView(viewScreen.getPanel());
-
                 }
             });
 
@@ -966,8 +964,13 @@ public class View implements IView {
             tfPassword = new JPasswordField(15);
             btnSignUp = new JButton("Sign up");
 
+            createListeners();
+        }
 
-            //Sign up listener
+        /**
+         * Creates all listeners of the screen
+         */
+        public void createListeners() {
             btnSignUp.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {

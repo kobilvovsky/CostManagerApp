@@ -14,7 +14,6 @@ public class Application {
      * @throws ClassNotFoundException if DerbyDB was not initiated properly
      */    
   public static void main(String[] args) throws  CostManagerException {
-
         IModel model = DerbyDBModel.getInstance();
         IView view = new View();
         IViewModel vm = new ViewModel();
