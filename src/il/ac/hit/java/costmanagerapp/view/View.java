@@ -1,6 +1,7 @@
 package il.ac.hit.java.costmanagerapp.view;
 
 import il.ac.hit.java.costmanagerapp.model.*;
+import il.ac.hit.java.costmanagerapp.model.exceptions.CostManagerException;
 import il.ac.hit.java.costmanagerapp.view.viewutils.HintTextField;
 import il.ac.hit.java.costmanagerapp.view.viewutils.RoundedBorder;
 import il.ac.hit.java.costmanagerapp.view.viewutils.MessageBox;
@@ -15,6 +16,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Vector;
 
@@ -310,10 +312,8 @@ public class View implements IView {
                         Expense expense = new Expense(0, amount, category, currency, description, date, frequency);
                         try {
                             vm.addExpense(expense);
-                        } catch (SQLException throwable) {
-                            throwable.printStackTrace();
-                        } catch (ClassNotFoundException classNotFoundException) {
-                            classNotFoundException.printStackTrace();
+                        } catch (CostManagerException costManagerException) {
+                            costManagerException.printStackTrace();
                         }
                     } catch (NumberFormatException ex) {
                         System.out.println(ex);
@@ -890,10 +890,13 @@ public class View implements IView {
                     ViewScreen viewScreen = null;
                     try {
                         viewScreen = new ViewScreen();
-                        resetView(viewScreen.getPanel());
-                    } catch (SQLException | ClassNotFoundException throwables) {
-                        throwables.printStackTrace();
+                    } catch (CostManagerException ex) {
+                       ex.getCause();
                     }
+
+
+                    resetView(viewScreen.getPanel());
+
                 }
             });
 
@@ -961,53 +964,27 @@ public class View implements IView {
             tfPassword = new JPasswordField(15);
             btnSignUp = new JButton("Sign up");
 
-            btnSignUp.setBorder(new RoundedBorder(3));
 
-            panelUpper = new JPanel();
-            panelUpper.add(lblUserName);
-            panelUpper.add(tfUserName);
-
-            panelMiddle = new JPanel();
-            panelMiddle.add(lblPassword);
-            panelMiddle.add(tfPassword);
-
-            panelLower =new JPanel();
-            panelLower.add(btnSignUp);
-
-            panelMain = new JPanel(new BorderLayout());
-            panelMain.setBorder(BorderFactory.createEmptyBorder(20,20,40,40));
-            panelMain.add(panelUpper,BorderLayout.NORTH);
-            panelMain.add(panelMiddle,BorderLayout.CENTER);
-            panelMain.add(panelLower,BorderLayout.SOUTH);
-
-            frame.add(panelMain);
-
-            frame.pack();
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
-
-            createListeners();
-        }
-
-        /**
-         * Creates all listeners of the screen
-         */
-        public void createListeners() {
+            //Sign up listener
             btnSignUp.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String pass = String.valueOf(tfPassword.getPassword());
+                    String pass=String.valueOf(tfPassword.getPassword());
                     if(!tfUserName.getText().isEmpty() && !pass.isEmpty()) {
                         Username username = new Username(tfUserName.getText());
-                        Password password = new Password(tfPassword.getPassword().toString());
-
+                        Password password = new Password(Arrays.toString(tfPassword.getPassword()));
                         User user= new User(username,password);
-                        vm.addUser(user);
-
+                        try {
+                            vm.addUser(user);
+                        } catch (CostManagerException costManagerException) {
+                            System.out.println(costManagerException.getMessage());
+                            showMessage("Input Error", "Login Error");
+                        }
+                        //check user was actually saved (receive some sort of boolean back)
                         View.MainScreen mainScreen = new View.MainScreen();
                         frame.dispose();
                     }
-                    else {
+                    else{
                         showMessage("user name or password is incorrect","Login error");
                     }
                 }
@@ -1020,22 +997,23 @@ public class View implements IView {
         private JTable table;
         private JScrollPane sp;
 
-        /**
+              /**
          * View screen constructor (table)
          * @throws SQLException if there was an error with a query
          * @throws ClassNotFoundException if database wasn't initiated properly
          */
-        public ViewScreen() throws SQLException, ClassNotFoundException {
+        public ViewScreen() throws CostManagerException {
             panel = new JPanel(new BorderLayout());
             getTable();
         }
 
-        /**
+
+          /**
          * Sets table data by requesting all expenses of a user from the database
          * @throws SQLException if there was an error with a query
          * @throws ClassNotFoundException if database wasn't initiated properly
          */
-        public void getTable() throws SQLException, ClassNotFoundException {
+        public void getTable() throws CostManagerException {
             String data[][] = vm.getUserExpenses();
             String column[] = {"Id", "Cost", "Category", "Currency", "Description", "CreatedAt", "dueDate", "Frequency"};
             table = new JTable(data, column);
