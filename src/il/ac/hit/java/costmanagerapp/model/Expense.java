@@ -1,6 +1,4 @@
 package il.ac.hit.java.costmanagerapp.model;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Expense {
@@ -48,8 +46,9 @@ public class Expense {
 
     //Rounding number to .2 decimal digits
     public void setCost(double cost) {
-
-        this.cost = Math.round(cost*100)/100;
+        double c = Math.round(cost * 100);
+        double d = c/100;
+        this.cost = d;
     }
 
     public Category getCategory() {

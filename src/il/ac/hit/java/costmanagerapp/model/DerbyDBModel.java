@@ -1,5 +1,6 @@
 package il.ac.hit.java.costmanagerapp.model;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class DerbyDBModel implements IModel {
 
@@ -11,7 +12,6 @@ public class DerbyDBModel implements IModel {
     Connection connection;
     Statement statement;
     ResultSet resultSet = null;
-
 
     private DerbyDBModel() throws ClassNotFoundException {
         try {
@@ -44,40 +44,37 @@ public class DerbyDBModel implements IModel {
         if(getRs() != null) try { getRs().close(); } catch (Exception e) {};
     }
 
-    public void simpleQuery() throws SQLException, ClassNotFoundException {
-        init();
-        setRs(getStatement().executeQuery("SELECT id, description, dueDate FROM Expense WHERE dueDate >= '2020-12-01' AND dueDate <= '2020-12-30'")); // execute = multiple results
-
-        while(getRs().next()) {
-            System.out.println("id=" + getRs().getInt("id") + " description=" + getRs().getString("description")
-                    + " dueDate=" + getRs().getDate("dueDate"));
-        }
-
-        close();
-    }
-
     public String[][] getUserExpenses() throws SQLException, ClassNotFoundException {
         init();
-        setRs(getStatement().executeQuery("SELECT id, cost, category, currency, description, creationDate, dueDate, frequency FROM Expense WHERE ownerid = 1"));
+        setRs(getStatement().executeQuery("SELECT id, cost, category, currency, description, creationDate, dueDate, frequency FROM Expense"));
 
-        String data[][] = new String[0][];
-        int row = 0;
-        int col = 0;
+        ArrayList<ArrayList<String>> allExpenses = new ArrayList<>();
         while(getRs().next()) {
-            data[row][col++] = String.valueOf(getRs().getInt("id"));
-            data[row][col++] = String.valueOf(getRs().getInt("cost"));
-            data[row][col++] = getRs().getString("category");
-            data[row][col++] = String.valueOf(getRs().getInt("currency"));
-            data[row][col++] = getRs().getString("description");
-            data[row][col++] = getRs().getDate("creationDate").toString();
-            data[row][col++] = getRs().getDate("dueDate").toString();
-            data[row][col++] = String.valueOf(getRs().getInt("frequency"));
-
-            row++;
-            col = 0;
+            ArrayList<String> currExpense = new ArrayList<>();
+            currExpense.add(String.valueOf(getRs().getInt("id")));
+            currExpense.add(String.valueOf(getRs().getDouble("cost")));
+            currExpense.add(getRs().getString("category"));
+            currExpense.add(Currency.stringToCurrency(String.valueOf(getRs().getInt("currency"))));
+            currExpense.add(getRs().getString("description"));
+            currExpense.add(getRs().getDate("creationDate").toString());
+            currExpense.add(getRs().getDate("dueDate").toString());
+            currExpense.add(Frequency.stringToFrequency(String.valueOf(getRs().getInt("frequency"))));
+            allExpenses.add(currExpense);
         }
 
         close();
+
+        String[][] data = new String[allExpenses.size()][];
+        int i = 0, j = 0;
+        for (ArrayList<String> row: allExpenses) {
+            data[i] = new String[row.size()];
+            j = 0;
+            for (String str: row) {
+                data[i][j] = str;
+                j++;
+            }
+            i++;
+        }
 
         return data;
     }
@@ -122,10 +119,10 @@ public class DerbyDBModel implements IModel {
 
     public void createUsers() throws SQLException, ClassNotFoundException {
         init();
-        getStatement().execute("CREATE TABLE Users(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), username varchar(250) NULL, password varchar(100), UNIQUE (id))");
-        getStatement().execute("INSERT INTO Users values ('erez', 'erez')");
-        getStatement().execute("INSERT INTO Users values ('nati', 'nati')");
-        getStatement().execute("INSERT INTO Users values ('kobi', 'kobi')");
+        getStatement().execute("CREATE TABLE Users(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), username varchar(250) NOT NULL, password varchar(100) NOT NULL, UNIQUE (id))");
+        getStatement().execute("INSERT INTO Users(username, password) values ('erez', 'erez')");
+        getStatement().execute("INSERT INTO Users(username, password) values ('nati', 'nati')");
+        getStatement().execute("INSERT INTO Users(username, password) values ('kobi', 'kobi')");
         close();
     }
 
@@ -142,21 +139,10 @@ public class DerbyDBModel implements IModel {
     public void createExpenses() throws SQLException, ClassNotFoundException {
         init();
         getStatement().execute("CREATE TABLE Expense(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
-                "ownerid int, cost int, category varchar(250) NOT NULL," +
+                "ownerid int, cost float, category varchar(250) NOT NULL," +
                 "currency int, description varchar(250) NOT NULL," +
                 "creationDate DATE, dueDate DATE, frequency int," +
                 "UNIQUE (id))");
-        getStatement().execute("INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (1, 100, 'House', 1, 'abba...', '2020-12-17', '2020-12-21', 1)");
-        getStatement().execute("INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (1, 200, 'Tax',   2, 'qqqq...', '2020-12-17', '2021-01-20', 1)");
-        getStatement().execute("INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (2, 300, 'Tax',   1, 'zzzz...', '2020-12-17', '2020-12-23', 1)");
-        getStatement().execute("INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (3, 400, 'Car',   3, 'aaaa...', '2020-12-17', '2020-12-25', 2)");
-        getStatement().execute("INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (1, 500, 'Car',   1, '1234...', '2020-12-17', '2022-01-01', 3)");
-
-
-        while(getRs().next()) {
-            System.out.println("id=" + getRs().getInt("id") + " description=" + getRs().getString("description")
-                    + " creationDate=" + getRs().getDate("creationDate") + " dueDate=" + getRs().getDate("dueDate") + " category=" + getRs().getString("category"));
-        }
 
         close();
     }
@@ -164,13 +150,11 @@ public class DerbyDBModel implements IModel {
     public void addExpense(Expense e) throws SQLException, ClassNotFoundException {
         init();
 
-        System.out.println(e.toString());
-
         try {
             PreparedStatement insertStatement = connection.prepareStatement(
                     "INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (?, ?, ?, ?, ?, ?, ?, ?)");
             insertStatement.setInt(1, e.getOwner());
-            insertStatement.setInt(2, (int) e.getCost());
+            insertStatement.setDouble(2, e.getCost());
             insertStatement.setString(3, e.getCategory().getCategoryName());
             insertStatement.setInt(4, e.getCurrency().getId());
             insertStatement.setString(5, e.getDescription());
@@ -182,18 +166,15 @@ public class DerbyDBModel implements IModel {
             throwables.printStackTrace();
         }
 
-        setRs(getStatement().executeQuery("SELECT id, description, creationDate, category, dueDate FROM Expense")); // execute = multiple results
+        setRs(getStatement().executeQuery("SELECT id, cost, description, creationDate, category, dueDate FROM Expense")); // execute = multiple results
 
         while(getRs().next()) {
-            System.out.println("id=" + getRs().getInt("id") + " description=" + getRs().getString("description")
+            System.out.println("id=" + getRs().getInt("id") + " cost=" + getRs().getDouble("cost") + " description=" + getRs().getString("description")
                     + " creationDate=" + getRs().getDate("creationDate") + " dueDate=" + getRs().getDate("dueDate") + " category=" + getRs().getString("category"));
         }
 
         close();
     }
-
-    //getStatement().execute("INSERT INTO Users values (1, 'erez', 'erez')");
-
     public boolean isUserMatched(String username, String password) throws SQLException, ClassNotFoundException {
         init();
         boolean r = false;
@@ -216,5 +197,4 @@ public class DerbyDBModel implements IModel {
         close();
         return r;
     }
-
 }
