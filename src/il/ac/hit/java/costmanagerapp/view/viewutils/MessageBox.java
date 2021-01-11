@@ -2,7 +2,8 @@ package il.ac.hit.java.costmanagerapp.view.viewutils;
 
 import javax.swing.*;
 
-public class MessageBox {
+public class MessageBox
+{
 
     /**
      * Generates UI message box

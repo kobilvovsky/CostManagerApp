@@ -3,8 +3,8 @@ package il.ac.hit.java.costmanagerapp.view;
 import il.ac.hit.java.costmanagerapp.model.*;
 import il.ac.hit.java.costmanagerapp.model.exceptions.CostManagerException;
 import il.ac.hit.java.costmanagerapp.view.viewutils.HintTextField;
-import il.ac.hit.java.costmanagerapp.view.viewutils.RoundedBorder;
 import il.ac.hit.java.costmanagerapp.view.viewutils.MessageBox;
+import il.ac.hit.java.costmanagerapp.view.viewutils.RoundedBorder;
 import il.ac.hit.java.costmanagerapp.viewmodel.IViewModel;
 
 import javax.swing.*;
@@ -784,6 +784,8 @@ public class View implements IView {
 //                            frame.dispose();
 //                        } else
 //                            System.out.println("WRONG PASSWORD U DUMBASS!!");
+                    } else {
+                        //
                     }
                 }
             });
