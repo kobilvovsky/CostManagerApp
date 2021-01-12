@@ -44,6 +44,7 @@ public class ViewModel implements IViewModel {
             public void run() {
                 try {
                     model.addExpense(expense);
+                    view.showMessage("Expense was added Successfully","Success!");
                 } catch (CostManagerException e) {
                     System.out.println(e.getMessage());
                     view.showMessage("Error in adding expense", "Error");
@@ -54,7 +55,18 @@ public class ViewModel implements IViewModel {
 
     @Override
     public void addUser(User user) throws CostManagerException{
+        pool.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
         model.addUser(user);
+                    view.showMessage("User was added Successfully","Success!");
+                } catch (CostManagerException e) {
+                    System.out.println(e.getMessage());
+                    view.showMessage("Error in adding user", "Error");
+                }
+            }
+        });
     }
 
     @Override
