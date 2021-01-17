@@ -9,6 +9,8 @@ import il.ac.hit.java.costmanagerapp.viewmodel.IViewModel;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -1002,7 +1004,9 @@ public class View implements IView {
         private JTable table;
         private JScrollPane sp;
 
-              /**
+        String column[] = {"Id", "Cost", "Category", "Currency", "Description", "CreatedAt", "dueDate", "Frequency"};
+
+         /**
          * View screen constructor (table)
          * @throws SQLException if there was an error with a query
          * @throws ClassNotFoundException if database wasn't initiated properly
@@ -1010,21 +1014,46 @@ public class View implements IView {
         public ViewScreen() throws CostManagerException {
             panel = new JPanel(new BorderLayout());
             getTable();
+
+            createListeners();
         }
 
-
-          /**
+         /**
          * Sets table data by requesting all expenses of a user from the database
          * @throws SQLException if there was an error with a query
          * @throws ClassNotFoundException if database wasn't initiated properly
          */
         public void getTable() throws CostManagerException {
             String data[][] = vm.getUserExpenses();
-            String column[] = {"Id", "Cost", "Category", "Currency", "Description", "CreatedAt", "dueDate", "Frequency"};
             table = new JTable(data, column);
             table.setFillsViewportHeight(true);
             sp = new JScrollPane(table);
             panel.add(sp, BorderLayout.CENTER);
+        }
+
+        /**
+         * Creates all listeners of the screen
+         */
+        public void createListeners() {
+            table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+                int row;
+
+                @Override
+                public void valueChanged(ListSelectionEvent e) {
+                    if (!e.getValueIsAdjusting()) {
+                        row = table.getSelectedRow();
+
+                        if(row != -1) {
+                            String[] expenseData = new String[column.length];
+
+                            for (int i = 0; i < column.length; i++)
+                                expenseData[i] = (String) table.getValueAt(row, i);
+
+                            View.EditExpenseScreen editScreen = new View.EditExpenseScreen();
+                        }
+                    }
+                }
+            });
         }
 
         /**
