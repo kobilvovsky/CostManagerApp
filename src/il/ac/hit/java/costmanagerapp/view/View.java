@@ -1049,7 +1049,8 @@ public class View implements IView {
                             for (int i = 0; i < column.length; i++)
                                 expenseData[i] = (String) table.getValueAt(row, i);
 
-                            View.EditExpenseScreen editScreen = new View.EditExpenseScreen();
+                            System.out.println(expenseData[0]);
+                            //View.EditExpenseScreen editScreen = new View.EditExpenseScreen();
                         }
                     }
                 }

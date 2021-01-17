@@ -22,6 +22,7 @@ public class DerbyDBModel implements IModel {
     private DerbyDBModel() throws CostManagerException {
         try {
             Class.forName(driver);
+            //createTables();
         } catch (ClassNotFoundException e) {
             throw new CostManagerException("Could not find the Derby JAR file.");
         }
