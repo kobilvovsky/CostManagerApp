@@ -16,4 +16,5 @@ public interface IView {
      * @param strTitle title string of the message
      */
     public void showMessage(String strMessage,String strTitle);
+    public void callGetTable(String [][] data);
 }

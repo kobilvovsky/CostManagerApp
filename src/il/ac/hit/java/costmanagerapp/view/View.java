@@ -26,6 +26,11 @@ public class View implements IView {
 
     private IViewModel vm;
     private LoginScreen ui;
+    private MainScreen mainScreen;
+    private ViewScreen viewScreen;
+    private GeneratePieScreen generatePieScreen;
+    private AddExpenseScreen addExpenseScreen;
+    private EditExpenseScreen editExpenseScreen;
 
     @Override
     public void setViewModel(IViewModel vm) {
@@ -44,6 +49,11 @@ public class View implements IView {
                 }
             });
         }
+    }
+
+    @Override
+    public void callGetTable(String[][] data) {
+        View.this.viewScreen.getTable(data);
     }
 
     /**
@@ -536,62 +546,6 @@ public class View implements IView {
                 }
             });
         }
-//        btnAddExpense.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                try {
-//                    float amount = Float.parseFloat(tfExpenseAmount.getText());
-//                    String description = tfExpenseDescription.getText();
-//
-//                    String categoryStr = String.valueOf(cbCategory.getSelectedItem());
-//                    Category category = new Category(categoryStr);
-//                    String frequencyStr = bgFrequency.getSelection().getActionCommand();
-//                    Frequency frequency = null;
-//                    switch (frequencyStr) {
-//                        case "ONE_TIME":
-//                            frequency = Frequency.ONE_TIME;
-//                            break;
-//                        case "MONTHLY":
-//                            frequency = Frequency.MONTHLY;
-//                            break;
-//                        default:
-//                            frequency = Frequency.YEARLY;
-//                    }
-//                    String currencyStr = bgCurrency.getSelection().getActionCommand();
-//                    Currency currency = null;
-//                    switch (currencyStr) {
-//                        case "USD":
-//                            currency = Currency.USD;
-//                            break;
-//                        case "EURO":
-//                            currency = Currency.EURO;
-//                            break;
-//                        case "YEN":
-//                            currency = Currency.YEN;
-//                            break;
-//                        case "POUND":
-//                            currency = Currency.POUND;
-//                            break;
-//                        default:
-//                            currency = Currency.NIS;
-//                    }
-//                    String date = tfExpenseDate.getText();
-//
-//                    //Need to send Expense parameter after confirming with Erez and updating the branch.
-//                    Expense expense = new Expense(0,amount,category,currency,description,date,frequency);
-//                    try {
-//                        vm.addExpense(expense);
-//                    } catch (SQLException throwable) {
-//                        throwable.printStackTrace();
-//                    } catch (ClassNotFoundException classNotFoundException) {
-//                        classNotFoundException.printStackTrace();
-//                    }
-//                } catch (NumberFormatException ex) {
-//                    System.out.println(ex);
-//                    //adding the relevant exception..
-//                }
-//            }
-//        });
 
         /**
          * Gets screen's panel
@@ -778,7 +732,7 @@ public class View implements IView {
                     String pass=String.valueOf(tfPassword.getPassword());
                     //checking that all fields are filled correctly
                     if(!tfUserName.getText().isEmpty() && !pass.isEmpty()) {
-                        MainScreen mainScreen = new MainScreen();
+                        View.this.mainScreen = new MainScreen();
                         frame.dispose();
 //                        boolean r = vm.isUserMatched(tfUserName.getText(), pass);
 //                        System.out.println(r);
@@ -891,38 +845,38 @@ public class View implements IView {
             viewBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    ViewScreen viewScreen = null;
                     try {
-                        viewScreen = new ViewScreen();
+                        View.this.viewScreen= new ViewScreen();
+                        View.this.viewScreen.generateTable();
                     } catch (CostManagerException ex) {
                        ex.getCause();
                     }
 
-                    resetView(viewScreen.getPanel());
+                    resetView(View.this.viewScreen.getPanel());
                 }
             });
 
             editBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    View.EditExpenseScreen editScreen = new View.EditExpenseScreen();
-                    resetView(editScreen.getPanel());
+                    View.this.editExpenseScreen = new EditExpenseScreen();
+                    resetView(editExpenseScreen.getPanel());
                 }
             });
 
             addBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    View.AddExpenseScreen addScreen = new View.AddExpenseScreen();
-                    resetView(addScreen.getPanel());
+                    View.this.addExpenseScreen = new AddExpenseScreen();
+                    resetView(addExpenseScreen.getPanel());
                 }
             });
 
             reportBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    View.GeneratePieScreen pieScreen = new View.GeneratePieScreen();
-                    resetView(pieScreen.getPanel());
+                    View.this.generatePieScreen = new GeneratePieScreen();
+                    resetView(generatePieScreen.getPanel());
                 }
             });
 
@@ -1013,9 +967,8 @@ public class View implements IView {
          */
         public ViewScreen() throws CostManagerException {
             panel = new JPanel(new BorderLayout());
-            getTable();
 
-            createListeners();
+
         }
 
          /**
@@ -1023,8 +976,12 @@ public class View implements IView {
          * @throws SQLException if there was an error with a query
          * @throws ClassNotFoundException if database wasn't initiated properly
          */
-        public void getTable() throws CostManagerException {
-            String data[][] = vm.getUserExpenses();
+        public void generateTable() throws CostManagerException {
+            vm.getUserExpenses();
+            createListeners();
+        }
+
+        public void getTable(String [][] data){
             table = new JTable(data, column);
             table.setFillsViewportHeight(true);
             sp = new JScrollPane(table);

@@ -50,5 +50,5 @@ public interface IViewModel {
      * @throws SQLException if there was an error with the query
      * @throws ClassNotFoundException if database wasn't initiated properly
      */
-    public String[][] getUserExpenses() throws CostManagerException;
+    public void getUserExpenses() throws CostManagerException;
 }

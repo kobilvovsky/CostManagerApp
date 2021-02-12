@@ -1,15 +1,11 @@
 package il.ac.hit.java.costmanagerapp.viewmodel;
 
-import il.ac.hit.java.costmanagerapp.model.DerbyDBModel;
 import il.ac.hit.java.costmanagerapp.model.Expense;
 import il.ac.hit.java.costmanagerapp.model.IModel;
 import il.ac.hit.java.costmanagerapp.model.User;
 import il.ac.hit.java.costmanagerapp.model.exceptions.CostManagerException;
 import il.ac.hit.java.costmanagerapp.view.IView;
-import il.ac.hit.java.costmanagerapp.view.View;
 
-import javax.swing.*;
-import java.sql.SQLException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -101,8 +97,9 @@ public class ViewModel implements IViewModel {
     }
 
     @Override
-    public String[][] getUserExpenses() throws CostManagerException {
-        return model.getUserExpenses();
+    public void getUserExpenses() throws CostManagerException {
+        String [][] data=model.getUserExpenses();
+        view.callGetTable(data);
     }
 }
 
