@@ -564,10 +564,10 @@ public class View implements IView {
         private JLabel endDateLabel;
         private JTextField endDateField;
         private JButton Generate;
-        private PieChartComponent pieChart;
         private GroupLayout layout;
         private GroupLayout.SequentialGroup vGroup;
         private Box temp;
+        private PieChart testChart;
 
         /**
          * Pie chart constructor
@@ -575,9 +575,9 @@ public class View implements IView {
         public GeneratePieScreen() {
             panel = new JPanel();
             temp = Box.createHorizontalBox();
-            pieChart = new PieChartComponent();
+            testChart = new PieChart("test");
             temp.add(Box.createRigidArea(new Dimension(190, 0)));
-            temp.add(pieChart);
+            temp.add(testChart, BorderLayout.CENTER);
 
             layout = new GroupLayout(panel);
 
