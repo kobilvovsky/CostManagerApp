@@ -1,6 +1,7 @@
 package il.ac.hit.java.costmanagerapp.view;
 
 import il.ac.hit.java.costmanagerapp.model.*;
+import il.ac.hit.java.costmanagerapp.model.Currency;
 import il.ac.hit.java.costmanagerapp.model.exceptions.CostManagerException;
 import il.ac.hit.java.costmanagerapp.view.viewutils.HintTextField;
 import il.ac.hit.java.costmanagerapp.view.viewutils.MessageBox;
@@ -9,18 +10,12 @@ import il.ac.hit.java.costmanagerapp.viewmodel.IViewModel;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Vector;
+import java.util.*;
 
 public class View implements IView {
 
@@ -53,7 +48,17 @@ public class View implements IView {
 
     @Override
     public void callGetTable(String[][] data) {
-        View.this.viewScreen.getTable(data);
+        viewScreen.getTable(data);
+    }
+
+    @Override
+    public void printExpenseToEditScreen(ArrayList<String> data) {
+        editExpenseScreen.uploadDataToComponents(data);
+    }
+
+    @Override
+    public void printPieToScreen(HashMap<String, Double> data) {
+        
     }
 
     /**
@@ -66,6 +71,15 @@ public class View implements IView {
                 View.this.ui=new LoginScreen();
             }
         });
+    }
+
+    /**
+     * Check if a string is a number and less than 7 digits
+     * @param number number as string
+     * @return boolean
+     */
+    public boolean isNumeric(String number) {
+        return number.matches("\\d{1,6}");
     }
 
     public class AddExpenseScreen {
@@ -107,7 +121,6 @@ public class View implements IView {
         private JButton btnAddExpense;
         private JButton btnAddCategory;
 
-        private ArrayList<String> cats;
         private Vector defaultCategory;
         private DefaultComboBoxModel model;
 
@@ -254,7 +267,8 @@ public class View implements IView {
         }
 
         /**
-         * Creates all listeners of the screen
+         * Creates add category listener
+         * Creates add expense listener
          */
         public void createListeners() {
             btnAddCategory.addActionListener(new ActionListener() {
@@ -350,6 +364,7 @@ public class View implements IView {
         private GroupLayout layout;
         private GroupLayout.SequentialGroup vGroup;
 
+        private JLabel lbExpenseId;
         private JLabel lbExpenseAmount;
         private JLabel lbExpenseCurrency;
         private JLabel lbExpenseDescription;
@@ -357,6 +372,7 @@ public class View implements IView {
         private JLabel lbExpenseFrequency;
         private JLabel lbExpenseDate;
 
+        private JTextField tfExpenseId;
         private JTextField tfExpenseAmount;
         private JTextField tfExpenseDescription;
         private JTextField tfExpenseDate;
@@ -379,11 +395,12 @@ public class View implements IView {
         private JComboBox cbCategory;
 
         private Box bxCategory;
+        private Box bxLoad;
 
-        private JButton btnAddExpense;
+        private JButton btnLoadExpense;
+        private JButton btnUpdateExpense;
         private JButton btnAddCategory;
 
-        private ArrayList<String> cats;
         private Vector defaultCategory;
         private DefaultComboBoxModel model;
 
@@ -393,6 +410,18 @@ public class View implements IView {
         public EditExpenseScreen() {
             mainPanel = new JPanel();
             layout = new GroupLayout(mainPanel);
+
+            lbExpenseId = new JLabel("Enter Expense ID: ");
+            tfExpenseId = new JTextField(15);
+            tfExpenseId.setMaximumSize(new Dimension(200, 25));
+
+            btnLoadExpense = new JButton("Load Expense");
+            btnLoadExpense.setBorder(new RoundedBorder(5));
+
+            bxLoad = Box.createHorizontalBox();
+            bxLoad.add(tfExpenseId);
+            bxLoad.add(Box.createRigidArea(new Dimension(5, 0)));
+            bxLoad.add(btnLoadExpense);
 
             lbExpenseAmount = new JLabel("Enter Expense Amount: ");
             tfExpenseAmount = new JTextField(15);
@@ -463,11 +492,11 @@ public class View implements IView {
             bxFrequency.add(rbYearly);
 
             lbExpenseDate = new JLabel("Enter Expense Date: ");
-            tfExpenseDate = new HintTextField("yyyy-mm-dd");
+            tfExpenseDate = new JTextField("yyyy-mm-dd");
             tfExpenseDate.setMaximumSize(new Dimension(200, 25));
 
-            btnAddExpense = new JButton("Update Expense");
-            btnAddExpense.setBorder(new RoundedBorder(5));
+            btnUpdateExpense = new JButton("Update Expense");
+            btnUpdateExpense.setBorder(new RoundedBorder(5));
 
             mainPanel.setLayout(layout);
             layout.setAutoCreateGaps(true);
@@ -476,6 +505,7 @@ public class View implements IView {
 
             hGroup.addGroup(layout.createSequentialGroup()
                     .addGroup(layout.createParallelGroup()
+                            .addComponent(lbExpenseId)
                             .addComponent(lbExpenseAmount)
                             .addComponent(lbExpenseCurrency)
                             .addComponent(lbExpenseDescription)
@@ -483,17 +513,22 @@ public class View implements IView {
                             .addComponent(lbExpenseFrequency)
                             .addComponent(lbExpenseDate))
                     .addGroup(layout.createParallelGroup()
+                            .addComponent(bxLoad)
                             .addComponent(tfExpenseAmount)
                             .addComponent(bxCurrency)
                             .addComponent(tfExpenseDescription)
                             .addComponent(bxCategory)
                             .addComponent(bxFrequency)
                             .addComponent(tfExpenseDate)));
-            hGroup.addComponent(btnAddExpense);
+            hGroup.addComponent(btnUpdateExpense);
 
             layout.setHorizontalGroup(hGroup);
 
             GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
+
+            vGroup.addGroup(layout.createParallelGroup()
+                    .addComponent(lbExpenseId)
+                    .addComponent(bxLoad));
 
             vGroup.addGroup(layout.createParallelGroup()
                     .addComponent(lbExpenseAmount)
@@ -520,13 +555,89 @@ public class View implements IView {
                     .addComponent(tfExpenseDate));
 
             vGroup.addGroup(layout.createParallelGroup()
-                    .addComponent(btnAddExpense));
+                    .addComponent(btnUpdateExpense));
 
             layout.setVerticalGroup(vGroup);
             createListeners();
         }
 
         public void createListeners() {
+            btnUpdateExpense.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        if(isNumeric(tfExpenseId.getText())) {
+                            int id = Integer.parseInt(tfExpenseId.getText());
+                            double amount = Double.parseDouble(tfExpenseAmount.getText());
+                            String description = tfExpenseDescription.getText();
+                            String categoryStr = String.valueOf(cbCategory.getSelectedItem());
+                            Category category = new Category(categoryStr);
+                            String frequencyStr = bgFrequency.getSelection().getActionCommand();
+                            Frequency frequency = null;
+                            switch (frequencyStr)
+                            {
+                                case "ONE_TIME":
+                                    frequency = Frequency.ONE_TIME;
+                                    break;
+                                case "MONTHLY":
+                                    frequency = Frequency.MONTHLY;
+                                    break;
+                                default:
+                                    frequency = Frequency.YEARLY;
+                            }
+
+                            String currencyStr = bgCurrency.getSelection().getActionCommand();
+                            Currency currency = null;
+
+                            switch (currencyStr) {
+                                case "USD":
+                                    currency = Currency.USD;
+                                    break;
+                                case "EURO":
+                                    currency = Currency.EURO;
+                                    break;
+                                case "YEN":
+                                    currency = Currency.YEN;
+                                    break;
+                                case "POUND":
+                                    currency = Currency.POUND;
+                                    break;
+                                default:
+                                    currency = Currency.NIS;
+                            }
+                            String date = tfExpenseDate.getText();
+
+                            //Need to send Expense parameter after confirming with Erez and updating the branch.
+                            try {
+                                vm.updateExpense(id, amount, category, currency, description, date, frequency);
+                            } catch (CostManagerException costManagerException) {
+                                costManagerException.printStackTrace();
+                            }
+                        } else {
+                            showMessage("You must enter a number", "Error");
+                        }
+                    } catch (NumberFormatException ex) {
+                        System.out.println(ex);
+                        //adding the relevant exception..
+                    }
+                }
+            });
+
+            btnLoadExpense.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if(isNumeric(tfExpenseId.getText())) {
+                        try {
+                            vm.getExpense(Integer.parseInt(tfExpenseId.getText()));
+                        } catch (CostManagerException costManagerException) {
+                            costManagerException.printStackTrace();
+                        }
+                    } else {
+                        showMessage("You must enter a number", "Error");
+                    }
+                }
+            });
+
             btnAddCategory.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -548,11 +659,88 @@ public class View implements IView {
         }
 
         /**
+         * Updates textviews with the data of the expense id
+         * @param data expense data from DB
+         */
+        public void uploadDataToComponents(ArrayList<String> data) {
+            if(!data.isEmpty()) {
+                boolean defCategory = false;
+                tfExpenseAmount.setText(data.get(0));
+
+                for (Object category : defaultCategory) {
+                    if (category.equals(data.get(1))) {
+                        cbCategory.setSelectedItem(category); //category
+                        defCategory = true;
+                        break;
+                    }
+                }
+
+                if (!defCategory) {
+                    defaultCategory.add(data.get(1));
+                    cbCategory.setSelectedItem(data.get(1));
+                }
+
+                setCurrencyRadio(data.get(2));
+                tfExpenseDescription.setText(data.get(3));
+                tfExpenseDate.setText(data.get(4));
+                setFrequencyRadio(data.get(5));
+            } else {
+                showMessage("There is no expense with that id", "Error");
+            }
+        }
+
+        /**
          * Gets screen's panel
          * @return JPanel object
          */
         public JPanel getPanel () {
             return mainPanel;
+        }
+
+        /**
+         * Sets the category based on Expense's category value
+         * @param currency currency type as string
+         */
+        public void setCurrencyRadio(String currency) {
+            bgCurrency.clearSelection();
+
+            switch(currency) {
+                case "EURO":
+                    rbEURO.setSelected(true);
+                    break;
+
+                case "USD":
+                    rbUSD.setSelected(true);
+                    break;
+
+                case "NIS":
+                    rbNIS.setSelected(true);
+                    break;
+
+                case "POUND":
+                    rbPOUND.setSelected(true);
+                    break;
+
+                case "YEN":
+                    rbYEN.setSelected(true);
+                    break;
+            }
+        }
+
+        /**
+         * Sets the frequency based on Expense's frequency value
+         * @param freq frequency type as string
+         */
+        public void setFrequencyRadio(String freq) {
+            bgFrequency.clearSelection();
+
+            if(freq.equals(Frequency.ONE_TIME.name())) {
+                rbOneTime.setSelected(true);
+            } else if (freq.equals(Frequency.MONTHLY.name())) {
+                rbMonthly.setSelected(true);
+            } else if (freq.equals(Frequency.YEARLY.name())) {
+                rbYearly.setSelected(true);
+            }
         }
     }
 
@@ -641,7 +829,7 @@ public class View implements IView {
         }
 
         /**
-         * Creates all listeners of the screen
+         * Creates graph screen listener
          */
         private void createListeners() {
             Generate.addActionListener(new ActionListener() {
@@ -723,7 +911,8 @@ public class View implements IView {
         }
 
         /**
-         * Creates all listeners of the screen
+         * Creates user login button listener
+         * Creates user sign up listener
          */
         private void createListeners() {
             btnLogin.addActionListener(new ActionListener() {
@@ -816,7 +1005,7 @@ public class View implements IView {
                 }
             });
             frame.setTitle("CostManagerApp - Menu");
-            frame.setSize(680, 300);
+            frame.setSize(720, 360);
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
 
@@ -839,7 +1028,11 @@ public class View implements IView {
         }
 
         /**
-         * Creates all listeners of the screen
+         * Creates view screen listener
+         * Creates edit screen listener
+         * Creates add screen listener
+         * Creates report screen listener
+         * Creates log out screen listener
          */
         public void createListeners() {
             viewBtn.addActionListener(new ActionListener() {
@@ -924,7 +1117,7 @@ public class View implements IView {
         }
 
         /**
-         * Creates all listeners of the screen
+         * Creates user sign up listener
          */
         public void createListeners() {
             btnSignUp.addActionListener(new ActionListener() {
@@ -962,23 +1155,16 @@ public class View implements IView {
 
          /**
          * View screen constructor (table)
-         * @throws SQLException if there was an error with a query
-         * @throws ClassNotFoundException if database wasn't initiated properly
          */
         public ViewScreen() throws CostManagerException {
             panel = new JPanel(new BorderLayout());
-
-
         }
 
          /**
          * Sets table data by requesting all expenses of a user from the database
-         * @throws SQLException if there was an error with a query
-         * @throws ClassNotFoundException if database wasn't initiated properly
          */
         public void generateTable() throws CostManagerException {
             vm.getUserExpenses();
-            createListeners();
         }
 
         public void getTable(String [][] data){
@@ -986,32 +1172,6 @@ public class View implements IView {
             table.setFillsViewportHeight(true);
             sp = new JScrollPane(table);
             panel.add(sp, BorderLayout.CENTER);
-        }
-
-        /**
-         * Creates all listeners of the screen
-         */
-        public void createListeners() {
-            table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-                int row;
-
-                @Override
-                public void valueChanged(ListSelectionEvent e) {
-                    if (!e.getValueIsAdjusting()) {
-                        row = table.getSelectedRow();
-
-                        if(row != -1) {
-                            String[] expenseData = new String[column.length];
-
-                            for (int i = 0; i < column.length; i++)
-                                expenseData[i] = (String) table.getValueAt(row, i);
-
-                            System.out.println(expenseData[0]);
-                            //View.EditExpenseScreen editScreen = new View.EditExpenseScreen();
-                        }
-                    }
-                }
-            });
         }
 
         /**
