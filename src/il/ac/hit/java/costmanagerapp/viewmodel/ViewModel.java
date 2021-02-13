@@ -1,11 +1,10 @@
 package il.ac.hit.java.costmanagerapp.viewmodel;
 
-import il.ac.hit.java.costmanagerapp.model.Expense;
-import il.ac.hit.java.costmanagerapp.model.IModel;
-import il.ac.hit.java.costmanagerapp.model.User;
+import il.ac.hit.java.costmanagerapp.model.*;
 import il.ac.hit.java.costmanagerapp.model.exceptions.CostManagerException;
 import il.ac.hit.java.costmanagerapp.view.IView;
 
+import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -55,8 +54,8 @@ public class ViewModel implements IViewModel {
             @Override
             public void run() {
                 try {
-        model.addUser(user);
-                    view.showMessage("User was added Successfully","Success!");
+                    model.addUser(user);
+                    view.showMessage("User was added successfully","Success!");
                 } catch (CostManagerException e) {
                     System.out.println(e.getMessage());
                     view.showMessage("Error in adding user", "Error");
@@ -98,10 +97,22 @@ public class ViewModel implements IViewModel {
 
     @Override
     public void getUserExpenses() throws CostManagerException {
-        String [][] data=model.getUserExpenses();
+        String[][] data = model.getUserExpenses();
         view.callGetTable(data);
     }
 
+
+    @Override
+    public void getExpense(int id) throws CostManagerException {
+        ArrayList<String> data = model.getExpense(id);
+        view.printExpenseToEditScreen(data);
+    }
+
+    @Override
+    public void updateExpense(int id, double amount, Category cat, Currency currency, String description, String date, Frequency freq) throws CostManagerException {
+        model.updateExpense(id, amount, cat, currency, description, date, freq);
+        view.showMessage("Expense was updated successfully","Success!");
+    }
 }
 
 

@@ -143,7 +143,7 @@ public class Expense {
 
     /**
      * Sets due date of the expense
-     * @param dueDate due date of the expnese
+     * @param dueDate due date of the expense
      */
     public void setDueDate(String dueDate) {
         this.dueDate = java.sql.Date.valueOf(dueDate);

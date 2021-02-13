@@ -3,6 +3,7 @@ import il.ac.hit.java.costmanagerapp.model.exceptions.CostManagerException;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DerbyDBModel implements IModel {
 
@@ -17,7 +18,6 @@ public class DerbyDBModel implements IModel {
 
     /**
      * DerbyDBModel constructor
-     * @throws ClassNotFoundException if database wasn't initiated properly
      */
     private DerbyDBModel() throws CostManagerException {
         try {
@@ -31,7 +31,6 @@ public class DerbyDBModel implements IModel {
     /**
      * Gets singleton instance of DerbyDBModel object
      * @return instance of DerbyDBModel
-     * @throws ClassNotFoundException if database wasn't initiated properly
      */
     public static DerbyDBModel getInstance() throws CostManagerException {
         if (single_instance == null)
@@ -40,10 +39,8 @@ public class DerbyDBModel implements IModel {
 
     }
 
-
-      /**
+     /**
      * Initialize a connection to the database
-     * @throws SQLException if there was an error with a query
      */
     private void init() throws CostManagerException {
         connection = null;
@@ -54,7 +51,6 @@ public class DerbyDBModel implements IModel {
         catch (SQLException e) {
             throw new CostManagerException(e.getMessage());
         }
-
     }
     /**
      * Closes the connection to the database
@@ -126,7 +122,7 @@ public class DerbyDBModel implements IModel {
         this.resultSet = rs;
     }
 
-      // ALPHA
+    // ALPHA
     public void createTables() throws CostManagerException {
         init();
         createUsers();
@@ -134,7 +130,7 @@ public class DerbyDBModel implements IModel {
         close();
     }
 
-      // ALPHA
+    // ALPHA
     public void dropTables() throws CostManagerException {
         init();
         try {
@@ -147,7 +143,7 @@ public class DerbyDBModel implements IModel {
         close();
     }
 
-      // ALPHA
+    // ALPHA
     public void createUsers() throws CostManagerException {
         init();
         try {
@@ -191,6 +187,7 @@ public class DerbyDBModel implements IModel {
 
     public void addExpense(Expense e) throws CostManagerException {
         init();
+
         try {
             PreparedStatement insertStatement = connection.prepareStatement(
                     "INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (?, ?, ?, ?, ?, ?, ?, ?)");
@@ -203,7 +200,6 @@ public class DerbyDBModel implements IModel {
             insertStatement.setDate(7, (Date) e.getDueDate());
             insertStatement.setInt(8, e.getType().getId());
             insertStatement.execute();
-
 
             setRs(getStatement().executeQuery("SELECT id, cost, description, creationDate, category, dueDate FROM Expense"));
 
@@ -220,6 +216,79 @@ public class DerbyDBModel implements IModel {
 
         close();
     }
+
+    public ArrayList<String> getExpense(int id) throws CostManagerException {
+        init();
+
+        ArrayList<String> expenseData = new ArrayList<>();
+        try {
+            PreparedStatement selectStatement = connection.prepareStatement("SELECT cost, category, currency, description, dueDate, frequency FROM Expense WHERE id = ?");
+            selectStatement.setInt(1, id);
+            setRs(selectStatement.executeQuery());
+
+            if(getRs().next()) {
+                expenseData.add(String.valueOf(getRs().getDouble("cost")));
+                expenseData.add(getRs().getString("category"));
+                expenseData.add(Currency.stringToCurrency(String.valueOf(getRs().getInt("currency"))));
+                expenseData.add(getRs().getString("description"));
+                expenseData.add(getRs().getDate("dueDate").toString());
+                expenseData.add(Frequency.stringToFrequency(String.valueOf(getRs().getInt("frequency"))));
+            }
+        } catch (SQLException e) {
+            throw new CostManagerException(e.getMessage());
+        }
+        close();
+
+        return expenseData;
+    }
+
+    public void updateExpense(int id, double amount, Category cat, Currency currency, String description, String date, Frequency freq) throws CostManagerException {
+        init();
+
+        try {
+            PreparedStatement uploadStatement = connection.prepareStatement("UPDATE Expense SET cost = ?, category = ?, currency = ?, description = ?, dueDate = ?, frequency = ? WHERE id = ?");
+            uploadStatement.setDouble(1, amount);
+            uploadStatement.setString(2, cat.getCategoryName());
+            uploadStatement.setInt(3, currency.getId());
+            uploadStatement.setString(4, description);
+            uploadStatement.setDate(5, (Date) java.sql.Date.valueOf(date));
+            uploadStatement.setInt(6, freq.getId());
+            uploadStatement.setInt(7, id);
+            uploadStatement.execute();
+
+            setRs(getStatement().executeQuery("SELECT id, cost, description, creationDate, category, dueDate FROM Expense"));
+
+            while(getRs().next()) {
+                System.out.println("id=" + getRs().getInt("id") + " cost=" + getRs().getDouble("cost") + " description=" + getRs().getString("description")
+                        + " creationDate=" + getRs().getDate("creationDate") + " dueDate=" + getRs().getDate("dueDate") + " category=" + getRs().getString("category"));
+            }
+
+        } catch (SQLException ex1) {
+            throw new CostManagerException("The query was incorrect");
+        } catch (NumberFormatException ex2) {
+            throw new CostManagerException("Entered wrong data type");
+        }
+
+        close();
+    }
+
+    public HashMap<String, Double> getSumPerCategory() throws CostManagerException {
+        init();
+        HashMap<String, Double> categories = new HashMap<>();
+        try {
+            setRs(getStatement().executeQuery("SELECT category, SUM(cost) AS total FROM Expense GROUP BY category"));
+
+            while(getRs().next())
+                categories.put(getRs().getString("category"), getRs().getDouble("total"));
+
+        } catch (SQLException e) {
+            throw new CostManagerException(e.getMessage());
+        }
+        close();
+
+        return categories;
+    }
+
     public boolean isUserMatched(String username, String password) throws CostManagerException {
         init();
         boolean r = false;
