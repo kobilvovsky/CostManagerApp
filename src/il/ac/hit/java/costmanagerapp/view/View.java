@@ -107,7 +107,7 @@ public class View implements IView {
 
         private ArrayList<String> cats;
         private Vector defaultCategory;
-        private DefaultComboBoxModel model;
+        private DefaultComboBoxModel comboBoxModel;
 
         /**
          * Add expense screen constructor
@@ -153,8 +153,8 @@ public class View implements IView {
             lbExpenseCategory = new JLabel("Select Expense Category: ");
             defaultCategory = new Vector();
             Collections.addAll(defaultCategory, Category.INITIAL_CATEGORIES);
-            model = new DefaultComboBoxModel(defaultCategory);
-            cbCategory = new JComboBox(model);
+            comboBoxModel = new DefaultComboBoxModel(defaultCategory);
+            cbCategory = new JComboBox(comboBoxModel);
             cbCategory.setMaximumSize(new Dimension(200, 25));
             btnAddCategory = new JButton("Add Category");
             btnAddCategory.setBorder(new RoundedBorder(5));
@@ -268,7 +268,7 @@ public class View implements IView {
                             "Enter your category"
                     );
                     if ((result != null) && (result.length() > 0)) {
-                        model.addElement(result);
+                        comboBoxModel.addElement(result);
                         cbCategory.setSelectedItem(result);
                     }
                 }
@@ -283,7 +283,6 @@ public class View implements IView {
                         String description = tfExpenseDescription.getText();
 
                         String categoryStr = String.valueOf(cbCategory.getSelectedItem());
-                        Category category = new Category(categoryStr);
                         String frequencyStr = bgFrequency.getSelection().getActionCommand();
                         Frequency frequency = null;
                         switch (frequencyStr) {
@@ -319,7 +318,7 @@ public class View implements IView {
                         String date = tfExpenseDate.getText();
 
                         //Need to send Expense parameter after confirming with Erez and updating the branch.
-                        Expense expense = new Expense(0, amount, category, currency, description, date, frequency);
+                        Expense expense = new Expense(0, amount, categoryStr, currency, description, date, frequency);
                         try {
                             vm.addExpense(expense);
                         } catch (CostManagerException costManagerException) {
@@ -383,7 +382,7 @@ public class View implements IView {
 
         private ArrayList<String> cats;
         private Vector defaultCategory;
-        private DefaultComboBoxModel model;
+        private DefaultComboBoxModel comboBoxModel;
 
         /**
          * Edit expense screen constructor
@@ -429,8 +428,8 @@ public class View implements IView {
             lbExpenseCategory = new JLabel("Select Expense Category: ");
             defaultCategory = new Vector();
             Collections.addAll(defaultCategory, Category.INITIAL_CATEGORIES);
-            model = new DefaultComboBoxModel(defaultCategory);
-            cbCategory = new JComboBox(model);
+            comboBoxModel = new DefaultComboBoxModel(defaultCategory);
+            cbCategory = new JComboBox(comboBoxModel);
             cbCategory.setMaximumSize(new Dimension(200, 25));
             btnAddCategory = new JButton("Add Category");
             btnAddCategory.setBorder(new RoundedBorder(5));
@@ -538,7 +537,7 @@ public class View implements IView {
                             "Enter your category"
                     );
                     if ((result != null) && (result.length() > 0)) {
-                        model.addElement(result);
+                        comboBoxModel.addElement(result);
                         cbCategory.setSelectedItem(result);
                     }
                 }
@@ -728,6 +727,7 @@ public class View implements IView {
             frame.setVisible(true);
 
             createListeners();
+
         }
 
         /**

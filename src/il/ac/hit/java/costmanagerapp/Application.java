@@ -1,6 +1,5 @@
 package il.ac.hit.java.costmanagerapp;
-import il.ac.hit.java.costmanagerapp.model.DerbyDBModel;
-import il.ac.hit.java.costmanagerapp.model.IModel;
+import il.ac.hit.java.costmanagerapp.model.*;
 import il.ac.hit.java.costmanagerapp.model.exceptions.CostManagerException;
 import il.ac.hit.java.costmanagerapp.view.IView;
 import il.ac.hit.java.costmanagerapp.view.View;
@@ -21,5 +20,7 @@ public class Application {
         view.setViewModel(vm);
         vm.setModel(model);
         vm.setView(view);
-    }
+
+
+  }
 }

@@ -51,4 +51,5 @@ public interface IViewModel {
      * @throws ClassNotFoundException if database wasn't initiated properly
      */
     public void getUserExpenses() throws CostManagerException;
+
 }

@@ -101,6 +101,7 @@ public class ViewModel implements IViewModel {
         String [][] data=model.getUserExpenses();
         view.callGetTable(data);
     }
+
 }
 
 
