@@ -5,6 +5,7 @@ import il.ac.hit.java.costmanagerapp.model.exceptions.CostManagerException;
 import il.ac.hit.java.costmanagerapp.view.IView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -99,6 +100,12 @@ public class ViewModel implements IViewModel {
     public void getUserExpenses() throws CostManagerException {
         String[][] data = model.getUserExpenses();
         view.callGetTable(data);
+    }
+
+    @Override
+    public void getSumPerCategory() throws CostManagerException {
+        HashMap<String ,Double> data = model.getSumPerCategory();
+        view.printPieToScreen(data);
     }
 
 

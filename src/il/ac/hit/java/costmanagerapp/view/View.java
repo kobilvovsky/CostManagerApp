@@ -61,7 +61,7 @@ public class View implements IView {
 
     @Override
     public void printPieToScreen(HashMap<String, Double> data) {
-        
+        generatePieScreen.setReport(data);
     }
 
     /**
@@ -761,24 +761,19 @@ public class View implements IView {
         private PieChart pieChart;
         private HashMap<String, Double> tempHash;
 
-
+        public void setReport(HashMap<String, Double> data) {
+            pieChart = new PieChart("test", data);
+            pieChart.setPreferredSize(new Dimension(280, 280));
+            piePanel.add(pieChart);
+        }
 
         /**
          * Pie chart constructor
          */
         public GeneratePieScreen() {
-            tempHash = new HashMap<String, Double>();
-            tempHash.put("Food", 12.0);
-            tempHash.put("School", 55.0);
-            tempHash.put("Bills", 23.0);
-            tempHash.put("Taxes", 10.0);
             dataPanel = new JPanel();
-            pieChart = new PieChart("test", tempHash);
-            pieChart.setPreferredSize(new Dimension(280, 280));
-            
             piePanel = new JPanel();
             piePanel.setVisible(false);
-            piePanel.add(pieChart);
             layout = new GroupLayout(dataPanel);
             startDateLabel = new JLabel("Start Date: ");
 
@@ -847,6 +842,11 @@ public class View implements IView {
             Generate.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    try {
+                        vm.getSumPerCategory();
+                    } catch (CostManagerException costManagerException) {
+                        costManagerException.printStackTrace();
+                    }
                     piePanel.setVisible(true);
                 }
             });

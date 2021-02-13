@@ -64,4 +64,6 @@ public interface IViewModel {
      */
     public void getUserExpenses() throws CostManagerException;
 
+    public void getSumPerCategory() throws CostManagerException;
+
 }
