@@ -25,12 +25,12 @@ public class ViewModel implements IViewModel {
 
     @Override
     public void setView(IView view) {
-        this.view=view;
+        this.view = view;
     }
 
     @Override
     public void setModel(IModel model) {
-        this.model=model;
+        this.model = model;
     }
 
     @Override
@@ -39,8 +39,10 @@ public class ViewModel implements IViewModel {
             @Override
             public void run() {
                 try {
-                    model.addExpense(expense);
-                    view.showMessage("Expense was added Successfully","Success!");
+                    if(model.addExpense(expense))
+                        view.showMessage("Expense was added successfully","Success!");
+                    else
+                        view.showMessage("Expense couldn't be added","Error");
                 } catch (CostManagerException e) {
                     System.out.println(e.getMessage());
                     view.showMessage("Error in adding expense", "Error");
@@ -55,8 +57,10 @@ public class ViewModel implements IViewModel {
             @Override
             public void run() {
                 try {
-                    model.addUser(user);
-                    view.showMessage("User was added successfully","Success!");
+                    if(model.addUser(user))
+                        view.showMessage("User was added successfully","Success!");
+                    else
+                        view.showMessage("Couldn't add a user","Error");
                 } catch (CostManagerException e) {
                     System.out.println(e.getMessage());
                     view.showMessage("Error in adding user", "Error");
@@ -75,22 +79,6 @@ public class ViewModel implements IViewModel {
                 System.out.println(r[0]);
                 return r[0];
             }
-
-//            @Override
-//            public void run() {
-//                try {
-//                    r[0] = model.isUserMatched(username, password);
-////                    if(r[0]) {
-////                        SwingUtilities.invokeLater(
-////                            View.MainScreen mainScreen = new View.MainScreen();
-////                        frame.dispose();
-////                        );
-////                    }
-//                } catch (SQLException | ClassNotFoundException throwable) { //needs to be replaced with own exception!
-//                    throwable.printStackTrace();
-//                    //Show message
-//                }
-//            }
         });
         System.out.println(r[0]);
         return r[0];
@@ -98,29 +86,80 @@ public class ViewModel implements IViewModel {
 
     @Override
     public void getUserExpenses() throws CostManagerException {
-        String[][] data = model.getUserExpenses();
-        view.callGetTable(data);
+        pool.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String[][] data = model.getUserExpenses();
+                    view.callGetTable(data);
+                } catch (CostManagerException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        });
     }
 
     @Override
-    public void getSumPerCategory() throws CostManagerException {
-        HashMap<String ,Double> data = model.getSumPerCategory();
-        view.printPieToScreen(data);
+    public void getSumPerCategory(String start, String end) throws CostManagerException {
+        pool.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    HashMap<String, Double> data = model.getSumPerCategory(start, end);
+                    view.printPieToScreen(data);
+                } catch (CostManagerException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        });
     }
 
+    @Override
+    public void deleteExpense(int id) throws CostManagerException {
+        pool.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if(model.deleteExpense(id))
+                        view.showMessage("Expense was deleted successfully","Success!");
+                    else
+                        view.showMessage("Expense couldn't be deleted","Error");
+                } catch (CostManagerException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        });
+    }
 
     @Override
     public void getExpense(int id) throws CostManagerException {
-        ArrayList<String> data = model.getExpense(id);
-        view.printExpenseToEditScreen(data);
+        pool.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ArrayList<String> data = model.getExpense(id);
+                    view.printExpenseToEditScreen(data);
+                } catch (CostManagerException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        });
     }
 
     @Override
     public void updateExpense(int id, double amount, Category cat, Currency currency, String description, String date, Frequency freq) throws CostManagerException {
-        model.updateExpense(id, amount, cat, currency, description, date, freq);
-        view.showMessage("Expense was updated successfully","Success!");
+        pool.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if(model.updateExpense(id, amount, cat, currency, description, date, freq))
+                        view.showMessage("Expense was updated successfully","Success!");
+                    else
+                        view.showMessage("Expense couldn't be updated","Error");
+                } catch (CostManagerException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        });
     }
 }
-
-
-

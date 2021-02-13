@@ -2,8 +2,6 @@ package il.ac.hit.java.costmanagerapp.model;
 import java.util.Date;
 
 public class Expense {
-    //private int id;
-    private int ownerID;
     private double cost; // cost of expense
     private Category category;
     private Currency currency;
@@ -14,7 +12,6 @@ public class Expense {
 
     /**
      * Expense constructor
-     * @param ownerId userId who made the expense
      * @param cost cost of the expense
      * @param category category of the expense
      * @param currency currency of the expense
@@ -22,9 +19,7 @@ public class Expense {
      * @param dueDate due date of the expense
      * @param type payment type of the expense
      */
-    public Expense(int ownerId, double cost, String category, Currency currency, String description, String dueDate, Frequency type) {
-        //setId(id);
-        setOwner(ownerId);
+    public Expense(double cost, String category, Currency currency, String description, String dueDate, Frequency type) {
         setCost(cost);
         setCategory(category);
         setCurrency(currency);
@@ -33,30 +28,6 @@ public class Expense {
         setDueDate(dueDate);
         setType(type);
     }
-
-    /**
-     * Gets userId of the user who created the expense
-     * @return userId
-     */
-    public int getOwner() {
-        return ownerID;
-    }
-
-    /**
-     * Sets the owner of the expense
-     * @param ownerID userId of the user who made the expense
-     */
-    public void setOwner(int ownerID) {
-        this.ownerID = ownerID;
-    }
-
-/*    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }*/
 
     /**
      * Gets the cost of the expense
@@ -172,7 +143,6 @@ public class Expense {
     @Override
     public String toString() {
         return "Expense{" +
-                "ownerID=" + getOwner() +
                 ", cost=" + getCost() +
                 ", category=" + getCategory().getCategoryName() +
                 ", currency=" + getCurrency() +

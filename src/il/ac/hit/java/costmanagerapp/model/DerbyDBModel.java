@@ -157,17 +157,20 @@ public class DerbyDBModel implements IModel {
         close();
     }
 
-    public void addUser(User user) throws CostManagerException {
+    public boolean addUser(User user) throws CostManagerException {
         init();
+        int usersAdded = 0;
         try {
             PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO Users(username, password) values (?, ?)");
             insertStatement.setString(1, user.getUserName().getName());
             insertStatement.setString(2,user.getUserPassword().getPassword());
-            insertStatement.execute();
+            usersAdded = insertStatement.executeUpdate();
         } catch (SQLException e) {
             throw new CostManagerException("Could not add user.");
         }
         close();
+
+        return usersAdded > 0;
     }
 
     // ALPHA
@@ -175,7 +178,7 @@ public class DerbyDBModel implements IModel {
         init();
         try {
             getStatement().execute("CREATE TABLE Expense(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
-                    "ownerid int, cost float, category varchar(250) NOT NULL," +
+                    "cost float, category varchar(250) NOT NULL," +
                     "currency int, description varchar(250) NOT NULL," +
                     "creationDate DATE, dueDate DATE, frequency int," +
                     "UNIQUE (id))");
@@ -185,29 +188,20 @@ public class DerbyDBModel implements IModel {
         close();
     }
 
-    public void addExpense(Expense e) throws CostManagerException {
+    public boolean addExpense(Expense e) throws CostManagerException {
         init();
-
+        int expensesAdded = 0;
         try {
             PreparedStatement insertStatement = connection.prepareStatement(
-                    "INSERT INTO Expense(ownerid, cost, category, currency, description, creationDate, dueDate, frequency) values (?, ?, ?, ?, ?, ?, ?, ?)");
-            insertStatement.setInt(1, e.getOwner());
-            insertStatement.setDouble(2, e.getCost());
-            insertStatement.setString(3, e.getCategory().getCategoryName());
-            insertStatement.setInt(4, e.getCurrency().getId());
-            insertStatement.setString(5, e.getDescription());
-            insertStatement.setDate(6, (Date) e.getCreationDate());
-            insertStatement.setDate(7, (Date) e.getDueDate());
-            insertStatement.setInt(8, e.getType().getId());
-            insertStatement.execute();
-
-            setRs(getStatement().executeQuery("SELECT id, cost, description, creationDate, category, dueDate FROM Expense"));
-
-            while(getRs().next()) {
-                System.out.println("id=" + getRs().getInt("id") + " cost=" + getRs().getDouble("cost") + " description=" + getRs().getString("description")
-                        + " creationDate=" + getRs().getDate("creationDate") + " dueDate=" + getRs().getDate("dueDate") + " category=" + getRs().getString("category"));
-            }
-
+                    "INSERT INTO Expense(cost, category, currency, description, creationDate, dueDate, frequency) values (?, ?, ?, ?, ?, ?, ?)");
+            insertStatement.setDouble(1, e.getCost());
+            insertStatement.setString(2, e.getCategory().getCategoryName());
+            insertStatement.setInt(3, e.getCurrency().getId());
+            insertStatement.setString(4, e.getDescription());
+            insertStatement.setDate(5, (Date) e.getCreationDate());
+            insertStatement.setDate(6, (Date) e.getDueDate());
+            insertStatement.setInt(7, e.getType().getId());
+            expensesAdded = insertStatement.executeUpdate();
         } catch (SQLException ex1) {
             throw new CostManagerException("The query was incorrect");
         } catch (NumberFormatException ex2) {
@@ -215,6 +209,7 @@ public class DerbyDBModel implements IModel {
         }
 
         close();
+        return expensesAdded > 0;
     }
 
     public ArrayList<String> getExpense(int id) throws CostManagerException {
@@ -242,9 +237,24 @@ public class DerbyDBModel implements IModel {
         return expenseData;
     }
 
-    public void updateExpense(int id, double amount, Category cat, Currency currency, String description, String date, Frequency freq) throws CostManagerException {
+    public boolean deleteExpense(int id) throws CostManagerException {
         init();
+        int countDeleted = 0;
+        try {
+            PreparedStatement selectStatement = connection.prepareStatement("DELETE FROM Expense WHERE id = ?");
+            selectStatement.setInt(1, id);
+            countDeleted = selectStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new CostManagerException(e.getMessage());
+        }
+        close();
 
+        return countDeleted > 0;
+    }
+
+    public boolean updateExpense(int id, double amount, Category cat, Currency currency, String description, String date, Frequency freq) throws CostManagerException {
+        init();
+        int countUpdated = 0;
         try {
             PreparedStatement uploadStatement = connection.prepareStatement("UPDATE Expense SET cost = ?, category = ?, currency = ?, description = ?, dueDate = ?, frequency = ? WHERE id = ?");
             uploadStatement.setDouble(1, amount);
@@ -254,15 +264,7 @@ public class DerbyDBModel implements IModel {
             uploadStatement.setDate(5, (Date) java.sql.Date.valueOf(date));
             uploadStatement.setInt(6, freq.getId());
             uploadStatement.setInt(7, id);
-            uploadStatement.execute();
-
-            setRs(getStatement().executeQuery("SELECT id, cost, description, creationDate, category, dueDate FROM Expense"));
-
-            while(getRs().next()) {
-                System.out.println("id=" + getRs().getInt("id") + " cost=" + getRs().getDouble("cost") + " description=" + getRs().getString("description")
-                        + " creationDate=" + getRs().getDate("creationDate") + " dueDate=" + getRs().getDate("dueDate") + " category=" + getRs().getString("category"));
-            }
-
+            countUpdated = uploadStatement.executeUpdate();
         } catch (SQLException ex1) {
             throw new CostManagerException("The query was incorrect");
         } catch (NumberFormatException ex2) {
@@ -270,13 +272,18 @@ public class DerbyDBModel implements IModel {
         }
 
         close();
+
+        return countUpdated > 0;
     }
 
-    public HashMap<String, Double> getSumPerCategory() throws CostManagerException {
+    public HashMap<String, Double> getSumPerCategory(String start, String end) throws CostManagerException {
         init();
         HashMap<String, Double> categories = new HashMap<>();
         try {
-            setRs(getStatement().executeQuery("SELECT category, SUM(cost) AS total FROM Expense GROUP BY category"));
+            PreparedStatement selectStatement = connection.prepareStatement("SELECT category, SUM(cost) AS total FROM Expense WHERE dueDate >= ? AND dueDate <= ? GROUP BY category");
+            selectStatement.setDate(1, (Date) java.sql.Date.valueOf(start));
+            selectStatement.setDate(2, (Date) java.sql.Date.valueOf(end));
+            setRs(selectStatement.executeQuery());
 
             while(getRs().next())
                 categories.put(getRs().getString("category"), getRs().getDouble("total"));
@@ -291,18 +298,12 @@ public class DerbyDBModel implements IModel {
 
     public boolean isUserMatched(String username, String password) throws CostManagerException {
         init();
-        boolean r = false;
+        int numResult = 0;
         try {
             PreparedStatement selectStatement = connection.prepareStatement("SELECT id FROM Users WHERE username = ? AND password = ?");
             selectStatement.setString(1, username);
             selectStatement.setString(2, password);
-            setRs(selectStatement.executeQuery());
-
-            while(getRs().next()) {
-                r = true;
-                System.out.println(getRs().getInt("id"));
-            }
-
+            numResult = selectStatement.executeUpdate();
         } catch (SQLException ex1) {
             throw new CostManagerException("The query was incorrect");
         } catch (NumberFormatException ex2) {
@@ -310,6 +311,6 @@ public class DerbyDBModel implements IModel {
         }
 
         close();
-        return r;
+        return numResult > 0;
     }
 }

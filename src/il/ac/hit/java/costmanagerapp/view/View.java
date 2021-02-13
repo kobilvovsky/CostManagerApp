@@ -16,8 +16,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import java.sql.SQLException;
-
 import java.util.*;
 
 public class View implements IView {
@@ -336,8 +334,7 @@ public class View implements IView {
                         }
                         String date = tfExpenseDate.getText();
 
-                        //Need to send Expense parameter after confirming with Erez and updating the branch.
-                        Expense expense = new Expense(0, amount, categoryStr, currency, description, date, frequency);
+                        Expense expense = new Expense(amount, categoryStr, currency, description, date, frequency);
                         try {
                             vm.addExpense(expense);
                         } catch (CostManagerException costManagerException) {
@@ -398,10 +395,12 @@ public class View implements IView {
 
         private Box bxCategory;
         private Box bxLoad;
+        private Box bxButtons;
 
         private JButton btnLoadExpense;
         private JButton btnUpdateExpense;
         private JButton btnAddCategory;
+        private JButton btnDeleteExpense;
 
         private Vector defaultCategory;
         private DefaultComboBoxModel comboBoxModel;
@@ -420,10 +419,21 @@ public class View implements IView {
             btnLoadExpense = new JButton("Load Expense");
             btnLoadExpense.setBorder(new RoundedBorder(5));
 
+            btnUpdateExpense = new JButton("Update Expense");
+            btnUpdateExpense.setBorder(new RoundedBorder(5));
+
+            btnDeleteExpense = new JButton("Delete Expense");
+            btnDeleteExpense.setBorder(new RoundedBorder(5));
+
             bxLoad = Box.createHorizontalBox();
             bxLoad.add(tfExpenseId);
             bxLoad.add(Box.createRigidArea(new Dimension(5, 0)));
             bxLoad.add(btnLoadExpense);
+
+            bxButtons = Box.createHorizontalBox();
+            bxButtons.add(btnUpdateExpense);
+            bxButtons.add(Box.createRigidArea(new Dimension(10, 0)));
+            bxButtons.add(btnDeleteExpense);
 
             lbExpenseAmount = new JLabel("Enter Expense Amount: ");
             tfExpenseAmount = new JTextField(15);
@@ -497,9 +507,6 @@ public class View implements IView {
             tfExpenseDate = new JTextField("yyyy-mm-dd");
             tfExpenseDate.setMaximumSize(new Dimension(200, 25));
 
-            btnUpdateExpense = new JButton("Update Expense");
-            btnUpdateExpense.setBorder(new RoundedBorder(5));
-
             mainPanel.setLayout(layout);
             layout.setAutoCreateGaps(true);
             layout.setAutoCreateContainerGaps(true);
@@ -522,7 +529,7 @@ public class View implements IView {
                             .addComponent(bxCategory)
                             .addComponent(bxFrequency)
                             .addComponent(tfExpenseDate)));
-            hGroup.addComponent(btnUpdateExpense);
+            hGroup.addComponent(bxButtons);
 
             layout.setHorizontalGroup(hGroup);
 
@@ -557,7 +564,7 @@ public class View implements IView {
                     .addComponent(tfExpenseDate));
 
             vGroup.addGroup(layout.createParallelGroup()
-                    .addComponent(btnUpdateExpense));
+                    .addComponent(bxButtons));
 
             layout.setVerticalGroup(vGroup);
             createListeners();
@@ -568,7 +575,7 @@ public class View implements IView {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     try {
-                        if(isNumeric(tfExpenseId.getText())) {
+                        if (isNumeric(tfExpenseId.getText())) {
                             int id = Integer.parseInt(tfExpenseId.getText());
                             double amount = Double.parseDouble(tfExpenseAmount.getText());
                             String description = tfExpenseDescription.getText();
@@ -576,8 +583,7 @@ public class View implements IView {
                             Category category = new Category(categoryStr);
                             String frequencyStr = bgFrequency.getSelection().getActionCommand();
                             Frequency frequency = null;
-                            switch (frequencyStr)
-                            {
+                            switch (frequencyStr) {
                                 case "ONE_TIME":
                                     frequency = Frequency.ONE_TIME;
                                     break;
@@ -609,7 +615,6 @@ public class View implements IView {
                             }
                             String date = tfExpenseDate.getText();
 
-                            //Need to send Expense parameter after confirming with Erez and updating the branch.
                             try {
                                 vm.updateExpense(id, amount, category, currency, description, date, frequency);
                             } catch (CostManagerException costManagerException) {
@@ -621,6 +626,21 @@ public class View implements IView {
                     } catch (NumberFormatException ex) {
                         System.out.println(ex);
                         //adding the relevant exception..
+                    }
+                }
+            });
+
+            btnDeleteExpense.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (isNumeric(tfExpenseId.getText())) {
+                        try {
+                            vm.deleteExpense(Integer.parseInt(tfExpenseId.getText()));
+                        } catch (CostManagerException costManagerException) {
+                            costManagerException.printStackTrace();
+                        }
+                    } else {
+                        showMessage("You must enter a number", "Error");
                     }
                 }
             });
@@ -643,7 +663,7 @@ public class View implements IView {
             btnAddCategory.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String result = (String)JOptionPane.showInputDialog(
+                    String result = (String) JOptionPane.showInputDialog(
                             mainPanel,
                             "Add your own category",
                             "Add New Category",
@@ -747,7 +767,6 @@ public class View implements IView {
     }
 
     public class GeneratePieScreen {
-
         private JPanel dataPanel;
         private JPanel piePanel;
         private JPanel containerPanel;
@@ -765,6 +784,7 @@ public class View implements IView {
             pieChart = new PieChart("test", data);
             pieChart.setPreferredSize(new Dimension(280, 280));
             piePanel.add(pieChart);
+            piePanel.revalidate();
         }
 
         /**
@@ -777,12 +797,12 @@ public class View implements IView {
             layout = new GroupLayout(dataPanel);
             startDateLabel = new JLabel("Start Date: ");
 
-            startDateField = new HintTextField("dd/mm/yyyy");
+            startDateField = new HintTextField("yyyy-mm-dd");
             startDateField.setMaximumSize(new Dimension(200, 25));
 
             endDateLabel = new JLabel("End Date: ");
 
-            endDateField = new HintTextField("dd/mm/yyyy");
+            endDateField = new HintTextField("yyyy-mm-dd");
             endDateField.setMaximumSize(new Dimension(200, 25));
 
             Generate = new JButton("Generate");
@@ -794,18 +814,14 @@ public class View implements IView {
             GroupLayout.ParallelGroup hGroup = layout.createParallelGroup(GroupLayout.Alignment.CENTER);
 
             hGroup.addGroup(layout.createSequentialGroup()
-
-                    .addGroup(layout.createParallelGroup()
-                            .addComponent(startDateLabel)
-                            .addComponent(endDateLabel))
-
-
-                    .addGroup(layout.createParallelGroup()
-                            .addComponent(startDateField)
-                            .addComponent(endDateField)));
+                .addGroup(layout.createParallelGroup()
+                        .addComponent(startDateLabel)
+                        .addComponent(endDateLabel))
+                .addGroup(layout.createParallelGroup()
+                        .addComponent(startDateField)
+                        .addComponent(endDateField)));
 
             hGroup.addComponent(Generate);
-            //hGroup.addComponent(temp);
 
             layout.setHorizontalGroup(hGroup);
 
@@ -823,10 +839,6 @@ public class View implements IView {
                     .addComponent(Generate));
 
             vGroup.addGap(20);
-
-            //vGroup.addGroup(layout.createParallelGroup()
-                    //.addComponent(temp));
-
             layout.setVerticalGroup(vGroup);
 
             createListeners();
@@ -842,8 +854,17 @@ public class View implements IView {
             Generate.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    piePanel.removeAll();
                     try {
-                        vm.getSumPerCategory();
+                        if(startDateField.getText().matches("^\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$")) {
+                            if(endDateField.getText().matches("^\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$")) {
+                                vm.getSumPerCategory(startDateField.getText(), endDateField.getText());
+                            } else {
+                                MessageBox.infoBox("Wrong end date entered", "Error");
+                            }
+                        } else {
+                            MessageBox.infoBox("Wrong start date entered", "Error");
+                        }
                     } catch (CostManagerException costManagerException) {
                         costManagerException.printStackTrace();
                     }
@@ -1053,7 +1074,7 @@ public class View implements IView {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     try {
-                        View.this.viewScreen= new ViewScreen();
+                        View.this.viewScreen = new ViewScreen();
                         View.this.viewScreen.generateTable();
                     } catch (CostManagerException ex) {
                        ex.getCause();
@@ -1151,7 +1172,6 @@ public class View implements IView {
                             System.out.println(costManagerException.getMessage());
                             showMessage("Input Error", "Login Error");
                         }
-                        //check user was actually saved (receive some sort of boolean back)
                         View.MainScreen mainScreen = new View.MainScreen();
                         frame.dispose();
                     }
@@ -1184,11 +1204,13 @@ public class View implements IView {
             vm.getUserExpenses();
         }
 
-        public void getTable(String [][] data){
+        public void getTable(String [][] data) {
             table = new JTable(data, column);
             table.setFillsViewportHeight(true);
             sp = new JScrollPane(table);
             panel.add(sp, BorderLayout.CENTER);
+            panel.revalidate();
+            panel.repaint();
         }
 
         /**

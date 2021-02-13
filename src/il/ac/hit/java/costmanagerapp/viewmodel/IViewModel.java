@@ -64,6 +64,18 @@ public interface IViewModel {
      */
     public void getUserExpenses() throws CostManagerException;
 
-    public void getSumPerCategory() throws CostManagerException;
+    /**
+     * Call on database with requested start date and end date to get expenses
+     * @param start start date
+     * @param end end date
+     * @throws CostManagerException
+     */
+    public void getSumPerCategory(String start, String end) throws CostManagerException;
 
+    /**
+     * Deletes an expense
+     * @param id id of expense
+     * @throws CostManagerException
+     */
+    public void deleteExpense(int id) throws CostManagerException;
 }

@@ -71,11 +71,11 @@ public interface IModel {
     public ArrayList<String> getExpense(int id) throws CostManagerException;
 
     /**
-     *  returns hashmap of categories and respected total sum
-     * @return hashmap of categories and respected total sum
+     * returns hashmap of categories and respected total sum per date
+     * @return hashmap of categories and respected total sum per date
      * @throws CostManagerException
      */
-    public HashMap<String, Double> getSumPerCategory() throws CostManagerException;
+    public HashMap<String, Double> getSumPerCategory(String start, String end) throws CostManagerException;
 
     /**
      * Updates an expense with new data
@@ -86,19 +86,30 @@ public interface IModel {
      * @param description description of expense
      * @param date due date of expense
      * @param freq frequency of expense
+     * @return returns true of updated, otherwise false
      * @throws CostManagerException
      */
-    public void updateExpense(int id, double amount, Category cat, Currency currency, String description, String date, Frequency freq) throws CostManagerException;
+    public boolean updateExpense(int id, double amount, Category cat, Currency currency, String description, String date, Frequency freq) throws CostManagerException;
   
     /**
      * Inserts a new Expense to the database
+     * @return returns true of expense created, otherwise false
      * @param e Expense object
      */
-    public void addExpense(Expense e) throws CostManagerException;
+    public boolean addExpense(Expense e) throws CostManagerException;
 
     /**
      * Inserts a new User to the database
+     * @return returns true of user created, otherwise false
      * @param user User object
      */
-    public void addUser(User user) throws CostManagerException;
+    public boolean addUser(User user) throws CostManagerException;
+
+    /**
+     * Deletes an expense
+     * @param id id of expense
+     * @return returns true of deleted, otherwise false
+     * @throws CostManagerException
+     */
+    public boolean deleteExpense(int id) throws CostManagerException;
 }
