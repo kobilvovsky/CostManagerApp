@@ -101,6 +101,7 @@ public class ViewModel implements IViewModel {
         view.callGetTable(data);
     }
 
+
     @Override
     public void getExpense(int id) throws CostManagerException {
         ArrayList<String> data = model.getExpense(id);

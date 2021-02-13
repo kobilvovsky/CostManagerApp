@@ -15,6 +15,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
+import java.sql.SQLException;
+
 import java.util.*;
 
 public class View implements IView {
@@ -122,7 +125,7 @@ public class View implements IView {
         private JButton btnAddCategory;
 
         private Vector defaultCategory;
-        private DefaultComboBoxModel model;
+        private DefaultComboBoxModel comboBoxModel;
 
         /**
          * Add expense screen constructor
@@ -168,8 +171,8 @@ public class View implements IView {
             lbExpenseCategory = new JLabel("Select Expense Category: ");
             defaultCategory = new Vector();
             Collections.addAll(defaultCategory, Category.INITIAL_CATEGORIES);
-            model = new DefaultComboBoxModel(defaultCategory);
-            cbCategory = new JComboBox(model);
+            comboBoxModel = new DefaultComboBoxModel(defaultCategory);
+            cbCategory = new JComboBox(comboBoxModel);
             cbCategory.setMaximumSize(new Dimension(200, 25));
             btnAddCategory = new JButton("Add Category");
             btnAddCategory.setBorder(new RoundedBorder(5));
@@ -284,7 +287,7 @@ public class View implements IView {
                             "Enter your category"
                     );
                     if ((result != null) && (result.length() > 0)) {
-                        model.addElement(result);
+                        comboBoxModel.addElement(result);
                         cbCategory.setSelectedItem(result);
                     }
                 }
@@ -299,7 +302,6 @@ public class View implements IView {
                         String description = tfExpenseDescription.getText();
 
                         String categoryStr = String.valueOf(cbCategory.getSelectedItem());
-                        Category category = new Category(categoryStr);
                         String frequencyStr = bgFrequency.getSelection().getActionCommand();
                         Frequency frequency = null;
                         switch (frequencyStr) {
@@ -335,7 +337,7 @@ public class View implements IView {
                         String date = tfExpenseDate.getText();
 
                         //Need to send Expense parameter after confirming with Erez and updating the branch.
-                        Expense expense = new Expense(0, amount, category, currency, description, date, frequency);
+                        Expense expense = new Expense(0, amount, categoryStr, currency, description, date, frequency);
                         try {
                             vm.addExpense(expense);
                         } catch (CostManagerException costManagerException) {
@@ -402,7 +404,7 @@ public class View implements IView {
         private JButton btnAddCategory;
 
         private Vector defaultCategory;
-        private DefaultComboBoxModel model;
+        private DefaultComboBoxModel comboBoxModel;
 
         /**
          * Edit expense screen constructor
@@ -460,8 +462,8 @@ public class View implements IView {
             lbExpenseCategory = new JLabel("Select Expense Category: ");
             defaultCategory = new Vector();
             Collections.addAll(defaultCategory, Category.INITIAL_CATEGORIES);
-            model = new DefaultComboBoxModel(defaultCategory);
-            cbCategory = new JComboBox(model);
+            comboBoxModel = new DefaultComboBoxModel(defaultCategory);
+            cbCategory = new JComboBox(comboBoxModel);
             cbCategory.setMaximumSize(new Dimension(200, 25));
             btnAddCategory = new JButton("Add Category");
             btnAddCategory.setBorder(new RoundedBorder(5));
@@ -651,7 +653,7 @@ public class View implements IView {
                             "Enter your category"
                     );
                     if ((result != null) && (result.length() > 0)) {
-                        model.addElement(result);
+                        comboBoxModel.addElement(result);
                         cbCategory.setSelectedItem(result);
                     }
                 }
@@ -746,31 +748,38 @@ public class View implements IView {
 
     public class GeneratePieScreen {
 
-        private JPanel panel;
+        private JPanel dataPanel;
+        private JPanel piePanel;
+        private JPanel containerPanel;
         private JLabel startDateLabel;
         private JTextField startDateField;
         private JLabel endDateLabel;
         private JTextField endDateField;
         private JButton Generate;
-        private PieChartComponent pieChart;
         private GroupLayout layout;
         private GroupLayout.SequentialGroup vGroup;
-        private Box temp;
+        private PieChart pieChart;
+        private HashMap<String, Double> tempHash;
+
+
 
         /**
          * Pie chart constructor
          */
         public GeneratePieScreen() {
-            panel = new JPanel();
-            temp = Box.createHorizontalBox();
-            pieChart = new PieChartComponent();
-            temp.add(Box.createRigidArea(new Dimension(190, 0)));
-            temp.add(pieChart);
-
-            layout = new GroupLayout(panel);
-
-            temp.setVisible(false);
-
+            tempHash = new HashMap<String, Double>();
+            tempHash.put("Food", 12.0);
+            tempHash.put("School", 55.0);
+            tempHash.put("Bills", 23.0);
+            tempHash.put("Taxes", 10.0);
+            dataPanel = new JPanel();
+            pieChart = new PieChart("test", tempHash);
+            pieChart.setPreferredSize(new Dimension(280, 280));
+            
+            piePanel = new JPanel();
+            piePanel.setVisible(false);
+            piePanel.add(pieChart);
+            layout = new GroupLayout(dataPanel);
             startDateLabel = new JLabel("Start Date: ");
 
             startDateField = new HintTextField("dd/mm/yyyy");
@@ -783,7 +792,7 @@ public class View implements IView {
 
             Generate = new JButton("Generate");
 
-            panel.setLayout(layout);
+            dataPanel.setLayout(layout);
             layout.setAutoCreateGaps(true);
             layout.setAutoCreateContainerGaps(true);
 
@@ -801,7 +810,7 @@ public class View implements IView {
                             .addComponent(endDateField)));
 
             hGroup.addComponent(Generate);
-            hGroup.addComponent(temp);
+            //hGroup.addComponent(temp);
 
             layout.setHorizontalGroup(hGroup);
 
@@ -820,12 +829,15 @@ public class View implements IView {
 
             vGroup.addGap(20);
 
-            vGroup.addGroup(layout.createParallelGroup()
-                    .addComponent(temp));
+            //vGroup.addGroup(layout.createParallelGroup()
+                    //.addComponent(temp));
 
             layout.setVerticalGroup(vGroup);
 
             createListeners();
+            containerPanel = new JPanel( new BorderLayout() );
+            containerPanel.add( dataPanel, BorderLayout.WEST );
+            containerPanel.add(piePanel, BorderLayout.EAST );
         }
 
         /**
@@ -835,7 +847,7 @@ public class View implements IView {
             Generate.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    temp.setVisible(true);
+                    piePanel.setVisible(true);
                 }
             });
         }
@@ -845,7 +857,7 @@ public class View implements IView {
          * @return JPanel object
          */
         public JPanel getPanel() {
-            return panel;
+            return containerPanel;
         }
     }
 
@@ -908,6 +920,7 @@ public class View implements IView {
             frame.setVisible(true);
 
             createListeners();
+
         }
 
         /**
@@ -1005,7 +1018,8 @@ public class View implements IView {
                 }
             });
             frame.setTitle("CostManagerApp - Menu");
-            frame.setSize(720, 360);
+
+            frame.setSize(710, 340);
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
 
@@ -1080,6 +1094,9 @@ public class View implements IView {
                     frame.dispose();
                 }
             });
+        }
+        public JFrame getFrame () {
+            return frame;
         }
     }
 

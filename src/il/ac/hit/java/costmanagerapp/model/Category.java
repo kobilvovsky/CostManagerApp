@@ -1,5 +1,7 @@
 package il.ac.hit.java.costmanagerapp.model;
 
+import org.junit.platform.commons.util.StringUtils;
+
 import static il.ac.hit.java.costmanagerapp.model.utils.AppUtils.checkArgument;
 
 public class Category {
@@ -57,5 +59,6 @@ public class Category {
         return other == this
                 || (other instanceof Category
                 && categoryName.equals(((Category) other).categoryName));
+
     }
 }

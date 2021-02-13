@@ -22,7 +22,7 @@ public class Expense {
      * @param dueDate due date of the expense
      * @param type payment type of the expense
      */
-    public Expense(int ownerId, double cost, Category category, Currency currency, String description, String dueDate, Frequency type) {
+    public Expense(int ownerId, double cost, String category, Currency currency, String description, String dueDate, Frequency type) {
         //setId(id);
         setOwner(ownerId);
         setCost(cost);
@@ -88,20 +88,9 @@ public class Expense {
      * Sets the category of the expense
      * @param category category of the expense
      */
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    /**
-     * Gets total cost of the expense by taking into account its duration
-     * @return total sum of the expense
-     */
-    public double getSum() { // total of expense over period of time (monthly, yearly)
-        switch (getType()) {
-            case YEARLY:
-                return Math.round((getCost() * 12)*100)/100;
-        }
-        return getCost();
+    public void setCategory(String category) {
+        Category c=new Category(category);
+        this.category = c;
     }
 
     /**
@@ -183,11 +172,9 @@ public class Expense {
     @Override
     public String toString() {
         return "Expense{" +
-                //"id=" + getId() +
                 "ownerID=" + getOwner() +
                 ", cost=" + getCost() +
-                ", category=" + getCategory() +
-                ", sum=" + getSum() +
+                ", category=" + getCategory().getCategoryName() +
                 ", currency=" + getCurrency() +
                 ", description='" + getDescription() + '\'' +
                 ", creationDate=" + getCreationDate() +

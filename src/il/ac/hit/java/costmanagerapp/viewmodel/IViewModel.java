@@ -63,4 +63,5 @@ public interface IViewModel {
      * @return String 2D array
      */
     public void getUserExpenses() throws CostManagerException;
+
 }
