@@ -1,6 +1,7 @@
 package il.ac.hit.java.costmanagerapp.view;
 
 import il.ac.hit.java.costmanagerapp.model.*;
+import il.ac.hit.java.costmanagerapp.model.Currency;
 import il.ac.hit.java.costmanagerapp.model.exceptions.CostManagerException;
 import il.ac.hit.java.costmanagerapp.view.viewutils.HintTextField;
 import il.ac.hit.java.costmanagerapp.view.viewutils.MessageBox;
@@ -17,10 +18,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Vector;
+import java.util.*;
 
 public class View implements IView {
 
@@ -558,7 +556,9 @@ public class View implements IView {
 
     public class GeneratePieScreen {
 
-        private JPanel panel;
+        private JPanel dataPanel;
+        private JPanel piePanel;
+        private JPanel containerPanel;
         private JLabel startDateLabel;
         private JTextField startDateField;
         private JLabel endDateLabel;
@@ -566,23 +566,28 @@ public class View implements IView {
         private JButton Generate;
         private GroupLayout layout;
         private GroupLayout.SequentialGroup vGroup;
-        private Box temp;
-        private PieChart testChart;
+        private PieChart pieChart;
+        private HashMap<String, Double> tempHash;
+
+
 
         /**
          * Pie chart constructor
          */
         public GeneratePieScreen() {
-            panel = new JPanel();
-            temp = Box.createHorizontalBox();
-            testChart = new PieChart("test");
-            temp.add(Box.createRigidArea(new Dimension(190, 0)));
-            temp.add(testChart, BorderLayout.CENTER);
-
-            layout = new GroupLayout(panel);
-
-            temp.setVisible(false);
-
+            tempHash = new HashMap<String, Double>();
+            tempHash.put("Food", 12.0);
+            tempHash.put("School", 55.0);
+            tempHash.put("Bills", 23.0);
+            tempHash.put("Taxes", 10.0);
+            dataPanel = new JPanel();
+            pieChart = new PieChart("test", tempHash);
+            pieChart.setPreferredSize(new Dimension(280, 280));
+            
+            piePanel = new JPanel();
+            piePanel.setVisible(false);
+            piePanel.add(pieChart);
+            layout = new GroupLayout(dataPanel);
             startDateLabel = new JLabel("Start Date: ");
 
             startDateField = new HintTextField("dd/mm/yyyy");
@@ -595,7 +600,7 @@ public class View implements IView {
 
             Generate = new JButton("Generate");
 
-            panel.setLayout(layout);
+            dataPanel.setLayout(layout);
             layout.setAutoCreateGaps(true);
             layout.setAutoCreateContainerGaps(true);
 
@@ -613,7 +618,7 @@ public class View implements IView {
                             .addComponent(endDateField)));
 
             hGroup.addComponent(Generate);
-            hGroup.addComponent(temp);
+            //hGroup.addComponent(temp);
 
             layout.setHorizontalGroup(hGroup);
 
@@ -632,12 +637,15 @@ public class View implements IView {
 
             vGroup.addGap(20);
 
-            vGroup.addGroup(layout.createParallelGroup()
-                    .addComponent(temp));
+            //vGroup.addGroup(layout.createParallelGroup()
+                    //.addComponent(temp));
 
             layout.setVerticalGroup(vGroup);
 
             createListeners();
+            containerPanel = new JPanel( new BorderLayout() );
+            containerPanel.add( dataPanel, BorderLayout.WEST );
+            containerPanel.add(piePanel, BorderLayout.EAST );
         }
 
         /**
@@ -647,7 +655,7 @@ public class View implements IView {
             Generate.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    temp.setVisible(true);
+                    piePanel.setVisible(true);
                 }
             });
         }
@@ -657,7 +665,7 @@ public class View implements IView {
          * @return JPanel object
          */
         public JPanel getPanel() {
-            return panel;
+            return containerPanel;
         }
     }
 
@@ -816,7 +824,7 @@ public class View implements IView {
                 }
             });
             frame.setTitle("CostManagerApp - Menu");
-            frame.setSize(680, 300);
+            frame.setSize(710, 340);
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
 
@@ -887,6 +895,9 @@ public class View implements IView {
                     frame.dispose();
                 }
             });
+        }
+        public JFrame getFrame () {
+            return frame;
         }
     }
 

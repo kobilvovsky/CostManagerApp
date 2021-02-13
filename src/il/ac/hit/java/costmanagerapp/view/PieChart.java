@@ -1,46 +1,42 @@
 package il.ac.hit.java.costmanagerapp.view;
-
-import javax.swing.*;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.PieSectionLabelGenerator;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.plot.PiePlot;
+
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
-import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RefineryUtilities;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PieChart extends ChartPanel {
-
-    public PieChart( String title ) {
-        super(createChart(createDataset()));
-
+    public PieChart( String title, HashMap<String,Double> data) {
+        super(createChart(createDataset(data)));
     }
 
-    private static PieDataset createDataset( ) {
+    private static PieDataset createDataset(HashMap <String,Double> data) {
         DefaultPieDataset dataset = new DefaultPieDataset( );
-        dataset.setValue( "IPhone 5s" , new Double( 20 ) );
-        dataset.setValue( "SamSung Grand" , new Double( 20 ) );
-        dataset.setValue( "MotoG" , new Double( 40 ) );
-        dataset.setValue( "Nokia Lumia" , new Double( 10 ) );
+        for (Map.Entry<String, Double> hashElement : data.entrySet()) {
+            dataset.setValue(hashElement.getKey(), hashElement.getValue());
+        }
+
         return dataset;
     }
 
     private static JFreeChart createChart( PieDataset dataset ) {
+        PieSectionLabelGenerator labelGenerator = new StandardPieSectionLabelGenerator("{0} = {1}");
         JFreeChart chart = ChartFactory.createPieChart(
-                "Mobile Sales",   // chart title
+                "Expenses",   // chart title
                 dataset,          // data
-                true,             // include legend
+                true,
                 true,
                 false);
-
-
+        PiePlot plot = (PiePlot) chart.getPlot();
+        plot.setLabelGenerator(labelGenerator);
         return chart;
     }
 
-    public static JPanel createDemoPanel( ) {
-        JFreeChart chart = createChart(createDataset( ) );
-        return new ChartPanel( chart );
-    }
 
 }
