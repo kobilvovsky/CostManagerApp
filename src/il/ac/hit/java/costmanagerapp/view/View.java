@@ -27,6 +27,7 @@ public class View implements IView {
     private GeneratePieScreen generatePieScreen;
     private AddExpenseScreen addExpenseScreen;
     private EditExpenseScreen editExpenseScreen;
+    private final String DATE_REGEX="^\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$";
 
     @Override
     public void setViewModel(IViewModel vm) {
@@ -150,6 +151,8 @@ public class View implements IView {
             rbNIS = new JRadioButton(Currency.NIS.name());
             rbNIS.setActionCommand("NIS");
 
+            rbEURO.setSelected(true);
+
             bgCurrency.add(rbEURO);
             bgCurrency.add(rbUSD);
             bgCurrency.add(rbNIS);
@@ -184,6 +187,7 @@ public class View implements IView {
 
             lbExpenseFrequency = new JLabel("Select Expense Frequency");
             bgFrequency = new ButtonGroup();
+
             bxFrequency = Box.createHorizontalBox();
 
             rbOneTime = new JRadioButton(Frequency.ONE_TIME.name());
@@ -193,6 +197,7 @@ public class View implements IView {
             rbYearly = new JRadioButton(Frequency.YEARLY.name());
             rbYearly.setActionCommand("YEARLY");
 
+            rbOneTime.setSelected(true);
             bgFrequency.add(rbOneTime);
             bgFrequency.add(rbMonthly);
             bgFrequency.add(rbYearly);
@@ -233,7 +238,7 @@ public class View implements IView {
 
             layout.setHorizontalGroup(hGroup);
 
-            GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
+            vGroup = layout.createSequentialGroup();
 
             vGroup.addGroup(layout.createParallelGroup()
                     .addComponent(lbExpenseAmount)
@@ -294,13 +299,14 @@ public class View implements IView {
             btnAddExpense.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    try {
-                        double amount = Double.parseDouble(tfExpenseAmount.getText());
-                        System.out.println(amount);
+                        double amount = 0;
+                        if (isNumeric(tfExpenseAmount.getText())) {
+                            amount = Double.parseDouble(tfExpenseAmount.getText());
                         String description = tfExpenseDescription.getText();
 
                         String categoryStr = String.valueOf(cbCategory.getSelectedItem());
-                        String frequencyStr = bgFrequency.getSelection().getActionCommand();
+                        String frequencyStr ="";
+                        frequencyStr =bgFrequency.getSelection().getActionCommand();
                         Frequency frequency = null;
                         switch (frequencyStr) {
                             case "ONE_TIME":
@@ -332,18 +338,23 @@ public class View implements IView {
                             default:
                                 currency = Currency.NIS;
                         }
-                        String date = tfExpenseDate.getText();
-
-                        Expense expense = new Expense(amount, categoryStr, currency, description, date, frequency);
-                        try {
-                            vm.addExpense(expense);
-                        } catch (CostManagerException costManagerException) {
-                            costManagerException.printStackTrace();
+                        String date="";
+                        if(tfExpenseDate.getText().matches(DATE_REGEX)) {
+                            date = tfExpenseDate.getText();
+                            Expense expense = new Expense(amount, categoryStr, currency, description, date, frequency);
+                            try {
+                                vm.addExpense(expense);
+                            } catch (CostManagerException costManagerException) {
+                                costManagerException.printStackTrace();
+                            }
                         }
-                    } catch (NumberFormatException ex) {
-                        System.out.println(ex);
-                        //adding the relevant exception..
-                    }
+                        else{
+                                showMessage("You must enter a valid date", "Error");
+                            }
+
+                    }else {
+                            showMessage("You must enter a number", "Error");
+                        }
                 }
             });
         }
@@ -533,7 +544,7 @@ public class View implements IView {
 
             layout.setHorizontalGroup(hGroup);
 
-            GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
+            vGroup = layout.createSequentialGroup();
 
             vGroup.addGroup(layout.createParallelGroup()
                     .addComponent(lbExpenseId)
@@ -574,7 +585,6 @@ public class View implements IView {
             btnUpdateExpense.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    try {
                         if (isNumeric(tfExpenseId.getText())) {
                             int id = Integer.parseInt(tfExpenseId.getText());
                             double amount = Double.parseDouble(tfExpenseAmount.getText());
@@ -613,20 +623,22 @@ public class View implements IView {
                                 default:
                                     currency = Currency.NIS;
                             }
-                            String date = tfExpenseDate.getText();
+                            if(tfExpenseDate.getText().matches(DATE_REGEX)) {
+                                String date = tfExpenseDate.getText();
 
-                            try {
-                                vm.updateExpense(id, amount, category, currency, description, date, frequency);
-                            } catch (CostManagerException costManagerException) {
-                                costManagerException.printStackTrace();
+                                try {
+                                    vm.updateExpense(id, amount, category, currency, description, date, frequency);
+                                } catch (CostManagerException costManagerException) {
+                                    costManagerException.printStackTrace();
+                                }
                             }
+                            else {
+                                showMessage("You must enter a valid date", "Error");
+                            }
+
                         } else {
                             showMessage("You must enter a number", "Error");
                         }
-                    } catch (NumberFormatException ex) {
-                        System.out.println(ex);
-                        //adding the relevant exception..
-                    }
                 }
             });
 
@@ -774,7 +786,7 @@ public class View implements IView {
         private JTextField startDateField;
         private JLabel endDateLabel;
         private JTextField endDateField;
-        private JButton Generate;
+        private JButton generateBtn;
         private GroupLayout layout;
         private GroupLayout.SequentialGroup vGroup;
         private PieChart pieChart;
@@ -805,7 +817,9 @@ public class View implements IView {
             endDateField = new HintTextField("yyyy-mm-dd");
             endDateField.setMaximumSize(new Dimension(200, 25));
 
-            Generate = new JButton("Generate");
+            generateBtn = new JButton("Generate");
+
+            generateBtn.setBorder(new RoundedBorder(3));
 
             dataPanel.setLayout(layout);
             layout.setAutoCreateGaps(true);
@@ -821,7 +835,7 @@ public class View implements IView {
                         .addComponent(startDateField)
                         .addComponent(endDateField)));
 
-            hGroup.addComponent(Generate);
+            hGroup.addComponent(generateBtn);
 
             layout.setHorizontalGroup(hGroup);
 
@@ -836,7 +850,7 @@ public class View implements IView {
                     .addComponent(endDateField));
 
             vGroup.addGroup(layout.createParallelGroup()
-                    .addComponent(Generate));
+                    .addComponent(generateBtn));
 
             vGroup.addGap(20);
             layout.setVerticalGroup(vGroup);
@@ -851,24 +865,24 @@ public class View implements IView {
          * Creates graph screen listener
          */
         private void createListeners() {
-            Generate.addActionListener(new ActionListener() {
+            generateBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     piePanel.removeAll();
-                    try {
-                        if(startDateField.getText().matches("^\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$")) {
-                            if(endDateField.getText().matches("^\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$")) {
-                                vm.getSumPerCategory(startDateField.getText(), endDateField.getText());
+                        try {
+                            if(startDateField.getText().matches(DATE_REGEX)) {
+                                if(endDateField.getText().matches(DATE_REGEX)) {
+                                    vm.getSumPerCategory(startDateField.getText(), endDateField.getText());
+                                } else {
+                                    MessageBox.infoBox("Wrong end date entered", "Error");
+                                }
                             } else {
-                                MessageBox.infoBox("Wrong end date entered", "Error");
+                                MessageBox.infoBox("Wrong start date entered", "Error");
                             }
-                        } else {
-                            MessageBox.infoBox("Wrong start date entered", "Error");
+                        } catch (CostManagerException costManagerException) {
+                            costManagerException.printStackTrace();
                         }
-                    } catch (CostManagerException costManagerException) {
-                        costManagerException.printStackTrace();
-                    }
-                    piePanel.setVisible(true);
+                        piePanel.setVisible(true);
                 }
             });
         }
@@ -963,9 +977,8 @@ public class View implements IView {
 //                            MainScreen mainScreen = new MainScreen();
 //                            frame.dispose();
 //                        } else
-//                            System.out.println("WRONG PASSWORD U DUMBASS!!");
                     } else {
-                        //
+                        showMessage("Please enter username and password","EREZ");
                     }
                 }
             });
@@ -1009,6 +1022,13 @@ public class View implements IView {
             viewBtn = new JButton("View Expenses");
             addBtn = new JButton("Add Expense");
             logoutBtn = new JButton("Logout");
+
+            editBtn.setBorder(new RoundedBorder(3));
+            reportBtn.setBorder(new RoundedBorder(3));
+            viewBtn.setBorder(new RoundedBorder(3));
+            addBtn.setBorder(new RoundedBorder(3));
+            logoutBtn.setBorder(new RoundedBorder(3));
+
 
             container.setLayout(new BorderLayout());
             leftPanel.setBorder(new LineBorder(Color.BLACK, 2));
