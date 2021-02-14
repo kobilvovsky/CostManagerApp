@@ -12,24 +12,39 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PieChart extends ChartPanel {
-    public PieChart( String title, HashMap<String,Double> data) {
+
+    /**
+     * Pie chart constructor
+     * @param data cost and categories from DB
+     */
+    public PieChart(HashMap<String, Double> data) {
         super(createChart(createDataset(data)));
     }
 
-    private static PieDataset createDataset(HashMap <String,Double> data) {
-        DefaultPieDataset dataset = new DefaultPieDataset( );
-        for (Map.Entry<String, Double> hashElement : data.entrySet()) {
+    /**
+     * Parses the data and returns data set
+     * @param data cost and categories from DB
+     * @return pie dataset
+     */
+    private static PieDataset createDataset(HashMap <String, Double> data) {
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        for (Map.Entry<String, Double> hashElement: data.entrySet()) {
             dataset.setValue(hashElement.getKey(), hashElement.getValue());
         }
 
         return dataset;
     }
 
-    private static JFreeChart createChart( PieDataset dataset ) {
+    /**
+     * Creates the actual pie chart from the data
+     * @param dataset pie chart data
+     * @return chart
+     */
+    private static JFreeChart createChart(PieDataset dataset) {
         PieSectionLabelGenerator labelGenerator = new StandardPieSectionLabelGenerator("{0} = {1}");
         JFreeChart chart = ChartFactory.createPieChart(
-                "Expenses",   // chart title
-                dataset,          // data
+                "Expenses",
+                dataset,
                 true,
                 true,
                 false);
@@ -37,6 +52,4 @@ public class PieChart extends ChartPanel {
         plot.setLabelGenerator(labelGenerator);
         return chart;
     }
-
-
 }

@@ -9,8 +9,8 @@ import il.ac.hit.java.costmanagerapp.viewmodel.ViewModel;
 public class Application {
 
     /**
-     * Runs the main function of the project
-     */    
+     * Runs the main flow of the application
+     */
   public static void main(String[] args) throws CostManagerException {
         IModel model = DerbyDBModel.getInstance();
         IView view = new View();
@@ -19,7 +19,5 @@ public class Application {
         view.setViewModel(vm);
         vm.setModel(model);
         vm.setView(view);
-
-
   }
 }

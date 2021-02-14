@@ -1,9 +1,7 @@
 package il.ac.hit.java.costmanagerapp.test;
 
 import il.ac.hit.java.costmanagerapp.model.Category;
-import org.apache.derby.iapi.util.StringUtil;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.util.StringUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -22,7 +22,6 @@ public class DerbyDBModel implements IModel {
     private DerbyDBModel() throws CostManagerException {
         try {
             Class.forName(driver);
-            //createTables();
         } catch (ClassNotFoundException e) {
             throw new CostManagerException("Could not find the Derby JAR file.");
         }
@@ -122,41 +121,6 @@ public class DerbyDBModel implements IModel {
         this.resultSet = rs;
     }
 
-    // ALPHA
-    public void createTables() throws CostManagerException {
-        init();
-        createUsers();
-        createExpenses();
-        close();
-    }
-
-    // ALPHA
-    public void dropTables() throws CostManagerException {
-        init();
-        try {
-            getStatement().execute("DROP TABLE Users");
-            getStatement().execute("DROP TABLE Expense");
-        } catch (SQLException e) {
-            throw new CostManagerException(e.getMessage());
-        }
-
-        close();
-    }
-
-    // ALPHA
-    public void createUsers() throws CostManagerException {
-        init();
-        try {
-            getStatement().execute("CREATE TABLE Users(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), username varchar(250) NOT NULL, password varchar(100) NOT NULL, UNIQUE (id))");
-            getStatement().execute("INSERT INTO Users(username, password) values ('erez', 'erez')");
-            getStatement().execute("INSERT INTO Users(username, password) values ('nati', 'nati')");
-            getStatement().execute("INSERT INTO Users(username, password) values ('kobi', 'kobi')");
-        } catch (SQLException e) {
-            throw new CostManagerException(e.getMessage());
-        }
-        close();
-    }
-
     public boolean addUser(User user) throws CostManagerException {
         init();
         int usersAdded = 0;
@@ -171,21 +135,6 @@ public class DerbyDBModel implements IModel {
         close();
 
         return usersAdded > 0;
-    }
-
-    // ALPHA
-    public void createExpenses() throws CostManagerException {
-        init();
-        try {
-            getStatement().execute("CREATE TABLE Expense(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
-                    "cost float, category varchar(250) NOT NULL," +
-                    "currency int, description varchar(250) NOT NULL," +
-                    "creationDate DATE, dueDate DATE, frequency int," +
-                    "UNIQUE (id))");
-        } catch (SQLException e) {
-            throw new CostManagerException(e.getMessage());
-        }
-        close();
     }
 
     public boolean addExpense(Expense e) throws CostManagerException {

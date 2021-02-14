@@ -6,7 +6,6 @@ import il.ac.hit.java.costmanagerapp.view.IView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,6 +17,7 @@ public class ViewModel implements IViewModel {
 
     /**
      * Constructor of view model
+     * Generates thread pool
      */
     public ViewModel() {
         pool = Executors.newFixedThreadPool(10);
@@ -34,7 +34,7 @@ public class ViewModel implements IViewModel {
     }
 
     @Override
-    public void addExpense(Expense expense) throws CostManagerException{
+    public void addExpense(Expense expense) {
         pool.submit(new Runnable() {
             @Override
             public void run() {
@@ -44,7 +44,6 @@ public class ViewModel implements IViewModel {
                     else
                         view.showMessage("Expense couldn't be added","Error");
                 } catch (CostManagerException e) {
-                    System.out.println(e.getMessage());
                     view.showMessage("Error in adding expense", "Error");
                 }
             }
@@ -52,7 +51,7 @@ public class ViewModel implements IViewModel {
     }
 
     @Override
-    public void addUser(User user) throws CostManagerException{
+    public void addUser(User user) {
         pool.submit(new Runnable() {
             @Override
             public void run() {
@@ -62,7 +61,6 @@ public class ViewModel implements IViewModel {
                     else
                         view.showMessage("Couldn't add a user","Error");
                 } catch (CostManagerException e) {
-                    System.out.println(e.getMessage());
                     view.showMessage("Error in adding user", "Error");
                 }
             }
@@ -70,22 +68,7 @@ public class ViewModel implements IViewModel {
     }
 
     @Override
-    public boolean isUserMatched(String username, String password) {
-        Boolean r[] = {false};
-        pool.submit(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                r[0] = model.isUserMatched(username, password);
-                System.out.println(r[0]);
-                return r[0];
-            }
-        });
-        System.out.println(r[0]);
-        return r[0];
-    }
-
-    @Override
-    public void getUserExpenses() throws CostManagerException {
+    public void getUserExpenses() {
         pool.submit(new Runnable() {
             @Override
             public void run() {
@@ -100,7 +83,7 @@ public class ViewModel implements IViewModel {
     }
 
     @Override
-    public void getSumPerCategory(String start, String end) throws CostManagerException {
+    public void getSumPerCategory(String start, String end) {
         pool.submit(new Runnable() {
             @Override
             public void run() {
@@ -115,7 +98,7 @@ public class ViewModel implements IViewModel {
     }
 
     @Override
-    public void deleteExpense(int id) throws CostManagerException {
+    public void deleteExpense(int id) {
         pool.submit(new Runnable() {
             @Override
             public void run() {
@@ -132,7 +115,7 @@ public class ViewModel implements IViewModel {
     }
 
     @Override
-    public void getExpense(int id) throws CostManagerException {
+    public void getExpense(int id) {
         pool.submit(new Runnable() {
             @Override
             public void run() {
@@ -147,7 +130,7 @@ public class ViewModel implements IViewModel {
     }
 
     @Override
-    public void updateExpense(int id, double amount, Category cat, Currency currency, String description, String date, Frequency freq) throws CostManagerException {
+    public void updateExpense(int id, double amount, Category cat, Currency currency, String description, String date, Frequency freq) {
         pool.submit(new Runnable() {
             @Override
             public void run() {

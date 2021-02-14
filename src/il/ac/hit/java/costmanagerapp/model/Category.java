@@ -1,7 +1,5 @@
 package il.ac.hit.java.costmanagerapp.model;
 
-import org.junit.platform.commons.util.StringUtils;
-
 import static il.ac.hit.java.costmanagerapp.model.utils.AppUtils.checkArgument;
 
 public class Category {
@@ -41,7 +39,7 @@ public class Category {
     }
 
     /**
-     * Checks if catergory name is valid
+     * Checks if category name is valid
      * @param name category name
      * @return true if valid, otherwise false
      */

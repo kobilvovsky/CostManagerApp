@@ -7,13 +7,13 @@ import il.ac.hit.java.costmanagerapp.view.IView;
 public interface IViewModel {
 
     /**
-     * Set view's model
+     * Sets model
      * @param model model
      */
     public void setModel(IModel model);
 
     /**
-     * Set view's view model
+     * Sets view
      * @param view view model
      */
     public void setView(IView view);
@@ -21,12 +21,14 @@ public interface IViewModel {
     /**
      * Adds a new user to the database
      * @param user user object
+     * @throws CostManagerException
      */
     public void addUser(User user) throws CostManagerException;
   
     /**
      * Adds new expense to the database
      * @param expense Expense object
+     * @throws CostManagerException
      */
     public void addExpense(Expense expense) throws CostManagerException;
 
@@ -51,16 +53,8 @@ public interface IViewModel {
     public void updateExpense(int id, double amount, Category cat, Currency currency, String description, String date, Frequency freq) throws CostManagerException;
 
     /**
-     * Checks if credentials match to a user in the database
-     * @param username Username object
-     * @param password Password Object
-     * @return true if correct, otherwise false
-     */
-    public boolean isUserMatched(String username, String password);
-  
-    /**
-     * Creates a 2D string array of all expenses data
-     * @return String 2D array
+     * Gets user expenses
+     * @throws CostManagerException
      */
     public void getUserExpenses() throws CostManagerException;
 

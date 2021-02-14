@@ -26,13 +26,13 @@ public interface IView {
     public void callGetTable(String[][] data);
 
     /**
-     * Prints expense data by its id
+     * Prints expense data to screen
      * @param data expense's data from DB
      */
     public void printExpenseToEditScreen(ArrayList<String> data);
 
     /**
-     * Prints categories and their sum as hashmap to pie screen
+     * Prints categories and their sum to pie screen
      * @param data hashmap of category and total sum
      */
     public void printPieToScreen(HashMap<String, Double> data);

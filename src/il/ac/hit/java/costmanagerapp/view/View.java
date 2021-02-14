@@ -50,7 +50,7 @@ public class View implements IView {
 
     @Override
     public void callGetTable(String[][] data) {
-        viewScreen.getTable(data);
+        viewScreen.printTable(data);
     }
 
     @Override
@@ -273,8 +273,7 @@ public class View implements IView {
         }
 
         /**
-         * Creates add category listener
-         * Creates add expense listener
+         * Generates all listener for AddExpenseScreen
          */
         public void createListeners() {
             btnAddCategory.addActionListener(new ActionListener() {
@@ -581,6 +580,9 @@ public class View implements IView {
             createListeners();
         }
 
+        /**
+         * Generates all listener for EditExpenseScreen
+         */
         public void createListeners() {
             btnUpdateExpense.addActionListener(new ActionListener() {
                 @Override
@@ -693,7 +695,7 @@ public class View implements IView {
         }
 
         /**
-         * Updates textviews with the data of the expense id
+         * Loads the data from DB to screen with a given expense id
          * @param data expense data from DB
          */
         public void uploadDataToComponents(ArrayList<String> data) {
@@ -790,10 +792,13 @@ public class View implements IView {
         private GroupLayout layout;
         private GroupLayout.SequentialGroup vGroup;
         private PieChart pieChart;
-        private HashMap<String, Double> tempHash;
 
+        /**
+         * Generates pie and display it on screen
+         * @param data category and total sum
+         */
         public void setReport(HashMap<String, Double> data) {
-            pieChart = new PieChart("test", data);
+            pieChart = new PieChart(data);
             pieChart.setPreferredSize(new Dimension(280, 280));
             piePanel.add(pieChart);
             piePanel.revalidate();
@@ -862,7 +867,7 @@ public class View implements IView {
         }
 
         /**
-         * Creates graph screen listener
+         * Generates pie listener
          */
         private void createListeners() {
             generateBtn.addActionListener(new ActionListener() {
@@ -896,7 +901,7 @@ public class View implements IView {
         }
     }
 
-    public class LoginScreen{
+    public class LoginScreen {
         private JFrame frame;
         private JPanel panelUpper;
         private JPanel panelMiddle;
@@ -955,30 +960,21 @@ public class View implements IView {
             frame.setVisible(true);
 
             createListeners();
-
         }
 
         /**
-         * Creates user login button listener
-         * Creates user sign up listener
+         * Generates all listener for LoginScreen
          */
         private void createListeners() {
             btnLogin.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     String pass=String.valueOf(tfPassword.getPassword());
-                    //checking that all fields are filled correctly
                     if(!tfUserName.getText().isEmpty() && !pass.isEmpty()) {
-                        View.this.mainScreen = new MainScreen();
+                        mainScreen = new MainScreen();
                         frame.dispose();
-//                        boolean r = vm.isUserMatched(tfUserName.getText(), pass);
-//                        System.out.println(r);
-//                        if(r) {
-//                            MainScreen mainScreen = new MainScreen();
-//                            frame.dispose();
-//                        } else
                     } else {
-                        showMessage("Please enter username and password","EREZ");
+                        showMessage("Please enter username and password","Error");
                     }
                 }
             });
@@ -986,7 +982,6 @@ public class View implements IView {
             btnSignUp.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    //Creating sign up screen
                     SignUpScreen signUp = new SignUpScreen();
                     frame.dispose();
                 }
@@ -1008,7 +1003,7 @@ public class View implements IView {
         private Container container;
 
         /**
-         * Main screen constructor of the project
+         * Main screen constructor
          */
         public MainScreen() {
             frame = new JFrame();
@@ -1136,9 +1131,6 @@ public class View implements IView {
                 }
             });
         }
-        public JFrame getFrame () {
-            return frame;
-        }
     }
 
     public class SignUpScreen {
@@ -1185,14 +1177,14 @@ public class View implements IView {
                     if(!tfUserName.getText().isEmpty() && !pass.isEmpty()) {
                         Username username = new Username(tfUserName.getText());
                         Password password = new Password(Arrays.toString(tfPassword.getPassword()));
-                        User user= new User(username,password);
+                        User user = new User(username,password);
                         try {
                             vm.addUser(user);
                         } catch (CostManagerException costManagerException) {
                             System.out.println(costManagerException.getMessage());
                             showMessage("Input Error", "Login Error");
                         }
-                        View.MainScreen mainScreen = new View.MainScreen();
+                        mainScreen = new View.MainScreen();
                         frame.dispose();
                     }
                     else{
@@ -1211,20 +1203,25 @@ public class View implements IView {
         String column[] = {"Id", "Cost", "Category", "Currency", "Description", "CreatedAt", "dueDate", "Frequency"};
 
          /**
-         * View screen constructor (table)
+         * View screen constructor
          */
-        public ViewScreen() throws CostManagerException {
+        public ViewScreen() {
             panel = new JPanel(new BorderLayout());
         }
 
-         /**
+        /**
          * Sets table data by requesting all expenses of a user from the database
+         * @throws CostManagerException
          */
         public void generateTable() throws CostManagerException {
             vm.getUserExpenses();
         }
 
-        public void getTable(String [][] data) {
+        /**
+         * Displays expense table on screen
+         * @param data expense data
+         */
+        public void printTable(String[][] data) {
             table = new JTable(data, column);
             table.setFillsViewportHeight(true);
             sp = new JScrollPane(table);
@@ -1237,7 +1234,6 @@ public class View implements IView {
          * Gets screen's panel
          * @return JPanel object
          */
-
         public JPanel getPanel() {
             return panel;
         }

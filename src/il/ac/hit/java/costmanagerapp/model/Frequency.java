@@ -20,7 +20,7 @@ public enum Frequency {
      * @return
      */
     public int getId() {
-        return id;
+        return this.id;
     }
 
     /**

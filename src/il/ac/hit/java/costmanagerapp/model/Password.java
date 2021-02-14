@@ -3,9 +3,6 @@ package il.ac.hit.java.costmanagerapp.model;
 import static il.ac.hit.java.costmanagerapp.model.utils.AppUtils.checkArgument;
 import static java.util.Objects.requireNonNull;
 
-
-//Instance is created when user registers and login
-
 public class Password {
     public static final String MESSAGE_PASSWORD_CONSTRAINTS =
             "Passwords cannot contain spaces and must be 6 to 100 characters long.";
@@ -29,7 +26,7 @@ public class Password {
      * @return user password
      */
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     /**
@@ -55,19 +52,6 @@ public class Password {
      */
     @Override
     public String toString() {
-        return password;
+        return this.password;
     }
-
-    /**
-     * Checks if password object is the same as another password object
-     * @param other password object
-     * @return true if same, otherwise false
-     */
-    @Override
-    public boolean equals(Object other) {
-        return other == this
-                || (other instanceof Password
-                && password.equals(((Password) other).password));
-    }
-
 }

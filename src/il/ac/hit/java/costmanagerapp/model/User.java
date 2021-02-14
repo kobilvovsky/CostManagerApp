@@ -1,7 +1,6 @@
 package il.ac.hit.java.costmanagerapp.model;
 
 public class User {
-    private int userId;
     private Username userName;
     private Password userPassword;
 
@@ -11,25 +10,16 @@ public class User {
      * @param userPassword password object
      */
     public User(Username userName, Password userPassword) {
-        //setId(userId);
         setUserName(userName);
         setUserPassword(userPassword);
     }
 
-//    public int getId() {
-//        return userId;
-//    }
-//
-//    public void setId(int userId) {
-//        this.userId = userId;
-//    }
-
     /**
-     * Gets username object
+     * Gets username object - username
      * @return username object
      */
     public Username getUserName() {
-        return userName;
+        return this.userName;
     }
 
     /**
@@ -45,7 +35,7 @@ public class User {
      * @return password object
      */
     public Password getUserPassword() {
-        return userPassword;
+        return this.userPassword;
     }
 
     /**
@@ -63,10 +53,9 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "userId=" + userId +
-                ", userName=" + userName +
-                ", userPassword=" + userPassword +
-                '}';
+            ", userName=" + userName +
+            ", userPassword=" + userPassword +
+            '}';
     }
 }
 

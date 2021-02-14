@@ -8,9 +8,6 @@ public class Username implements Comparable<Username> {
             "Names must be at most 250 characters long, cannot be empty and cannot contain white spaces or any of "
                     + "these characters: \" > < : \\ / | ? *";
 
-    /*
-     * Username cannot contain any of the following characters : " > < : \ / | ? *
-     */
     private static final String USERNAME_VALIDATION_REGEX = ".*[/\\\\:*?\"<>|\\s].*";
 
     private String name;
@@ -30,7 +27,7 @@ public class Username implements Comparable<Username> {
      * @return user name
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
@@ -48,14 +45,13 @@ public class Username implements Comparable<Username> {
         return !test.isEmpty() && !test.matches(USERNAME_VALIDATION_REGEX) && test.length() <= 250;
     }
 
-
     /**
      * Prints username variables data
      * @return username object as string
      */
     @Override
     public String toString() {
-        return name;
+        return this.name;
     }
 
     /**
@@ -65,9 +61,9 @@ public class Username implements Comparable<Username> {
      */
     @Override
     public boolean equals(Object other) {
-        return other == this // short circuit if same object
-                || (other instanceof Username // instanceof handles nulls
-                && name.equalsIgnoreCase(((Username) other).name)); // state check
+        return other == this
+            || (other instanceof Username
+            && name.equalsIgnoreCase(((Username) other).name));
     }
 
     /**

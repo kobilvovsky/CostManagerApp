@@ -2,7 +2,7 @@ package il.ac.hit.java.costmanagerapp.model;
 import java.util.Date;
 
 public class Expense {
-    private double cost; // cost of expense
+    private double cost;
     private Category category;
     private Currency currency;
     private String description;
@@ -24,7 +24,7 @@ public class Expense {
         setCategory(category);
         setCurrency(currency);
         setDescription(description);
-        this.creationDate = new java.sql.Date(System.currentTimeMillis());
+        setCreationDate();
         setDueDate(dueDate);
         setType(type);
     }
@@ -34,10 +34,11 @@ public class Expense {
      * @return cost of the expense
      */
     public double getCost() {
-        return cost;
+        return this.cost;
     }
 
     /**
+     * Cost setter
      * Rounds the expense cost to .2 decimal digits
      * @param cost cost of the expense
      */
@@ -52,16 +53,15 @@ public class Expense {
      * @return category of the expense
      */
     public Category getCategory() {
-        return category;
+        return this.category;
     }
 
     /**
-     * Sets the category of the expense
+     * Sets the category of the expense by category's name
      * @param category category of the expense
      */
     public void setCategory(String category) {
-        Category c=new Category(category);
-        this.category = c;
+        this.category = new Category(category);
     }
 
     /**
@@ -69,7 +69,7 @@ public class Expense {
      * @return currency of the expense
      */
     public Currency getCurrency() {
-        return currency;
+        return this.currency;
     }
 
     /**
@@ -85,7 +85,7 @@ public class Expense {
      * @return description of the expense
      */
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     /**
@@ -101,7 +101,7 @@ public class Expense {
      * @return date of the expense the day it was created
      */
     public Date getCreationDate() {
-        return creationDate;
+        return this.creationDate;
     }
 
     /**
@@ -109,7 +109,7 @@ public class Expense {
      * @return due date of the expense
      */
     public Date getDueDate() {
-        return dueDate;
+        return this.dueDate;
     }
 
     /**
@@ -121,11 +121,16 @@ public class Expense {
     }
 
     /**
+     * Generates current date
+     */
+    public void setCreationDate() { this.creationDate = new java.sql.Date(System.currentTimeMillis()); }
+
+    /**
      * Gets the frequency of the expense
      * @return frequency of the expense
      */
     public Frequency getType() {
-        return type;
+        return this.type;
     }
 
     /**
@@ -137,19 +142,19 @@ public class Expense {
     }
 
     /**
-     * Prints expense variables data
+     * Prints expense data
      * @return expense object as string
      */
     @Override
     public String toString() {
         return "Expense{" +
-                ", cost=" + getCost() +
-                ", category=" + getCategory().getCategoryName() +
-                ", currency=" + getCurrency() +
-                ", description='" + getDescription() + '\'' +
-                ", creationDate=" + getCreationDate() +
-                ", dueDate=" + getDueDate() +
-                ", type=" + getType() +
-                '}';
+            ", cost=" + getCost() +
+            ", category=" + getCategory().getCategoryName() +
+            ", currency=" + getCurrency() +
+            ", description='" + getDescription() + '\'' +
+            ", creationDate=" + getCreationDate() +
+            ", dueDate=" + getDueDate() +
+            ", type=" + getType() +
+            '}';
     }
 }
