@@ -1,3 +1,10 @@
+/*
+    Submitted by:
+    Erez Mizrahi 316267087
+    Lvovsky Yakov 315825380
+    Netanel Tarnorudsky 315424689
+ */
+
 package il.ac.hit.java.costmanagerapp.view;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -43,11 +50,11 @@ public class PieChart extends ChartPanel {
     private static JFreeChart createChart(PieDataset dataset) {
         PieSectionLabelGenerator labelGenerator = new StandardPieSectionLabelGenerator("{0} = {1}");
         JFreeChart chart = ChartFactory.createPieChart(
-                "Expenses",
-                dataset,
-                true,
-                true,
-                false);
+            "Expenses",
+            dataset,
+            true,
+            true,
+            false);
         PiePlot plot = (PiePlot) chart.getPlot();
         plot.setLabelGenerator(labelGenerator);
         return chart;

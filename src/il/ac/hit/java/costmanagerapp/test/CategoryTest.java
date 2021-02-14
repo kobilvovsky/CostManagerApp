@@ -1,3 +1,10 @@
+/*
+    Submitted by:
+    Erez Mizrahi 316267087
+    Lvovsky Yakov 315825380
+    Netanel Tarnorudsky 315424689
+ */
+
 package il.ac.hit.java.costmanagerapp.test;
 
 import il.ac.hit.java.costmanagerapp.model.Category;
